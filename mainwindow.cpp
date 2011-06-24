@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 #ifdef Q_WS_WIN
-    XmlTaskLoader loader("");
+    XmlTaskLoader loader("c:\\temp\\list.tdl");
 #else
     XmlTaskLoader loader("");
 #endif

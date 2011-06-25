@@ -20,6 +20,10 @@ private:
     void addTaskBelowCursor();
     void removeSelectedTasks();
     void getSelectedRowsRange(const QModelIndexList &selectedList, int &startRow, int &endRow) const;
+    void shiftSelectedTasksRight();
+    void shiftSelectedTasksLeft();
+    void shiftSelectedTasksUp();
+    void shiftSelectedTasksDown();
 signals:
 
 public slots:

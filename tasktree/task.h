@@ -6,6 +6,7 @@
 #include "QString"
 #include "QDateTime"
 #include "QSharedPointer"
+#include "QVariant"
 
 class Task
 {
@@ -63,5 +64,7 @@ private:
 
 friend class TaskStorage;
 };
+
+Q_DECLARE_METATYPE(Task::Ptr);
 
 #endif // TASK_H

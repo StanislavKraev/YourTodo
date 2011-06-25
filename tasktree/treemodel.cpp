@@ -50,6 +50,13 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
             return Qt::darkCyan;
         }
     }
+    else if (role == Qt::UserRole)
+    {
+        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        if (!item)
+            return QVariant();
+        return qVariantFromValue(item);
+    }
     return QVariant();
 }
 

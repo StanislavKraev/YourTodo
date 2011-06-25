@@ -141,7 +141,7 @@ Task::Ptr TaskStorage::root() const
 
 bool TaskStorage::removeTasks(Task::Ptr task, int pos, int count)
 {
-    if (pos < 0 || (pos + count > task->count() - 1))
+    if (pos < 0 || (pos + count > task->count()))
         return false;
 
     for (int taskToRemove = count; taskToRemove; taskToRemove--)

@@ -1,3 +1,6 @@
+#include <QMap>
+
+#include "tasktree/task.h"
 #include "tasktree/treemodel.h"
 
 #include "tasktreeview.h"
@@ -20,11 +23,37 @@ void TaskTreeView::keyPressEvent(QKeyEvent *event)
              event->modifiers() == Qt::ControlModifier)
     {
         addTaskBelowCursor();
+        event->accept();
     }
     else if (event->key() == Qt::Key_Delete &&
              event->modifiers() == Qt::NoModifier)
     {
         removeSelectedTasks();
+        event->accept();
+    }
+    else if (event->key() == Qt::Key_Right &&
+             event->modifiers() == Qt::ControlModifier)
+    {
+        shiftSelectedTasksRight();
+        event->accept();
+    }
+    else if (event->key() == Qt::Key_Left &&
+             event->modifiers() == Qt::ControlModifier)
+    {
+        shiftSelectedTasksLeft();
+        event->accept();
+    }
+    else if (event->key() == Qt::Key_Up &&
+             event->modifiers() == Qt::ControlModifier)
+    {
+        shiftSelectedTasksUp();
+        event->accept();
+    }
+    else if (event->key() == Qt::Key_Down &&
+             event->modifiers() == Qt::ControlModifier)
+    {
+        shiftSelectedTasksDown();
+        event->accept();
     }
     else
         QTreeView::keyPressEvent(event);
@@ -62,19 +91,35 @@ void TaskTreeView::addTaskBelowCursor()
 
 void TaskTreeView::removeSelectedTasks()
 {
-    // TODO: investigate how TODOlist removes multiple selection (part of hierarchy, several levels)
-    // Now only items under 1 parent are removed correctly.
-    QModelIndexList selectedList = selectionModel()->selectedRows(0);
-    if (selectedList.count() < 1)
-        return;
+    QModelIndexList selectedList = selectionModel()->selectedRows();
+    while (selectedList.count())
+    {
+        QMap<Task::Ptr, QModelIndex> taskMap;
+        foreach (QModelIndex id, selectedList)
+        {
+            QVariant taskData = m_model->data(id, Qt::UserRole);
+            Task::Ptr task = taskData.value<Task::Ptr>();
+            taskMap[task] = id;
+        }
 
-    int startRow = -1;
-    int endRow = -1;
-
-    getSelectedRowsRange(selectedList, startRow, endRow);
-
-    QModelIndex parent = selectedList.first().parent();
-    model()->removeRows(startRow, endRow - startRow + 1, parent);
+        foreach (Task::Ptr task, taskMap.keys())
+        {
+            Task::Ptr parent = task->parent();
+            bool parentSelected(false);
+            while (parent && !parentSelected)
+            {
+                parent = parent->parent();
+                parentSelected = taskMap.contains(parent);
+            }
+            if (!parentSelected)
+            {
+                QModelIndex taskIndex = taskMap[task];
+                model()->removeRows(taskIndex.row(), 1, taskIndex.parent());
+                break;
+            }
+        }
+        selectedList = selectionModel()->selectedRows();
+    }
 }
 
 void TaskTreeView::getSelectedRowsRange(const QModelIndexList &selectedList, int &startRow, int &endRow) const
@@ -88,4 +133,34 @@ void TaskTreeView::getSelectedRowsRange(const QModelIndexList &selectedList, int
         if (index.row() < startRow)
             startRow = index.row();
     }
+}
+
+void TaskTreeView::shiftSelectedTasksRight()
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+        return;
+
+}
+
+void TaskTreeView::shiftSelectedTasksLeft()
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+        return;
+
+}
+
+void TaskTreeView::shiftSelectedTasksUp()
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+        return;
+}
+
+void TaskTreeView::shiftSelectedTasksDown()
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+        return;
 }

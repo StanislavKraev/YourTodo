@@ -20,6 +20,7 @@ public:
     virtual bool insertNewTasks(Task::Ptr task, int pos, int count);
     virtual bool removeTasks(Task::Ptr task, int pos, int count);
     virtual Task::Ptr root() const;
+    virtual void replace(Task::Ptr oldItem, Task::Ptr newItem);
 public:
     virtual bool load(ITaskLoader *loader);
 protected:

@@ -100,3 +100,33 @@ void Task::removeAt(int pos)
     m_subTaskList.removeAt(pos);
 }
 
+void Task::replace(Task::Ptr oldItem, Task::Ptr newItem)
+{
+    if (m_subTaskList.contains(oldItem))
+    {
+        int oldId = oldItem->m_id;
+        oldItem->m_comments = newItem->m_comments;
+        oldItem->m_commentsType = newItem->m_commentsType;
+        oldItem->m_cost = newItem->m_cost;
+        oldItem->m_creationDate = newItem->m_creationDate;
+        oldItem->m_doneDate = newItem->m_doneDate;
+        oldItem->m_iconIndex = newItem->m_iconIndex;
+        oldItem->m_id = newItem->m_id;
+        oldItem->m_lastMod = newItem->m_lastMod;
+        oldItem->m_percentDone = newItem->m_percentDone;
+        oldItem->m_pos = newItem->m_pos;
+        oldItem->m_priority = newItem->m_priority;
+        oldItem->m_priorityColor = newItem->m_priorityColor;
+        oldItem->m_risk = newItem->m_risk;
+        oldItem->m_startDate = newItem->m_startDate;
+        oldItem->m_subTaskList = newItem->m_subTaskList;
+        oldItem->m_textColor = newItem->m_textColor;
+        oldItem->m_title = newItem->m_title;
+
+        foreach (Task::Ptr subTask, oldItem->m_subTaskList)
+            subTask->setParent(oldItem);
+
+        newItem->m_id = oldId;
+    }
+}
+

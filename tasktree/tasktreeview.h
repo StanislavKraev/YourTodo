@@ -3,6 +3,7 @@
 
 #include <QTreeView>
 #include <QKeyEvent>
+#include <QModelIndexList>
 
 class TreeModel;
 
@@ -11,8 +12,6 @@ class TaskTreeView : public QTreeView
     Q_OBJECT
 public:
     explicit TaskTreeView(QWidget *parent = 0);
-public:
-    void setTaskModel(TreeModel *model);
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
 private:
@@ -24,11 +23,11 @@ private:
     void shiftSelectedTasksLeft();
     void shiftSelectedTasksUp();
     void shiftSelectedTasksDown();
+    bool checkAllAreChildren(const QModelIndex &parent, const QModelIndexList &selectedList) const;
+    void getItemChildren(const QModelIndex &parent, const QModelIndexList &selectedList, QModelIndexList &topLevelChildren) const;
 signals:
-
 public slots:
 private:
-    TreeModel *m_model;
 };
 
 #endif // TASKTREEVIEW_H

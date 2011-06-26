@@ -152,3 +152,11 @@ bool TaskStorage::removeTasks(Task::Ptr task, int pos, int count)
     }
     return true;
 }
+
+void TaskStorage::replace(Task::Ptr oldItem, Task::Ptr newItem)
+{
+    Task::Ptr parent = oldItem->parent();
+    m_idTaskMap[oldItem->id()] = newItem;
+    m_idTaskMap[newItem->id()] = oldItem;
+    parent->replace(oldItem, newItem);
+}

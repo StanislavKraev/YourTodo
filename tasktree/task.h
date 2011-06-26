@@ -38,6 +38,7 @@ public:
     void setTitle(QString title);
     unsigned short percentDone() const;
     void setPercentDone(unsigned short percentDone);
+    void replace(Ptr oldItem, Ptr newItem);
 private:
     void addTask(Ptr task);
     void insertSubTask(int pos, Ptr task);

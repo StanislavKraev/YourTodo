@@ -43,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->setModel(model);
     ui->treeView->setEditTriggers(QAbstractItemView::SelectedClicked |
                                   QAbstractItemView::EditKeyPressed);
-    ui->treeView->setTaskModel(model);
 }
 
 MainWindow::~MainWindow()

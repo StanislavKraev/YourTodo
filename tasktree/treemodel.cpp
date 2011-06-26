@@ -143,6 +143,15 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
             return true;
         }
     }
+    else if (role == Qt::UserRole)
+    {
+        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        if (item)
+        {
+            Task::Ptr newItem = value.value<Task::Ptr>();
+            m_taskStorage->replace(item, newItem);
+        }
+    }
     else if (role == Qt::UserRole + 1)
     {
         Task::Ptr item = m_taskStorage->getById(index.internalId());

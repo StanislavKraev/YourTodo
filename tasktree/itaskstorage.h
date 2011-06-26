@@ -25,6 +25,7 @@ public:
     virtual bool insertNewTasks(Task::Ptr task, int pos, int count) = 0;
     virtual bool removeTasks(Task::Ptr task, int pos, int count) = 0;
     virtual Task::Ptr root() const = 0;
+    virtual void replace(Task::Ptr oldItem, Task::Ptr newItem) = 0;
 public:
     virtual bool load(ITaskLoader *loader) = 0;
 };

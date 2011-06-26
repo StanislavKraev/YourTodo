@@ -135,14 +135,14 @@ void TaskTreeView::shiftSelectedTasksRight()
     // + check that all following selected items are children of this parent. if not - cancel
     // + check that previous (prior to the first selected - X) element is the same level as the first
     // + find selected items of the same level as the first element
-    // remove all items from the parent
-    // add them to the end of the previous element (X)
+    // + remove all items from the parent
+    // + add them to the end of the previous element (X)
 
     QModelIndexList selectedList = selectionModel()->selectedRows(0);
     if (selectedList.count() < 1)
         return;
 
-    QModelIndex firstItem = selectedList.first();
+    QModelIndex firstItem = getFirstSelection(selectedList);
     QModelIndexList itemsToMove;
     itemsToMove.append(firstItem);
 
@@ -150,7 +150,7 @@ void TaskTreeView::shiftSelectedTasksRight()
     if (firstItem.row() < 1)
         return;
 
-    selectedList.pop_front();
+    selectedList.removeOne(firstItem);
     if (selectedList.count())
     {
         if (!checkAllAreChildren(mainParent, selectedList))
@@ -166,8 +166,9 @@ void TaskTreeView::shiftSelectedTasksRight()
         if (!newParent.isValid())
             return;
 
+        int startRow = model()->rowCount(newParent);
         int curRow = model()->rowCount(newParent);
-        model()->insertRows(curRow, itemsToMove.count(), newParent);
+        model()->insertRows(startRow, itemsToMove.count(), newParent);
         foreach (const QModelIndex id, itemsToMove)
         {
             QModelIndex newItemId = model()->index(curRow, 0, newParent);
@@ -176,6 +177,12 @@ void TaskTreeView::shiftSelectedTasksRight()
             curRow++;
         }
         model()->removeRows(firstItem.row(), itemsToMove.count(), mainParent);
+        expand(model()->index(newParent.row(), 0, mainParent));
+        selectionModel()->select(QItemSelection(model()->index(startRow, 0, newParent),
+                                                model()->index(startRow + itemsToMove.count() - 1, 0, newParent)),
+                                 QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+        selectionModel()->setCurrentIndex(model()->index(startRow, 0, newParent),
+                                          QItemSelectionModel::NoUpdate);
     }
 }
 
@@ -206,11 +213,11 @@ bool TaskTreeView::checkAllAreChildren(const QModelIndex &parent, const QModelIn
     foreach (const QModelIndex &id, selectedList)
     {
         QModelIndex currentParent = id.parent();
-        bool foundParent(false);
+        bool foundParent(currentParent == parent);
         while (currentParent.isValid() && !foundParent)
         {
-            foundParent = currentParent.internalId() == parent.internalId();
             currentParent = currentParent.parent();
+            foundParent = currentParent == parent;
         }
         if (!foundParent)
             return false;
@@ -227,4 +234,41 @@ void TaskTreeView::getItemChildren(const QModelIndex &parent,
     foreach (const QModelIndex &id, selectedList)
         if (id.parent().internalId() == parent.internalId())
             topLevelChildren.append(id);
+}
+
+QModelIndex TaskTreeView::getFirstSelection(const QModelIndexList &selectedList) const
+{
+    if (!selectedList.count())
+        return QModelIndex();
+
+    QModelIndex curItem = model()->index(0, 0);
+    while (curItem.isValid())
+    {
+        if (selectedList.contains(curItem))
+            return curItem;
+        if (curItem.child(0, 0).isValid())
+        {
+            curItem = curItem.child(0, 0);
+        }
+        else if (curItem.sibling(curItem.row() + 1, 0).isValid())
+        {
+            curItem = curItem.sibling(curItem.row() + 1, 0);
+        }
+        else
+        {
+            QModelIndex item = curItem.parent();
+            while (item.isValid())
+            {
+                if (item.sibling(item.row() + 1, 0).isValid())
+                {
+                    curItem = item.sibling(item.row() + 1, 0);
+                    if (selectedList.contains(curItem))
+                        return curItem;
+                    break;
+                }
+                item = item.parent();
+            }
+        }
+    }
+    return QModelIndex();
 }

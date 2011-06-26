@@ -25,6 +25,7 @@ private:
     void shiftSelectedTasksDown();
     bool checkAllAreChildren(const QModelIndex &parent, const QModelIndexList &selectedList) const;
     void getItemChildren(const QModelIndex &parent, const QModelIndexList &selectedList, QModelIndexList &topLevelChildren) const;
+    QModelIndex getFirstSelection(const QModelIndexList &selectedList) const;
 signals:
 public slots:
 private:

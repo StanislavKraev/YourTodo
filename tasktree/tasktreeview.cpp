@@ -162,6 +162,7 @@ void TaskTreeView::shiftSelectedTasksRight()
     }
     if (itemsToMove.count())
     {
+        // TODO: store selection, expanded/closed items
         QModelIndex newParent = model()->index(firstItem.row() - 1, 0, mainParent);
         if (!newParent.isValid())
             return;
@@ -178,6 +179,8 @@ void TaskTreeView::shiftSelectedTasksRight()
         }
         model()->removeRows(firstItem.row(), itemsToMove.count(), mainParent);
         expand(model()->index(newParent.row(), 0, mainParent));
+
+        // TODO: apply stored selection & expanded/closed items.
         selectionModel()->select(QItemSelection(model()->index(startRow, 0, newParent),
                                                 model()->index(startRow + itemsToMove.count() - 1, 0, newParent)),
                                  QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);

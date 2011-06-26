@@ -113,6 +113,7 @@ void TaskTreeView::removeSelectedTasks()
         }
         selectedList = selectionModel()->selectedRows();
     }
+    // TODO: select next element after last removed.
 }
 
 void TaskTreeView::getSelectedRowsRange(const QModelIndexList &selectedList, int &startRow, int &endRow) const

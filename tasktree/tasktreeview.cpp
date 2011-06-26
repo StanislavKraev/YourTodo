@@ -171,6 +171,7 @@ void TaskTreeView::shiftSelectedTasksRight()
         int startRow = model()->rowCount(newParent);
         int curRow = model()->rowCount(newParent);
         model()->insertRows(startRow, itemsToMove.count(), newParent);
+        // TODO: do not use model indexes and row numbers - they are shifted.
         foreach (const QModelIndex id, itemsToMove)
         {
             QModelIndex newItemId = model()->index(curRow, 0, newParent);
@@ -221,6 +222,7 @@ void TaskTreeView::shiftSelectedTasksLeft()
         int startRow = mainParent.row() + 1;
         int curRow = mainParent.row() + 1;
         model()->insertRows(startRow, itemsToMove.count(), newParent);
+        // TODO: do not use model indexes and row numbers - they are shifted.
         foreach (const QModelIndex id, itemsToMove)
         {
             QModelIndex newItemId = model()->index(curRow, 0, newParent);
@@ -240,6 +242,40 @@ void TaskTreeView::shiftSelectedTasksUp()
     QModelIndexList selectedList = selectionModel()->selectedRows(0);
     if (selectedList.count() < 1)
         return;
+
+    QModelIndex firstItem = getFirstSelection(selectedList);
+    QModelIndexList itemsToMove;
+    itemsToMove.append(firstItem);
+
+    QModelIndex mainParent = firstItem.parent();
+    if (firstItem.row() < 1)
+        return;
+
+    selectedList.removeOne(firstItem);
+    if (selectedList.count())
+    {
+        if (!checkAllAreChildren(mainParent, selectedList))
+            return;
+
+        QModelIndexList topLevelChildren;
+        getItemChildren(mainParent, selectedList, topLevelChildren);
+        itemsToMove.append(topLevelChildren);
+    }
+    if (itemsToMove.count())
+    {
+        int startRow = firstItem.row() - 1;
+        int curRow = startRow;
+        model()->insertRows(startRow, itemsToMove.count(), mainParent);
+        // TODO: do not use model indexes and row numbers - they are shifted.
+        foreach (const QModelIndex id, itemsToMove)
+        {
+            QModelIndex newItemId = model()->index(curRow, 0, mainParent);
+            QVariant val = model()->data(id, Qt::UserRole);
+            model()->setData(newItemId, val, Qt::UserRole);
+            curRow++;
+        }
+        //model()->removeRows(firstItem.row(), itemsToMove.count(), mainParent);
+    }
 }
 
 void TaskTreeView::shiftSelectedTasksDown()

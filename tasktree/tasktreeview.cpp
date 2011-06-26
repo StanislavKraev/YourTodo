@@ -195,6 +195,43 @@ void TaskTreeView::shiftSelectedTasksLeft()
     if (selectedList.count() < 1)
         return;
 
+    QModelIndex firstItem = getFirstSelection(selectedList);
+    QModelIndexList itemsToMove;
+    itemsToMove.append(firstItem);
+
+    QModelIndex mainParent = firstItem.parent();
+    if (!mainParent.isValid())
+        return;
+
+    selectedList.removeOne(firstItem);
+    if (selectedList.count())
+    {
+        if (!checkAllAreChildren(mainParent, selectedList))
+            return;
+
+        QModelIndexList topLevelChildren;
+        getItemChildren(mainParent, selectedList, topLevelChildren);
+        itemsToMove.append(topLevelChildren);
+    }
+    if (itemsToMove.count())
+    {
+        // TODO: store selection, expanded/closed items
+        QModelIndex newParent = mainParent.parent();
+        int startRow = mainParent.row() + 1;
+        int curRow = mainParent.row() + 1;
+        model()->insertRows(startRow, itemsToMove.count(), newParent);
+        foreach (const QModelIndex id, itemsToMove)
+        {
+            QModelIndex newItemId = model()->index(curRow, 0, newParent);
+            QVariant val = model()->data(id, Qt::UserRole);
+            model()->setData(newItemId, val, Qt::UserRole);
+            curRow++;
+        }
+        model()->removeRows(firstItem.row(), itemsToMove.count(), mainParent);
+        // TODO: apply stored selection & expanded/closed items.
+        selectionModel()->setCurrentIndex(model()->index(startRow, 0, newParent),
+                                          QItemSelectionModel::NoUpdate);
+    }
 }
 
 void TaskTreeView::shiftSelectedTasksUp()

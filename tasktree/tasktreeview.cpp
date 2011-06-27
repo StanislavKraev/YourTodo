@@ -131,14 +131,6 @@ void TaskTreeView::getSelectedRowsRange(const QModelIndexList &selectedList, int
 
 void TaskTreeView::shiftSelectedTasksRight()
 {
-    // + get selection
-    // + find parent of the first element
-    // + check that all following selected items are children of this parent. if not - cancel
-    // + check that previous (prior to the first selected - X) element is the same level as the first
-    // + find selected items of the same level as the first element
-    // + remove all items from the parent
-    // + add them to the end of the previous element (X)
-
     QModelIndexList selectedList = selectionModel()->selectedRows(0);
     if (selectedList.count() < 1)
         return;
@@ -171,7 +163,6 @@ void TaskTreeView::shiftSelectedTasksRight()
         int startRow = model()->rowCount(newParent);
         int curRow = model()->rowCount(newParent);
         model()->insertRows(startRow, itemsToMove.count(), newParent);
-        // TODO: do not use model indexes and row numbers - they are shifted.
         foreach (const QModelIndex id, itemsToMove)
         {
             QModelIndex newItemId = model()->index(curRow, 0, newParent);
@@ -222,7 +213,6 @@ void TaskTreeView::shiftSelectedTasksLeft()
         int startRow = mainParent.row() + 1;
         int curRow = mainParent.row() + 1;
         model()->insertRows(startRow, itemsToMove.count(), newParent);
-        // TODO: do not use model indexes and row numbers - they are shifted.
         foreach (const QModelIndex id, itemsToMove)
         {
             QModelIndex newItemId = model()->index(curRow, 0, newParent);
@@ -264,17 +254,22 @@ void TaskTreeView::shiftSelectedTasksUp()
     if (itemsToMove.count())
     {
         int startRow = firstItem.row() - 1;
+        const int count = itemsToMove.count();
         int curRow = startRow;
-        model()->insertRows(startRow, itemsToMove.count(), mainParent);
-        // TODO: do not use model indexes and row numbers - they are shifted.
-        foreach (const QModelIndex id, itemsToMove)
+        model()->insertRows(startRow, count, mainParent);
+        int least = count;
+        while (least)
         {
+            int curRowOld = curRow + count + 1;
             QModelIndex newItemId = model()->index(curRow, 0, mainParent);
-            QVariant val = model()->data(id, Qt::UserRole);
+            QModelIndex oldItemId = model()->index(curRowOld, 0, mainParent);
+            QVariant val = model()->data(oldItemId, Qt::UserRole);
             model()->setData(newItemId, val, Qt::UserRole);
             curRow++;
+
+            least--;
         }
-        //model()->removeRows(firstItem.row(), itemsToMove.count(), mainParent);
+        model()->removeRows(startRow + count + 1, count, mainParent);
     }
 }
 
@@ -283,6 +278,48 @@ void TaskTreeView::shiftSelectedTasksDown()
     QModelIndexList selectedList = selectionModel()->selectedRows(0);
     if (selectedList.count() < 1)
         return;
+
+    QModelIndex firstItem = getFirstSelection(selectedList);
+    QModelIndexList itemsToMove;
+    itemsToMove.append(firstItem);
+
+    QModelIndex mainParent = firstItem.parent();
+    int parentChildrenCount = model()->rowCount(mainParent);
+
+    selectedList.removeOne(firstItem);
+    if (selectedList.count())
+    {
+        if (!checkAllAreChildren(mainParent, selectedList))
+            return;
+
+        QModelIndexList topLevelChildren;
+        getItemChildren(mainParent, selectedList, topLevelChildren);
+        itemsToMove.append(topLevelChildren);
+    }
+
+    const int count = itemsToMove.count();
+    if (firstItem.row() + count >= parentChildrenCount)
+        return;
+
+    if (count)
+    {
+        int startRow = firstItem.row() + count + 1;
+        int curRow = startRow;
+        model()->insertRows(startRow, count, mainParent);
+        int least = count;
+        while (least)
+        {
+            int curRowOld = curRow - count - 1;
+            QModelIndex newItemId = model()->index(curRow, 0, mainParent);
+            QModelIndex oldItemId = model()->index(curRowOld, 0, mainParent);
+            QVariant val = model()->data(oldItemId, Qt::UserRole);
+            model()->setData(newItemId, val, Qt::UserRole);
+            curRow++;
+
+            least--;
+        }
+        model()->removeRows(startRow - count - 1, count, mainParent);
+    }
 }
 
 bool TaskTreeView::checkAllAreChildren(const QModelIndex &parent, const QModelIndexList &selectedList) const
@@ -303,6 +340,11 @@ bool TaskTreeView::checkAllAreChildren(const QModelIndex &parent, const QModelIn
     return true;
 }
 
+bool less(const QModelIndex &left, const QModelIndex &right)
+{
+    return left.row() < right.row();
+}
+
 void TaskTreeView::getItemChildren(const QModelIndex &parent,
                                    const QModelIndexList &selectedList,
                                    QModelIndexList &topLevelChildren) const
@@ -311,6 +353,7 @@ void TaskTreeView::getItemChildren(const QModelIndex &parent,
     foreach (const QModelIndex &id, selectedList)
         if (id.parent().internalId() == parent.internalId())
             topLevelChildren.append(id);
+    qSort(topLevelChildren.begin(), topLevelChildren.end(), less);
 }
 
 QModelIndex TaskTreeView::getFirstSelection(const QModelIndexList &selectedList) const

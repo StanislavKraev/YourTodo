@@ -4,6 +4,64 @@
 
 #include "tasktreeview.h"
 
+class StoreSelectionHelper
+{
+    QItemSelectionModel *m_selectionModel;
+    QAbstractItemModel *m_itemModel;
+    QList<int> m_selectedValues;
+    int m_curIndex;
+    QTreeView *m_view;
+public:
+    StoreSelectionHelper(QItemSelectionModel *selectionModel,
+                         QAbstractItemModel *itemModel,
+                         QTreeView *view) :
+        m_selectionModel(selectionModel),
+        m_itemModel(itemModel),
+        m_curIndex(-1),
+        m_view(view)
+    {
+        QModelIndexList selections = m_selectionModel->selectedRows();
+        foreach (QModelIndex id, selections)
+        {
+            Task::Ptr val = m_itemModel->data(id, Qt::UserRole).value<Task::Ptr>();
+            m_selectedValues.append(val->id());
+        }
+        QModelIndex current = m_selectionModel->currentIndex();
+        m_curIndex = (m_itemModel->data(current, Qt::UserRole).value<Task::Ptr>())->id();
+    }
+    void RestoreSelection(const QModelIndex &id)
+    {
+        int val = (m_itemModel->data(id, Qt::UserRole).value<Task::Ptr>())->id();
+        if (m_curIndex == val)
+        {
+            m_selectionModel->setCurrentIndex(id, QItemSelectionModel::NoUpdate);
+            m_view->scrollTo(id);
+        }
+        foreach (int newVal, m_selectedValues)
+        {
+            if (newVal == val)
+                m_selectionModel->select(id, QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        }
+        int rowCount = m_itemModel->rowCount(id);
+        for (int row = 0; row < rowCount; ++row)
+        {
+            QModelIndex childId = m_itemModel->index(row, 0, id);
+            RestoreSelection(childId);
+        }
+    }
+
+    ~StoreSelectionHelper()
+    {
+        m_selectionModel->clearSelection();
+        int rowCount = m_itemModel->rowCount();
+        for (int row = 0; row < rowCount; ++row)
+        {
+            QModelIndex id = m_itemModel->index(row, 0);
+            RestoreSelection(id);
+        }
+    }
+};
+
 TaskTreeView::TaskTreeView(QWidget *parent) :
     QTreeView(parent)
 {
@@ -155,7 +213,7 @@ void TaskTreeView::shiftSelectedTasksRight()
     }
     if (itemsToMove.count())
     {
-        // TODO: store selection, expanded/closed items
+        StoreSelectionHelper selHelper(selectionModel(), model(), this);
         QModelIndex newParent = model()->index(firstItem.row() - 1, 0, mainParent);
         if (!newParent.isValid())
             return;
@@ -173,10 +231,6 @@ void TaskTreeView::shiftSelectedTasksRight()
         model()->removeRows(firstItem.row(), itemsToMove.count(), mainParent);
         expand(model()->index(newParent.row(), 0, mainParent));
 
-        // TODO: apply stored selection & expanded/closed items.
-        selectionModel()->select(QItemSelection(model()->index(startRow, 0, newParent),
-                                                model()->index(startRow + itemsToMove.count() - 1, 0, newParent)),
-                                 QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
         selectionModel()->setCurrentIndex(model()->index(startRow, 0, newParent),
                                           QItemSelectionModel::NoUpdate);
     }
@@ -208,7 +262,7 @@ void TaskTreeView::shiftSelectedTasksLeft()
     }
     if (itemsToMove.count())
     {
-        // TODO: store selection, expanded/closed items
+        StoreSelectionHelper selHelper(selectionModel(), model(), this);
         QModelIndex newParent = mainParent.parent();
         int startRow = mainParent.row() + 1;
         int curRow = mainParent.row() + 1;
@@ -221,7 +275,6 @@ void TaskTreeView::shiftSelectedTasksLeft()
             curRow++;
         }
         model()->removeRows(firstItem.row(), itemsToMove.count(), mainParent);
-        // TODO: apply stored selection & expanded/closed items.
         selectionModel()->setCurrentIndex(model()->index(startRow, 0, newParent),
                                           QItemSelectionModel::NoUpdate);
     }
@@ -253,6 +306,7 @@ void TaskTreeView::shiftSelectedTasksUp()
     }
     if (itemsToMove.count())
     {
+        StoreSelectionHelper selHelper(selectionModel(), model(), this);
         int startRow = firstItem.row() - 1;
         const int count = itemsToMove.count();
         int curRow = startRow;
@@ -303,6 +357,7 @@ void TaskTreeView::shiftSelectedTasksDown()
 
     if (count)
     {
+        StoreSelectionHelper selHelper(selectionModel(), model(), this);
         int startRow = firstItem.row() + count + 1;
         int curRow = startRow;
         model()->insertRows(startRow, count, mainParent);

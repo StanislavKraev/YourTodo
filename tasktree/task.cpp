@@ -4,10 +4,13 @@ Task::Task() : m_id(-1)
 {
 }
 
-Task::Task(int id, QString title, unsigned short percentDone) :
+Task::Task(int id,
+           QString title,
+           unsigned short percentDone) :
     m_id(id),
     m_title(title),
     m_percentDone(percentDone)
+  // TODO: start here
 {
 }
 

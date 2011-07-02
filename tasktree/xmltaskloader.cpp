@@ -89,6 +89,28 @@ TaskInfo XmlTaskLoader::read()
         taskInfo.percentDone = taskElement.attribute("PERCENTDONE").toUShort(&parsedOk);
         if (!parsedOk)
             continue;
+        taskInfo.iconIndex = taskElement.attribute("ICONINDEX").toInt(&parsedOk);
+        if (!parsedOk)
+            continue;
+        taskInfo.pos = taskElement.attribute("POS").toInt(&parsedOk);
+        if (!parsedOk)
+            continue;
+        taskInfo.priority = taskElement.attribute("PRIORITY").toInt(&parsedOk);
+        if (!parsedOk)
+            continue;
+        taskInfo.risk = taskElement.attribute("RISK").toInt(&parsedOk);
+        if (!parsedOk)
+            continue;
+        taskInfo.cost = taskElement.attribute("COST").toDouble(&parsedOk);
+        if (!parsedOk)
+            continue;
+        taskInfo.startDate = taskElement.attribute("STARTDATE").toDouble(&parsedOk);
+        if (!parsedOk)
+            continue;
+        taskInfo.creationDate = taskElement.attribute("CREATIONDATE").toDouble(&parsedOk);
+        if (!parsedOk)
+            continue;
+        taskInfo.priorityColor = taskElement.attribute("PRIORITYCOLOR");
 
         int parentId = curLevel > 0 ? taskElement.
                                         parentNode().

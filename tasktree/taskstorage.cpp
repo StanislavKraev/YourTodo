@@ -57,7 +57,7 @@ int TaskStorage::nextId() const
 
 Task::Ptr TaskStorage::createTask(QString title)
 {
-    Task::Ptr newTask = Task::Ptr(new Task(nextId(), title, 0));
+    Task::Ptr newTask = Task::Ptr(new Task(nextId(), title));
     add(newTask);
     m_idTaskMap[newTask->id()] = newTask;
     return newTask;
@@ -125,7 +125,7 @@ bool TaskStorage::insertNewTasks(Task::Ptr task, int pos, int count)
     int curPos = pos;
     for (int taskToInsert = count; taskToInsert; taskToInsert--)
     {
-        Task::Ptr newTask = Task::Ptr(new Task(nextId(), "", 0));
+        Task::Ptr newTask = Task::Ptr(new Task(nextId(), ""));
         newTask->setParent(task);
         m_idTaskMap[newTask->id()] = newTask;
         task->insertSubTask(curPos, newTask);

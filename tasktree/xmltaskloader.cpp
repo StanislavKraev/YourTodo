@@ -84,33 +84,43 @@ TaskInfo XmlTaskLoader::read()
         bool parsedOk = false;
         taskInfo.id = taskElement.attribute("ID").toInt(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue; // TODO: assertion here!!!
         taskInfo.title = taskElement.attribute("TITLE");
         taskInfo.percentDone = taskElement.attribute("PERCENTDONE").toUShort(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue;// TODO: assertion here!!!
         taskInfo.iconIndex = taskElement.attribute("ICONINDEX").toInt(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue;// TODO: assertion here!!!
         taskInfo.pos = taskElement.attribute("POS").toInt(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue;// TODO: assertion here!!!
         taskInfo.priority = taskElement.attribute("PRIORITY").toInt(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue;// TODO: assertion here!!!
         taskInfo.risk = taskElement.attribute("RISK").toInt(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue;// TODO: assertion here!!!
         taskInfo.cost = taskElement.attribute("COST").toDouble(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue;// TODO: assertion here!!!
         taskInfo.startDate = taskElement.attribute("STARTDATE").toDouble(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue;// TODO: assertion here!!!
         taskInfo.creationDate = taskElement.attribute("CREATIONDATE").toDouble(&parsedOk);
         if (!parsedOk)
-            continue;
+            continue;// TODO: assertion here!!!
+        taskInfo.doneDate = taskElement.attribute("DONEDATE").toDouble(&parsedOk);
+        if (!parsedOk)
+            continue;// TODO: assertion here!!!
         taskInfo.priorityColor = taskElement.attribute("PRIORITYCOLOR");
+        taskInfo.textColor = taskElement.attribute("TEXTCOLOR");
+        taskInfo.comments = taskElement.attribute("COMMENTS");
+        taskInfo.commentsType = taskElement.attribute("COMMENTSTYPE");
+        taskInfo.lastMod = taskElement.attribute("LASTMOD").toDouble(&parsedOk);
+        if (!parsedOk)
+            continue;// TODO: assertion here!!!
+
 
         int parentId = curLevel > 0 ? taskElement.
                                         parentNode().

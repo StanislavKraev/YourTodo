@@ -26,7 +26,7 @@ QVariant TreeUi::itemData(int column, Task::Ptr task)
         case Title:
             return task->title();
         case Comment:
-            return "Comment";
+            return task->comments();
         }
     }
     return QVariant();

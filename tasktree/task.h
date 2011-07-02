@@ -13,6 +13,7 @@ class Task
 public:
     enum CommentsType
     {
+        UNDEFINED = 0,
         PLAIN_TEXT = 1
     };
 
@@ -23,7 +24,12 @@ public:
     typedef List::ConstIterator ListConstIterator;
 public:
     Task();
-    Task(int id, QString title, unsigned short percentDone);
+    Task(int id, QString title, unsigned short percentDone, QString comments,
+         QString commentsType, double cost, double creationDate,
+         double doneDate, int iconIndex, double lastMod, int pos,
+         int priority, QString priorityColor, int risk,
+         double startDate, QString textColor);
+    Task(int id, QString title);
     Task(const Task& task);
 public:
     QList<Task::Ptr>::Iterator tasks();
@@ -34,11 +40,14 @@ public:
     void setParent(Task::Ptr parent);
     int count() const;
     int id() const;
+    void replace(Ptr oldItem, Ptr newItem);
+public:
     QString title() const;
     void setTitle(QString title);
     unsigned short percentDone() const;
     void setPercentDone(unsigned short percentDone);
-    void replace(Ptr oldItem, Ptr newItem);
+    QString comments() const;
+    void setComments(QString comments);
 private:
     void addTask(Ptr task);
     void insertSubTask(int pos, Ptr task);

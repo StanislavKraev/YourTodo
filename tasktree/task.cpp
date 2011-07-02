@@ -6,11 +6,56 @@ Task::Task() : m_id(-1)
 
 Task::Task(int id,
            QString title,
-           unsigned short percentDone) :
+           unsigned short percentDone,
+           QString comments,
+           QString commentsType,
+           double cost,
+           double creationDate,
+           double doneDate,
+           int iconIndex,
+           double lastMod,
+           int pos,
+           int priority,
+           QString priorityColor,
+           int risk,
+           double startDate,
+           QString textColor) :
     m_id(id),
     m_title(title),
-    m_percentDone(percentDone)
-  // TODO: start here
+    m_percentDone(percentDone),
+    m_comments(comments),
+    m_commentsType(UNDEFINED),
+    m_cost(cost),
+    m_creationDate(QDateTime::fromTime_t((uint)creationDate)),
+    m_doneDate(QDateTime::fromTime_t((uint)doneDate)),
+    m_startDate(QDateTime::fromTime_t((uint)startDate)),
+    m_lastMod(QDateTime::fromTime_t((uint)lastMod)),
+    m_iconIndex(iconIndex),
+    m_pos(pos),
+    m_priority(priority),
+    m_priorityColor(priorityColor),
+    m_risk(risk),
+    m_textColor(textColor)
+{
+    if (commentsType=="PLAIN_TEXT")
+    {
+        m_commentsType = PLAIN_TEXT;
+    }
+}
+
+Task::Task(int id,
+           QString title) :
+    m_id(id),
+    m_title(title),
+    m_percentDone(0),
+    m_commentsType(UNDEFINED),
+    m_cost(0.0),
+    m_creationDate(QDateTime::currentDateTime()),
+    m_lastMod(QDateTime::currentDateTime()),
+    m_iconIndex(-1),
+    m_pos(-1),
+    m_priority(-1),
+    m_risk(-1)
 {
 }
 
@@ -133,3 +178,12 @@ void Task::replace(Task::Ptr oldItem, Task::Ptr newItem)
     }
 }
 
+QString Task::comments() const
+{
+    return m_comments;
+}
+
+void Task::setComments(QString comments)
+{
+    m_comments = comments;
+}

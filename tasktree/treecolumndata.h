@@ -7,7 +7,9 @@ enum TaskDataMember
 {
     Title = 1,
     Comment,
-    Priority
+    Priority,
+    PercentDone,
+    IconIndex
 };
 
 struct TreeColumnData

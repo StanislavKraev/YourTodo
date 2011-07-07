@@ -48,10 +48,15 @@ public:
     void setPercentDone(unsigned short percentDone);
     QString comments() const;
     void setComments(QString comments);
+    int priority() const;
+    void setPriority(int priority);
+    int iconIndex() const;
+    void setIconIndex(int iconIndex);
 private:
     void addTask(Ptr task);
     void insertSubTask(int pos, Ptr task);
     void removeAt(int pos);
+    unsigned short calculatePercentDone() const;
 private:
     QList<Ptr> m_subTaskList;
     int m_id;   // unique

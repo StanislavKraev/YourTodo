@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class TreeUi;
+class UiManager;
 
 namespace Ui {
     class MainWindow;
@@ -20,6 +21,7 @@ public:
 private:
     Ui::MainWindow *ui;
     TreeUi *m_treeUi;
+    UiManager *m_uiManager;
 };
 
 #endif // MAINWINDOW_H

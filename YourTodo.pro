@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     exceptions/stopiterexception.cpp \
     tasktree/treeui.cpp \
     tasktree/treecolumndata.cpp \
-    tasktree/tasktreeview.cpp
+    tasktree/tasktreeview.cpp \
+    uimanager.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -40,6 +41,7 @@ HEADERS  += mainwindow.h \
     tasktree/treeui.h \
     tasktree/treecolumndata.h \
     tasktree/itreeuiprovider.h \
-    tasktree/tasktreeview.h
+    tasktree/tasktreeview.h \
+    uimanager.h
 
 FORMS    += mainwindow.ui

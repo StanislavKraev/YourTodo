@@ -17,9 +17,10 @@ private:
 public:
     virtual int columnsCount() const = 0;
     virtual QString headerTitle(int section) const = 0;
-    virtual QVariant itemData(int column, Task::Ptr task) = 0;
+    virtual QVariant itemData(int column, Task::Ptr task) const = 0;
     virtual void updateData(Task::Ptr task, int column, QVariant data) = 0;
     virtual QFont strikedOutFont() const = 0;
+    virtual QFont font(int column, Task::Ptr task) const = 0;
 };
 
 

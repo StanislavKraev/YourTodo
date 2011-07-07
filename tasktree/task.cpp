@@ -125,11 +125,17 @@ void Task::setTitle(QString title)
 
 unsigned short Task::percentDone() const
 {
+    if (m_subTaskList.count() > 0)
+        return calculatePercentDone();
+
     return m_percentDone;
 }
 
 void Task::setPercentDone(unsigned short percentDone)
 {
+    if (m_subTaskList.count() > 0)
+        return;
+
     m_percentDone = percentDone;
 }
 
@@ -186,4 +192,34 @@ QString Task::comments() const
 void Task::setComments(QString comments)
 {
     m_comments = comments;
+}
+
+int Task::priority() const
+{
+    return m_priority;
+}
+
+void Task::setPriority(int priority)
+{
+    m_priority = priority;
+}
+
+int Task::iconIndex() const
+{
+    return m_iconIndex;
+}
+
+void Task::setIconIndex(int iconIndex)
+{
+    m_iconIndex = iconIndex;
+}
+
+unsigned short Task::calculatePercentDone() const
+{
+    int sum = 0;
+    foreach (Task::Ptr subTask, m_subTaskList)
+    {
+        sum += subTask->percentDone();
+    }
+    return (unsigned short)((double)sum / (double)m_subTaskList.count());
 }

@@ -1,3 +1,4 @@
+#include <QBrush>
 #include <QFont>
 
 #include "tasktree/itaskstorage.h"
@@ -35,10 +36,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
         Task::Ptr item = m_taskStorage->getById(index.internalId());
         if (!item)
             return QVariant();
-        if (item->percentDone() >= 100)
-        {
-            return m_treeUi->strikedOutFont();
-        }
+        return m_treeUi->font(index.column(), item);
     }
     else if (role == Qt::ForegroundRole)
     {
@@ -49,6 +47,11 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
         {
             return Qt::darkCyan;
         }
+    }
+    else if (role == Qt::BackgroundRole)
+    {
+        if (index.row() % 2)
+            return QVariant(Qt::red);
     }
     else if (role == Qt::UserRole)
     {

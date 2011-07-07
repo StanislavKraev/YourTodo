@@ -16,7 +16,7 @@ QString TreeUi::headerTitle(int section) const
     return QString();
 }
 
-QVariant TreeUi::itemData(int column, Task::Ptr task)
+QVariant TreeUi::itemData(int column, Task::Ptr task) const
 {
     if (column >= 0 && column <= m_columns.count() - 1)
     {
@@ -27,6 +27,16 @@ QVariant TreeUi::itemData(int column, Task::Ptr task)
             return task->title();
         case Comment:
             return task->comments();
+        case Priority:
+            if (task->percentDone() >= 100)
+                return QVariant();
+            return task->priority();
+        case PercentDone:
+            if (task->percentDone() >= 100)
+                return QVariant();
+            return QString("%1%").arg(task->percentDone());
+        case IconIndex:
+            return task->iconIndex();
         }
     }
     return QVariant();
@@ -51,9 +61,6 @@ void TreeUi::updateData(Task::Ptr task, int column, QVariant data)
         {
         case Title:
             task->setTitle(data.toString());
-        case Comment:
-            //task->setComment(data.toString());
-            break;
         }
     }
 }
@@ -61,4 +68,24 @@ void TreeUi::updateData(Task::Ptr task, int column, QVariant data)
 QFont TreeUi::strikedOutFont() const
 {
     return m_strikedOutFont;
+}
+
+QFont TreeUi::font(int column, Task::Ptr task) const
+{
+    if (column >= 0 && column <= m_columns.count() - 1)
+    {
+        TaskDataMember member = m_columns[column].taskDataMember;
+        if (member == Title)
+        {
+            QFont font;
+            if (task->percentDone() >= 100)
+            {
+                font = strikedOutFont();
+            }
+            else if (!task->parent())
+                font.setBold(true);
+            return font;
+        }
+    }
+    return QFont();
 }

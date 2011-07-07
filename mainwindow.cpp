@@ -1,7 +1,8 @@
-#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QMessageBox>
+#include <QStyledItemDelegate>
+#include <QPainter>
 
 #include "exceptions/loadtasksexception.h"
 
@@ -9,6 +10,10 @@
 #include "tasktree/treemodel.h"
 #include "tasktree/treeui.h"
 #include "tasktree/xmltaskloader.h"
+
+#include "uimanager.h"
+
+#include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -37,17 +42,29 @@ MainWindow::MainWindow(QWidget *parent) :
     treeViewFont.setStrikeOut(true);
 
     m_treeUi = new TreeUi(treeViewFont);
+    m_treeUi->addColumn(TreeColumnData("!", Priority));
+    m_treeUi->addColumn(TreeColumnData("%", PercentDone));
+    m_treeUi->addColumn(TreeColumnData("O", IconIndex));
     m_treeUi->addColumn(TreeColumnData("Title", Title));
-    m_treeUi->addColumn(TreeColumnData("Comments", Comment));
     TreeModel *model = new TreeModel(this, taskStorage, m_treeUi);
     ui->treeView->setModel(model);
     ui->treeView->setEditTriggers(QAbstractItemView::SelectedClicked |
                                   QAbstractItemView::EditKeyPressed);
+    ui->treeView->setUniformRowHeights(true);
+    ui->treeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+    ui->treeView->header()->resizeSection(1, 30);
+    ui->treeView->header()->resizeSection(2, 24);
+    m_uiManager = new UiManager(ui->menuBar);
+    m_uiManager->Init();
 }
 
 MainWindow::~MainWindow()
 {
+    if (m_uiManager)
+        m_uiManager->deleteLater();
+    m_uiManager = 0;
+
     if (m_treeUi)
-        delete m_treeUi;
+        m_treeUi->deleteLater();
     delete ui;
 }

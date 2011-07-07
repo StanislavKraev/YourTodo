@@ -17,6 +17,18 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="TaskTreeView" name="treeView">
+      <property name="styleSheet">
+       <string notr="true">QTreeView::item {
+      border: 1px solid #d9d9d9;
+     border-top-color: transparent;
+     border-left-color: transparent;
+ }
+
+QTreeView::item:selected {
+    background-color: #3399ff;
+ }
+</string>
+      </property>
       <property name="selectionMode">
        <enum>QAbstractItemView::ContiguousSelection</enum>
       </property>
@@ -30,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>647</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuQTodoList">

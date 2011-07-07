@@ -81,46 +81,29 @@ TaskInfo XmlTaskLoader::read()
         }
 
         TaskInfo taskInfo;
+
+        // Required arguments
         bool parsedOk = false;
         taskInfo.id = taskElement.attribute("ID").toInt(&parsedOk);
         if (!parsedOk)
-            continue; // TODO: assertion here!!!
+            throw LoadTasksException(QString("Can't parse task ID at line %1.").arg(taskElement.lineNumber()));
         taskInfo.title = taskElement.attribute("TITLE");
-        taskInfo.percentDone = taskElement.attribute("PERCENTDONE").toUShort(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-        taskInfo.iconIndex = taskElement.attribute("ICONINDEX").toInt(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-        taskInfo.pos = taskElement.attribute("POS").toInt(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-        taskInfo.priority = taskElement.attribute("PRIORITY").toInt(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-        taskInfo.risk = taskElement.attribute("RISK").toInt(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-        taskInfo.cost = taskElement.attribute("COST").toDouble(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-        taskInfo.startDate = taskElement.attribute("STARTDATE").toDouble(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-        taskInfo.creationDate = taskElement.attribute("CREATIONDATE").toDouble(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-        taskInfo.doneDate = taskElement.attribute("DONEDATE").toDouble(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
+
+        // Optional arguments
+        taskInfo.percentDone = taskElement.attribute("PERCENTDONE", "0").toUShort();
+        taskInfo.iconIndex = taskElement.attribute("ICONINDEX", "-1").toInt();
+        taskInfo.pos = taskElement.attribute("POS", "1").toInt();
+        taskInfo.priority = taskElement.attribute("PRIORITY", "5").toInt();
+        taskInfo.risk = taskElement.attribute("RISK", "0").toInt();
+        taskInfo.cost = taskElement.attribute("COST", "0.0").toDouble();
+        taskInfo.startDate = taskElement.attribute("STARTDATE", "0.0").toDouble();
+        taskInfo.creationDate = taskElement.attribute("CREATIONDATE", "0.0").toDouble();
+        taskInfo.doneDate = taskElement.attribute("DONEDATE", "0.0").toDouble();
         taskInfo.priorityColor = taskElement.attribute("PRIORITYCOLOR");
         taskInfo.textColor = taskElement.attribute("TEXTCOLOR");
         taskInfo.comments = taskElement.attribute("COMMENTS");
         taskInfo.commentsType = taskElement.attribute("COMMENTSTYPE");
-        taskInfo.lastMod = taskElement.attribute("LASTMOD").toDouble(&parsedOk);
-        if (!parsedOk)
-            continue;// TODO: assertion here!!!
-
+        taskInfo.lastMod = taskElement.attribute("LASTMOD", "0.0").toDouble();
 
         int parentId = curLevel > 0 ? taskElement.
                                         parentNode().
@@ -128,6 +111,7 @@ TaskInfo XmlTaskLoader::read()
                                         attribute("ID").
                                         toInt() :
                                      -1;
+
         taskInfo.parentId = parentId;
 
         return taskInfo;

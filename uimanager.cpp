@@ -1,9 +1,11 @@
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QApplication>
 
 #include "uimanager.h"
 
-UiManager::UiManager(QMenuBar *menuBar) :
+UiManager::UiManager(QWidget *parent, QMenuBar *menuBar) :
+    m_parentWindow(parent),
     m_menuBar(menuBar)
 {
 }
@@ -19,7 +21,9 @@ void UiManager::CreateMenu()
 
     // File menu
     QMenu *subMenu = m_menuBar->addMenu("File");
-    subMenu->addAction("New Tasklist");
+    QAction *action = subMenu->addAction("New Tasklist", this, SLOT(onNewTasklist()));
+    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
+
     subMenu->addSeparator();
     subMenu->addAction("Open Tasklist");
     subMenu->addSeparator();
@@ -31,7 +35,8 @@ void UiManager::CreateMenu()
     subMenu->addAction("Close All");
     subMenu->addSeparator();
     subMenu->addAction("Minimize to System Tray");
-    subMenu->addAction("Exit", this, SLOT(onExit()));
+    action = subMenu->addAction("Exit", this, SLOT(onExit()));
+    action->setShortcut(QKeySequence(Qt::ALT + Qt::Key_F4));
 
     // New Task menu
     subMenu = m_menuBar->addMenu("New Task");
@@ -79,4 +84,10 @@ void UiManager::CreateMenu()
 void UiManager::onExit()
 {
     qApp->quit();
+}
+
+void UiManager::onNewTasklist()
+{
+    QMessageBox newBox;
+    newBox.information(0, "New tasklist", "New Tasklist");
 }

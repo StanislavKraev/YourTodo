@@ -14,7 +14,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     tasktree/treemodel.cpp \
     tasktree/task.cpp \
-    tasktree/taskstorage.cpp \
     tasktree/todolist.cpp \
     tasktree/xmltaskloader.cpp \
     tasktree/taskinfo.cpp \
@@ -24,14 +23,13 @@ SOURCES += main.cpp\
     tasktree/treeui.cpp \
     tasktree/treecolumndata.cpp \
     tasktree/tasktreeview.cpp \
-    uimanager.cpp
+    uimanager.cpp \
+    tasktree/tasklist.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
     tasktree/task.h \
-    tasktree/taskstorage.h \
     tasktree/todolist.h \
-    tasktree/itaskstorage.h \
     tasktree/itaskloader.h \
     tasktree/xmltaskloader.h \
     tasktree/taskinfo.h \
@@ -42,6 +40,8 @@ HEADERS  += mainwindow.h \
     tasktree/treecolumndata.h \
     tasktree/itreeuiprovider.h \
     tasktree/tasktreeview.h \
-    uimanager.h
+    uimanager.h \
+    tasktree/tasklist.h \
+    tasktree/itasklist.h
 
 FORMS    += mainwindow.ui

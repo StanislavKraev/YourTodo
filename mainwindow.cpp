@@ -6,7 +6,7 @@
 
 #include "exceptions/loadtasksexception.h"
 
-#include "tasktree/taskstorage.h"
+#include "tasktree/tasklist.h"
 #include "tasktree/treemodel.h"
 #include "tasktree/treeui.h"
 #include "tasktree/xmltaskloader.h"
@@ -26,10 +26,10 @@ MainWindow::MainWindow(QWidget *parent) :
 #else
     XmlTaskLoader loader("");
 #endif
-    TaskStorage *taskStorage = new TaskStorage();
+    TaskList *taskList = new TaskList();
     try
     {
-        taskStorage->load(&loader);
+        taskList->load(&loader);
     }
     catch (LoadTasksException &e)
     {
@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_treeUi->addColumn(TreeColumnData("%", PercentDone));
     m_treeUi->addColumn(TreeColumnData("O", IconIndex));
     m_treeUi->addColumn(TreeColumnData("Title", Title));
-    TreeModel *model = new TreeModel(this, taskStorage, m_treeUi);
+    TreeModel *model = new TreeModel(this, taskList, m_treeUi);
     ui->treeView->setModel(model);
     ui->treeView->setEditTriggers(QAbstractItemView::SelectedClicked |
                                   QAbstractItemView::EditKeyPressed);

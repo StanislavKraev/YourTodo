@@ -6,44 +6,44 @@
 #include "exceptions/stopiterexception.h"
 #include "itaskloader.h"
 
-#include "taskstorage.h"
+#include "tasklist.h"
 
-TaskStorage::TaskStorage()
+TaskList::TaskList()
 {
     m_taskRoot = Task::Ptr(new Task());
 }
 
-Task::ListIterator TaskStorage::tasks()
+Task::ListIterator TaskList::tasks()
 {
     return m_taskRoot->tasks();
 }
 
-Task::ListConstIterator TaskStorage::tasks() const
+Task::ListConstIterator TaskList::tasks() const
 {
     return m_taskRoot->tasks();
 }
 
-Task::Ptr TaskStorage::getAt(int index) const
+Task::Ptr TaskList::getAt(int index) const
 {
     return m_taskRoot->getAt(index);
 }
 
-Task::Ptr TaskStorage::getById(int index) const
+Task::Ptr TaskList::getById(int index) const
 {
     return m_idTaskMap[index];
 }
 
-int TaskStorage::count() const
+int TaskList::count() const
 {
     return m_taskRoot->count();
 }
 
-void TaskStorage::add(Task::Ptr task)
+void TaskList::add(Task::Ptr task)
 {
     m_taskRoot->addTask(task);
 }
 
-int TaskStorage::nextId() const
+int TaskList::nextId() const
 {
     int maxKey = -1;
     foreach (int id, m_idTaskMap.keys())
@@ -55,7 +55,7 @@ int TaskStorage::nextId() const
     return maxKey + 1;
 }
 
-Task::Ptr TaskStorage::createTask(QString title)
+Task::Ptr TaskList::createTask(QString title)
 {
     Task::Ptr newTask = Task::Ptr(new Task(nextId(), title));
     add(newTask);
@@ -63,7 +63,7 @@ Task::Ptr TaskStorage::createTask(QString title)
     return newTask;
 }
 
-bool TaskStorage::load(ITaskLoader *loader)
+bool TaskList::load(ITaskLoader *loader)
 {
     clear();
 
@@ -106,18 +106,18 @@ bool TaskStorage::load(ITaskLoader *loader)
     return true;
 }
 
-void TaskStorage::clear()
+void TaskList::clear()
 {
     m_taskRoot = Task::Ptr(new Task());
     m_idTaskMap.clear();
 }
 
-int TaskStorage::pos(Task::Ptr task) const
+int TaskList::pos(Task::Ptr task) const
 {
     return m_taskRoot->pos(task);
 }
 
-bool TaskStorage::insertNewTasks(Task::Ptr task, int pos, int count)
+bool TaskList::insertNewTasks(Task::Ptr task, int pos, int count)
 {
     if (pos < 0 ||
         ((pos > task->count()) && (task->count() > 0)))
@@ -134,12 +134,12 @@ bool TaskStorage::insertNewTasks(Task::Ptr task, int pos, int count)
     return true;
 }
 
-Task::Ptr TaskStorage::root() const
+Task::Ptr TaskList::root() const
 {
     return m_taskRoot;
 }
 
-bool TaskStorage::removeTasks(Task::Ptr task, int pos, int count)
+bool TaskList::removeTasks(Task::Ptr task, int pos, int count)
 {
     if (pos < 0 || (pos + count > task->count()))
         return false;
@@ -153,7 +153,7 @@ bool TaskStorage::removeTasks(Task::Ptr task, int pos, int count)
     return true;
 }
 
-void TaskStorage::replace(Task::Ptr oldItem, Task::Ptr newItem)
+void TaskList::replace(Task::Ptr oldItem, Task::Ptr newItem)
 {
     Task::Ptr parent = oldItem->parent();
     m_idTaskMap[oldItem->id()] = newItem;

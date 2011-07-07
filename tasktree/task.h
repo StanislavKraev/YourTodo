@@ -77,7 +77,7 @@ private:
     QColor m_priorityColor;
     Task::Ptr m_parent;
 
-friend class TaskStorage;
+friend class TaskList;
 };
 
 Q_DECLARE_METATYPE(Task::Ptr);

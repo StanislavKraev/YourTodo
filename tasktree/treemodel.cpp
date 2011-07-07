@@ -1,15 +1,15 @@
 #include <QBrush>
 #include <QFont>
 
-#include "tasktree/itaskstorage.h"
+#include "tasktree/itasklist.h"
 #include "tasktree/itreeuiprovider.h"
 
 #include "treemodel.h"
 
 
-TreeModel::TreeModel(QObject *parent, ITaskStorage *taskStorage, ITreeUiProvider *treeUi) :
+TreeModel::TreeModel(QObject *parent, ITaskList *taskList, ITreeUiProvider *treeUi) :
     QAbstractItemModel(parent),
-    m_taskStorage(taskStorage),
+    m_taskList(taskList),
     m_treeUi(treeUi)
 {
 }
@@ -26,21 +26,21 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole || role == Qt::EditRole)
     {
-        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        Task::Ptr item = m_taskList->getById(index.internalId());
         if (!item)
             return QVariant();
         return m_treeUi->itemData(index.column(), item);
     }
     else if (role == Qt::FontRole)
     {
-        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        Task::Ptr item = m_taskList->getById(index.internalId());
         if (!item)
             return QVariant();
         return m_treeUi->font(index.column(), item);
     }
     else if (role == Qt::ForegroundRole)
     {
-        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        Task::Ptr item = m_taskList->getById(index.internalId());
         if (!item)
             return QVariant();
         if (item->percentDone() >= 100)
@@ -55,7 +55,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     }
     else if (role == Qt::UserRole)
     {
-        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        Task::Ptr item = m_taskList->getById(index.internalId());
         if (!item)
             return QVariant();
         return qVariantFromValue(item);
@@ -88,9 +88,9 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
     Task::Ptr parentItem;
 
     if (!parent.isValid())
-        return createIndex(row, column, m_taskStorage->getAt(row)->id());
+        return createIndex(row, column, m_taskList->getAt(row)->id());
     else
-        parentItem = m_taskStorage->getById(parent.internalId());
+        parentItem = m_taskList->getById(parent.internalId());
 
     Task::Ptr childItem = parentItem->getAt(row);
     if (childItem)
@@ -104,7 +104,7 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
     if (!index.isValid())
         return QModelIndex();
 
-    Task::Ptr childItem = m_taskStorage->getById(index.internalId());
+    Task::Ptr childItem = m_taskList->getById(index.internalId());
     if (!childItem)
         return QModelIndex();
 
@@ -114,7 +114,7 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 
     Task::Ptr grandItem = parentItem->parent();
     int row = grandItem ? grandItem->pos(parentItem) :
-                          m_taskStorage->pos(parentItem);
+                          m_taskList->pos(parentItem);
 
     return createIndex(row, 0, parentItem->id());
 }
@@ -127,9 +127,9 @@ int TreeModel::rowCount(const QModelIndex &parent) const
     Task::Ptr parentItem;
 
     if (!parent.isValid())
-        return m_taskStorage->count();
+        return m_taskList->count();
     else
-        parentItem = m_taskStorage->getById(parent.internalId());
+        parentItem = m_taskList->getById(parent.internalId());
 
     return parentItem ? parentItem->count() : 0;
 }
@@ -138,7 +138,7 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
 {
     if (role == Qt::DisplayRole || role == Qt::EditRole)
     {
-        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        Task::Ptr item = m_taskList->getById(index.internalId());
         if (item)
         {
             m_treeUi->updateData(item, index.column(), value);
@@ -148,16 +148,16 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
     }
     else if (role == Qt::UserRole)
     {
-        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        Task::Ptr item = m_taskList->getById(index.internalId());
         if (item)
         {
             Task::Ptr newItem = value.value<Task::Ptr>();
-            m_taskStorage->replace(item, newItem);
+            m_taskList->replace(item, newItem);
         }
     }
     else if (role == Qt::UserRole + 1)
     {
-        Task::Ptr item = m_taskStorage->getById(index.internalId());
+        Task::Ptr item = m_taskList->getById(index.internalId());
         if (item)
         {
             unsigned short curData = item->percentDone();
@@ -172,12 +172,12 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
 bool TreeModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     Task::Ptr task = parent.isValid() ?
-        m_taskStorage->getById(parent.internalId()) :
-        m_taskStorage->root();
+        m_taskList->getById(parent.internalId()) :
+        m_taskList->root();
     if (task)
     {
         emit(beginInsertRows(parent, row, row + count - 1));
-        bool result = m_taskStorage->insertNewTasks(task, row, count);
+        bool result = m_taskList->insertNewTasks(task, row, count);
         emit(endInsertRows());
         return result;
     }
@@ -187,12 +187,12 @@ bool TreeModel::insertRows(int row, int count, const QModelIndex &parent)
 bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     Task::Ptr task = parent.isValid() ?
-        m_taskStorage->getById(parent.internalId()) :
-        m_taskStorage->root();
+        m_taskList->getById(parent.internalId()) :
+        m_taskList->root();
     if (task)
     {
         emit(beginRemoveRows(parent, row, row + count - 1));
-        bool result = m_taskStorage->removeTasks(task, row, count);
+        bool result = m_taskList->removeTasks(task, row, count);
         emit(endRemoveRows());
         return result;
     }

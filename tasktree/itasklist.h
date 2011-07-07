@@ -1,17 +1,17 @@
-#ifndef ITASKSTORAGE_H
-#define ITASKSTORAGE_H
+#ifndef ITASKLIST_H
+#define ITASKLIST_H
 
 #include "task.h"
 
 class ITaskLoader;
 
-class ITaskStorage
+class ITaskList
 {
 protected:
-    ITaskStorage(){}
+    ITaskList(){}
 private:
-    ITaskStorage(const ITaskStorage &);
-    ITaskStorage &operator = (const ITaskStorage &);
+    ITaskList(const ITaskList &);
+    ITaskList &operator = (const ITaskList &);
 
 public:
     virtual Task::ListIterator tasks() = 0;
@@ -30,4 +30,4 @@ public:
     virtual bool load(ITaskLoader *loader) = 0;
 };
 
-#endif // ITASKSTORAGE_H
+#endif // ITASKLIST_H

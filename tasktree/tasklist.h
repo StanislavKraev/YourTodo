@@ -1,13 +1,13 @@
-#ifndef TASKSTORAGE_H
-#define TASKSTORAGE_H
+#ifndef TASKLIST_H
+#define TASKLIST_H
 
 #include <QMap>
-#include "itaskstorage.h"
+#include "itasklist.h"
 
-class TaskStorage : public ITaskStorage
+class TaskList : public ITaskList
 {
 public:
-    TaskStorage();
+    TaskList();
 public:
     virtual Task::ListIterator tasks();
     virtual Task::ListConstIterator tasks() const;
@@ -31,4 +31,4 @@ private:
     QMap<int, Task::Ptr> m_idTaskMap;
 };
 
-#endif // TASKSTORAGE_H
+#endif // TASKLIST_H

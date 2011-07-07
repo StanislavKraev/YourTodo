@@ -3,13 +3,13 @@
 
 #include "QAbstractItemModel"
 
-class ITaskStorage;
+class ITaskList;
 class ITreeUiProvider;
 
 class TreeModel : public QAbstractItemModel
 {
 public:
-    TreeModel(QObject* parent, ITaskStorage *taskStorage, ITreeUiProvider *treeUi);
+    TreeModel(QObject* parent, ITaskList *taskStorage, ITreeUiProvider *treeUi);
 
 public:
     virtual int columnCount(const QModelIndex &parent) const;
@@ -23,7 +23,7 @@ public:
     virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 private:
-    ITaskStorage *m_taskStorage;
+    ITaskList *m_taskList;
     ITreeUiProvider *m_treeUi;
 };
 

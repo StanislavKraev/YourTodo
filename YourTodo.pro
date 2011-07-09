@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     tasktree/treecolumndata.cpp \
     tasktree/tasktreeview.cpp \
     uimanager.cpp \
-    tasktree/tasklist.cpp
+    tasktree/tasklist.cpp \
+    action.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -42,6 +43,10 @@ HEADERS  += mainwindow.h \
     tasktree/tasktreeview.h \
     uimanager.h \
     tasktree/tasklist.h \
-    tasktree/itasklist.h
+    tasktree/itasklist.h \
+    itoolmanager.h \
+    itool.h \
+    action.h \
+    actionids.h
 
 FORMS    += mainwindow.ui

@@ -54,7 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
     ui->treeView->header()->resizeSection(1, 30);
     ui->treeView->header()->resizeSection(2, 24);
-    m_uiManager = new UiManager(this, ui->menuBar);
+    m_uiManager = new UiManager(this, ui->menuBar, ui->statusBar, ui->mainToolBar);
+    m_uiManager->addTool(m_uiManager);
     m_uiManager->Init();
 }
 

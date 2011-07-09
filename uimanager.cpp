@@ -1,12 +1,17 @@
 #include <QMenuBar>
+#include <QPair>
 #include <QMessageBox>
+#include <QToolBar>
+#include <QStatusBar>
 #include <QApplication>
 
 #include "uimanager.h"
 
-UiManager::UiManager(QWidget *parent, QMenuBar *menuBar) :
+UiManager::UiManager(QWidget *parent, QMenuBar *menuBar, QStatusBar *statusBar, QToolBar *toolBar) :
     m_parentWindow(parent),
-    m_menuBar(menuBar)
+    m_menuBar(menuBar),
+    m_toolBar(toolBar),
+    m_statusBar(statusBar)
 {
 }
 
@@ -15,70 +20,151 @@ void UiManager::Init()
     CreateMenu();
 }
 
+struct ActionHelper
+{
+    QString title;
+    Actions::Actions id;
+    QKeySequence keySequence;
+    bool checkable;
+    ActionHelper(QString title, Actions::Actions id, QKeySequence sequence = QKeySequence())
+    {
+        this->title = title;
+        this->id = id;
+        this->keySequence = sequence;
+        this->checkable = false;
+    }
+    ActionHelper(QString title, Actions::Actions id, bool checkable, QKeySequence sequence = QKeySequence())
+    {
+        this->title = title;
+        this->id = id;
+        this->keySequence = sequence;
+        this->checkable = checkable;
+    }
+};
+
+struct Separator : ActionHelper
+{
+    Separator() : ActionHelper(QString::null, Actions::Undefined){}
+};
+
 void UiManager::CreateMenu()
 {
     m_menuBar->clear();
 
-    // File menu
-    QMenu *subMenu = m_menuBar->addMenu("File");
-    QAction *action = subMenu->addAction("New Tasklist", this, SLOT(onNewTasklist()));
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
+    foreach(ITool *tool, m_tools)
+    {
+        QList<Actions::Actions> actions;
+        tool->getActions(actions);
+        foreach(Actions::Actions id, actions)
+            m_actionToolMap[id] = tool;
+    }
 
-    subMenu->addSeparator();
-    subMenu->addAction("Open Tasklist");
-    subMenu->addSeparator();
-    subMenu->addAction("Save Tasklist");
-    subMenu->addAction("Save Tasklist as...");
-    subMenu->addAction("Save All");
-    subMenu->addSeparator();
-    subMenu->addAction("Close Tasklist");
-    subMenu->addAction("Close All");
-    subMenu->addSeparator();
-    subMenu->addAction("Minimize to System Tray");
-    action = subMenu->addAction("Exit", this, SLOT(onExit()));
-    action->setShortcut(QKeySequence(Qt::ALT + Qt::Key_F4));
 
-    // New Task menu
-    subMenu = m_menuBar->addMenu("New Task");
-    subMenu->addAction("New Task Above");
-    subMenu->addAction("New Task Below");
-    subMenu->addAction("New Subtask");
+    QMenu *fileMenu = m_menuBar->addMenu("&File");
+    QMenu *newTaskMenu = m_menuBar->addMenu("&New Task");
+    QMenu *editMenu = m_menuBar->addMenu("&Edit");
+    QMenu *viewMenu = m_menuBar->addMenu("&View");
+    QMenu *moveMenu = m_menuBar->addMenu("&Move");
 
-    // Edit menu
-    subMenu = m_menuBar->addMenu("Edit");
-    subMenu->addAction("Undo");
-    subMenu->addAction("Redo");
-    subMenu->addSeparator();
-    subMenu->addAction("Cut");
-    subMenu->addAction("Copy");
-    subMenu->addAction("Paste");
-    subMenu->addSeparator();
-    subMenu->addAction("Delete Selected");
-    subMenu->addAction("Delete All");
-    subMenu->addSeparator();
-    subMenu->addAction("Select All");
-    subMenu->addSeparator();
-    subMenu->addAction("Preferences...");
+    QList<ActionHelper> fileMenuActions;
+    fileMenuActions
+            << ActionHelper("New Tasklist", Actions::FileNew, QKeySequence(Qt::CTRL + Qt::Key_N))
+            << Separator()
+            << ActionHelper("Open Tasklist", Actions::FileOpen)
+            << Separator()
+            << ActionHelper("Save Tasklist", Actions::FileSave)
+            << ActionHelper("Save Tasklist as...", Actions::FileSaveAs)
+            << ActionHelper("Save All", Actions::FileSaveAll)
+            << Separator()
+            << ActionHelper("Close Tasklist", Actions::FileClose)
+            << ActionHelper("Close All", Actions::FileCloseAll)
+            << Separator()
+            << ActionHelper("Minimize to System Tray", Actions::FileMinimize)
+            << Separator()
+            << ActionHelper("Exit", Actions::FileExit, QKeySequence(Qt::ALT + Qt::Key_F4));
 
-    // View menu
-    subMenu = m_menuBar->addMenu("View");
-    subMenu->addAction("Maximize Tasklist");
-    subMenu->addAction("Maximize Comments");
-    subMenu->addSeparator();
-    subMenu->addAction("Expand All");
-    subMenu->addAction("Collapse All");
-    subMenu->addSeparator();
-    subMenu->addAction("Select Columns...");
-    subMenu->addSeparator();
-    subMenu->addAction("Show Toolbar");
-    subMenu->addAction("Show Statusbar");
+    QList<ActionHelper> newTaskMenuActions;
+    newTaskMenuActions
+            << ActionHelper("New Task Above", Actions::NewTaskAbove)
+            << ActionHelper("New Task Below", Actions::NewTaskBelow)
+            << ActionHelper("New Subtask", Actions::NewSubtask);
 
-    // Move menu
-    subMenu = m_menuBar->addMenu("Move");
-    subMenu->addAction("Move up");
-    subMenu->addAction("Move down");
-    subMenu->addAction("Move left");
-    subMenu->addAction("Move right");
+    QList<ActionHelper> editMenuActions;
+    editMenuActions
+            << ActionHelper("Undo", Actions::EditUndo)
+            << ActionHelper("Redo", Actions::EditRedo)
+            << Separator()
+            << ActionHelper("Cut", Actions::EditCut)
+            << ActionHelper("Copy", Actions::EditCopy)
+            << ActionHelper("Paste", Actions::EditPaste)
+            << Separator()
+            << ActionHelper("Delete Selected", Actions::EditDeleteSelected)
+            << ActionHelper("Delete All", Actions::EditDeleteAll)
+            << Separator()
+            << ActionHelper("Select All", Actions::EditSelectAll)
+            << Separator()
+            << ActionHelper("Preferences...", Actions::EditPreferences);
+
+    QList<ActionHelper> viewMenuActions;
+    viewMenuActions
+            << ActionHelper("Maximize Tasklist", Actions::ViewMaxTasklist)
+            << ActionHelper("Maximize Comments", Actions::ViewMaxComments)
+            << Separator()
+            << ActionHelper("Expand All", Actions::ViewExpandAll)
+            << ActionHelper("Collapse All", Actions::ViewCollapseAll)
+            << Separator()
+            << ActionHelper("Select Columns...", Actions::ViewSelectColumns)
+            << Separator()
+            << ActionHelper("Show Toolbar", Actions::ViewShowToolbar, true)
+            << ActionHelper("Show Statusbar", Actions::ViewShowStatusbar, true);
+
+    QList<ActionHelper> moveMenuActions;
+    moveMenuActions
+            << ActionHelper("Move up", Actions::MoveUp)
+            << ActionHelper("Move down", Actions::MoveDown)
+            << ActionHelper("Move left", Actions::MoveLeft)
+            << ActionHelper("Move right", Actions::MoveRight);
+
+    typedef QPair<QMenu*, QList<ActionHelper> > MenuActionsPair;
+    QList<MenuActionsPair> menuActions;
+    menuActions.append(MenuActionsPair(fileMenu, fileMenuActions));
+    menuActions.append(MenuActionsPair(newTaskMenu, newTaskMenuActions));
+    menuActions.append(MenuActionsPair(editMenu, editMenuActions));
+    menuActions.append(MenuActionsPair(viewMenu, viewMenuActions));
+    menuActions.append(MenuActionsPair(moveMenu, moveMenuActions));
+
+    foreach(MenuActionsPair pair, menuActions)
+    {
+        QMenu *menu = pair.first;
+        QList<ActionHelper> actionList = pair.second;
+        foreach(ActionHelper helper, actionList)
+        {
+            if (helper.id == Actions::Undefined)
+            {
+                menu->addSeparator();
+                continue;
+            }
+
+            ITool *tool = 0;
+            if (m_actionToolMap.contains(helper.id))
+                tool = m_actionToolMap[helper.id];
+            bool enabled = (tool != 0) && (tool->isActionEnabled(helper.id));
+            bool checked = tool ? tool->isActionChecked(helper.id) : false;
+            const char *slot = tool ? tool->getActionSlot(helper.id) : 0;
+            QObject *obj = tool ? tool->getReciever() : 0;
+            QAction *a = (obj && slot) ?
+                menu->addAction(helper.title, obj, slot) :
+                menu->addAction(helper.title);
+            m_idActionMap[helper.id] = a;
+            if (!helper.keySequence.isEmpty())
+                a->setShortcut(helper.keySequence);
+            a->setParent(this);
+            a->setEnabled(enabled);
+            a->setCheckable(helper.checkable);
+            if (helper.checkable)
+                a->setChecked(checked);
+        }
+    }
 }
 
 void UiManager::onExit()
@@ -90,4 +176,97 @@ void UiManager::onNewTasklist()
 {
     QMessageBox newBox;
     newBox.information(0, "New tasklist", "New Tasklist");
+}
+
+void UiManager::onActionChanged(Actions::Actions id)
+{
+    if (m_actionToolMap.contains(id))
+    {
+        ITool *tool = m_actionToolMap[id];
+        bool enabled = tool->isActionEnabled(id);
+        bool checked = tool->isActionChecked(id);
+        QAction *action = m_idActionMap[id];
+        if (action->isCheckable())
+            action->setChecked(checked);
+        action->setEnabled(enabled);
+    }
+}
+
+void UiManager::getActions(QList<Actions::Actions> &actions) const
+{
+    actions.append(Actions::FileExit);
+    actions.append(Actions::ViewShowStatusbar);
+    actions.append(Actions::ViewShowToolbar);
+}
+
+bool UiManager::isActionEnabled(Actions::Actions action) const
+{
+    switch (action)
+    {
+    case Actions::FileExit:
+    case Actions::ViewShowStatusbar:
+    case Actions::ViewShowToolbar:
+        return true;
+    }
+
+    return false;
+}
+
+void UiManager::addTool(ITool *tool)
+{
+    if (!tool || m_tools.contains(tool))
+        return;
+    m_tools.append(tool);
+}
+
+const char * UiManager::getActionSlot(Actions::Actions action) const
+{
+    switch (action)
+    {
+    case Actions::FileExit:
+        return SLOT(onExit());
+    case Actions::ViewShowStatusbar:
+        return SLOT(onShowStatusbar());
+    case Actions::ViewShowToolbar:
+        return SLOT(onShowToolbar());
+    }
+    return 0;
+}
+
+QObject* UiManager::getReciever()
+{
+    return this;
+}
+
+void UiManager::onShowToolbar()
+{
+    if (m_toolBar->isVisible())
+        m_toolBar->hide();
+    else
+        m_toolBar->show();
+    onActionChanged(Actions::ViewShowToolbar);
+}
+
+void UiManager::onShowStatusbar()
+{
+    if (m_statusBar->isVisible())
+        m_statusBar->hide();
+    else
+        m_statusBar->show();
+    onActionChanged(Actions::ViewShowStatusbar);
+}
+
+bool UiManager::isActionChecked(Actions::Actions action) const
+{
+    switch (action)
+    {
+    case Actions::FileExit:
+        return false;
+    case Actions::ViewShowStatusbar:
+        return m_statusBar->isVisible();
+    case Actions::ViewShowToolbar:
+        return m_toolBar->isVisible();
+    }
+
+    return false;
 }

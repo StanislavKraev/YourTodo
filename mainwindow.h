@@ -17,6 +17,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+public:
+    void SetupEventFilter();
+    void onShortcut();
+protected:
+    virtual void changeEvent(QEvent *event);
 
 private:
     Ui::MainWindow *ui;

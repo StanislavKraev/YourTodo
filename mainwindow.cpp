@@ -3,6 +3,11 @@
 #include <QMessageBox>
 #include <QStyledItemDelegate>
 #include <QPainter>
+#include <QTimer>
+#include <QAbstractEventDispatcher>
+#include <QDebug>
+
+#include "windows.h"
 
 #include "exceptions/loadtasksexception.h"
 
@@ -10,6 +15,7 @@
 #include "tasktree/treemodel.h"
 #include "tasktree/treeui.h"
 #include "tasktree/xmltaskloader.h"
+#include "application.h"
 
 #include "uimanager.h"
 
@@ -54,9 +60,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
     ui->treeView->header()->resizeSection(1, 30);
     ui->treeView->header()->resizeSection(2, 24);
-    m_uiManager = new UiManager(this, ui->menuBar, ui->statusBar, ui->mainToolBar);
+    m_uiManager = new UiManager(this, ui->menuBar, ui->statusBar, ui->mainToolBar, this);
     m_uiManager->addTool(m_uiManager);
-    m_uiManager->Init();
+    m_uiManager->initManager();
 }
 
 MainWindow::~MainWindow()
@@ -68,4 +74,78 @@ MainWindow::~MainWindow()
     if (m_treeUi)
         m_treeUi->deleteLater();
     delete ui;
+}
+
+void MainWindow::changeEvent(QEvent * event)
+{
+    if(event->type() == QEvent::WindowStateChange)
+    {
+        if (isMinimized())
+        {
+            m_uiManager->onMainWindowMinimized();
+            qApp->processEvents();
+            QTimer::singleShot(250, this, SLOT(hide()));
+            return;
+        }
+        else
+        {
+            QWindowStateChangeEvent *ev = (QWindowStateChangeEvent*)event;
+            if (ev->oldState() == Qt::WindowMinimized)
+            {
+                m_uiManager->onMainWindowRestored();
+                qApp->processEvents();
+                QTimer::singleShot(250, this, SLOT(show()));
+                return;
+            }
+        }
+    }
+    QMainWindow::changeEvent(event);
+}
+
+#ifdef Q_WS_WIN
+bool myEventFilter(void *message)
+{
+    MSG *msg = static_cast<MSG*>(message);
+    int msgType = msg->message;  // test line
+    if (msgType == WM_HOTKEY)
+    {
+        switch ( msg->wParam )
+        {
+            case 777:
+            {
+                MainWindow *mainWindow = ((Application*)qApp)->mainWindow();
+                mainWindow->onShortcut();
+                break;
+            }
+        }
+    }
+    return( false );
+}
+#endif
+
+void MainWindow::SetupEventFilter()
+{
+#ifdef Q_WS_WIN
+    if ( RegisterHotKey( winId(), 777, MOD_CONTROL, VK_OEM_3 ) )
+    {
+        qDebug() << "FaceApp::SetupEventFilter says: RegisterHotKey ";
+    }
+
+    QAbstractEventDispatcher *evtdis = QAbstractEventDispatcher::instance();
+    if (evtdis != NULL)
+    {
+        evtdis->setEventFilter(myEventFilter);
+    }
+#endif
+}
+
+void MainWindow::onShortcut()
+{
+    if (isMinimized())
+    {
+        showNormal();
+        activateWindow();
+    }
+    else
+        showMinimized();
 }

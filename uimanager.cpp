@@ -1,3 +1,4 @@
+#include <QMainWindow>
 #include <QMenuBar>
 #include <QPair>
 #include <QMessageBox>
@@ -7,17 +8,30 @@
 
 #include "uimanager.h"
 
-UiManager::UiManager(QWidget *parent, QMenuBar *menuBar, QStatusBar *statusBar, QToolBar *toolBar) :
+UiManager::UiManager(QWidget *parent, QMenuBar *menuBar, QStatusBar *statusBar,
+                     QToolBar *toolBar, QMainWindow *mainWindow) :
     m_parentWindow(parent),
     m_menuBar(menuBar),
     m_toolBar(toolBar),
-    m_statusBar(statusBar)
+    m_statusBar(statusBar),
+    m_toolBarShown(true),
+    m_statusBarShown(true),
+    m_mainWindow(mainWindow)
 {
+    m_trayMenu = new QMenu(m_parentWindow);
+    m_trayMenu->addAction("Exit", this, SLOT(onExit()));
+    m_trayIcon = new QSystemTrayIcon(m_mainWindow);
+    m_trayIcon->setContextMenu(m_trayMenu);
+    m_trayIcon->setIcon(QIcon(":/icons/tray.gif"));
+    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
-void UiManager::Init()
+void UiManager::initManager()
 {
-    CreateMenu();
+    foreach(ITool *tool, m_tools)
+        tool->init(this);
+    createMenu();
 }
 
 struct ActionHelper
@@ -47,7 +61,7 @@ struct Separator : ActionHelper
     Separator() : ActionHelper(QString::null, Actions::Undefined){}
 };
 
-void UiManager::CreateMenu()
+void UiManager::createMenu()
 {
     m_menuBar->clear();
 
@@ -172,12 +186,6 @@ void UiManager::onExit()
     qApp->quit();
 }
 
-void UiManager::onNewTasklist()
-{
-    QMessageBox newBox;
-    newBox.information(0, "New tasklist", "New Tasklist");
-}
-
 void UiManager::onActionChanged(Actions::Actions id)
 {
     if (m_actionToolMap.contains(id))
@@ -190,26 +198,6 @@ void UiManager::onActionChanged(Actions::Actions id)
             action->setChecked(checked);
         action->setEnabled(enabled);
     }
-}
-
-void UiManager::getActions(QList<Actions::Actions> &actions) const
-{
-    actions.append(Actions::FileExit);
-    actions.append(Actions::ViewShowStatusbar);
-    actions.append(Actions::ViewShowToolbar);
-}
-
-bool UiManager::isActionEnabled(Actions::Actions action) const
-{
-    switch (action)
-    {
-    case Actions::FileExit:
-    case Actions::ViewShowStatusbar:
-    case Actions::ViewShowToolbar:
-        return true;
-    }
-
-    return false;
 }
 
 void UiManager::addTool(ITool *tool)
@@ -229,6 +217,8 @@ const char * UiManager::getActionSlot(Actions::Actions action) const
         return SLOT(onShowStatusbar());
     case Actions::ViewShowToolbar:
         return SLOT(onShowToolbar());
+    case Actions::FileMinimize:
+        return SLOT(onMinimize());
     }
     return 0;
 }
@@ -241,18 +231,30 @@ QObject* UiManager::getReciever()
 void UiManager::onShowToolbar()
 {
     if (m_toolBar->isVisible())
+    {
         m_toolBar->hide();
+        m_toolBarShown = false;
+    }
     else
+    {
         m_toolBar->show();
+        m_toolBarShown = true;
+    }
     onActionChanged(Actions::ViewShowToolbar);
 }
 
 void UiManager::onShowStatusbar()
 {
     if (m_statusBar->isVisible())
+    {
         m_statusBar->hide();
+        m_statusBarShown = false;
+    }
     else
+    {
         m_statusBar->show();
+        m_statusBarShown = true;
+    }
     onActionChanged(Actions::ViewShowStatusbar);
 }
 
@@ -260,13 +262,49 @@ bool UiManager::isActionChecked(Actions::Actions action) const
 {
     switch (action)
     {
-    case Actions::FileExit:
-        return false;
     case Actions::ViewShowStatusbar:
-        return m_statusBar->isVisible();
+        return m_statusBarShown;
     case Actions::ViewShowToolbar:
-        return m_toolBar->isVisible();
+        return m_toolBarShown;
     }
 
-    return false;
+    return Tool::isActionChecked(action);
+}
+
+void UiManager::onMinimize()
+{
+    m_mainWindow->hide();
+    m_trayIcon->show();
+}
+
+void UiManager::init(IToolManager *manager)
+{
+    m_manager = manager;
+    addAction(Actions::FileExit);
+    addAction(Actions::ViewShowStatusbar);
+    addAction(Actions::ViewShowToolbar);
+    addAction(Actions::FileMinimize);
+}
+
+void UiManager::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+ {
+     switch (reason)
+     {
+     case QSystemTrayIcon::Trigger:
+     case QSystemTrayIcon::DoubleClick:
+         m_trayIcon->hide();
+         m_mainWindow->showNormal();
+         m_mainWindow->activateWindow();
+         break;
+     }
+}
+
+void UiManager::onMainWindowMinimized()
+{
+    m_trayIcon->show();
+}
+
+void UiManager::onMainWindowRestored()
+{
+    m_trayIcon->hide();
 }

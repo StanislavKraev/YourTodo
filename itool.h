@@ -5,6 +5,8 @@
 #include <QObject>
 #include "actionids.h"
 
+class IToolManager;
+
 class ITool
 {
 protected:
@@ -14,6 +16,7 @@ private:
     ITool(const ITool&);
     ITool& operator=(const ITool&);
 public:
+    virtual void init(IToolManager *manager) = 0;
     virtual void getActions(QList<Actions::Actions> &actions) const = 0;
     virtual const char* getActionSlot(Actions::Actions action) const = 0;
     virtual QObject* getReciever() = 0;

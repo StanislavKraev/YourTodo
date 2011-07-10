@@ -9,6 +9,7 @@ QT       += core gui xml
 TARGET = YourTodo
 TEMPLATE = app
 
+LIBS += user32.lib
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -25,7 +26,10 @@ SOURCES += main.cpp\
     tasktree/tasktreeview.cpp \
     uimanager.cpp \
     tasktree/tasklist.cpp \
-    action.cpp
+    action.cpp \
+    filemanager.cpp \
+    tool.cpp \
+    application.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -47,6 +51,12 @@ HEADERS  += mainwindow.h \
     itoolmanager.h \
     itool.h \
     action.h \
-    actionids.h
+    actionids.h \
+    filemanager.h \
+    tool.h \
+    application.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    resources.qrc

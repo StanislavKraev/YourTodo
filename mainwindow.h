@@ -19,6 +19,7 @@ public:
     ~MainWindow();
 public:
     void SetupEventFilter();
+public slots:
     void onShortcut();
 protected:
     virtual void changeEvent(QEvent *event);

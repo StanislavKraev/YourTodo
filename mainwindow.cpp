@@ -7,6 +7,8 @@
 #include <QAbstractEventDispatcher>
 #include <QDebug>
 
+#include <QxtGlobalShortcut>
+
 #include "windows.h"
 
 #include "exceptions/loadtasksexception.h"
@@ -102,41 +104,10 @@ void MainWindow::changeEvent(QEvent * event)
     QMainWindow::changeEvent(event);
 }
 
-#ifdef Q_WS_WIN
-bool myEventFilter(void *message)
-{
-    MSG *msg = static_cast<MSG*>(message);
-    int msgType = msg->message;  // test line
-    if (msgType == WM_HOTKEY)
-    {
-        switch ( msg->wParam )
-        {
-            case 777:
-            {
-                MainWindow *mainWindow = ((Application*)qApp)->mainWindow();
-                mainWindow->onShortcut();
-                break;
-            }
-        }
-    }
-    return( false );
-}
-#endif
-
 void MainWindow::SetupEventFilter()
 {
-#ifdef Q_WS_WIN
-    if ( RegisterHotKey( winId(), 777, MOD_CONTROL, VK_OEM_3 ) )
-    {
-        qDebug() << "FaceApp::SetupEventFilter says: RegisterHotKey ";
-    }
-
-    QAbstractEventDispatcher *evtdis = QAbstractEventDispatcher::instance();
-    if (evtdis != NULL)
-    {
-        evtdis->setEventFilter(myEventFilter);
-    }
-#endif
+    QxtGlobalShortcut* shortcut = new QxtGlobalShortcut(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T), this);
+    connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcut()));
 }
 
 void MainWindow::onShortcut()

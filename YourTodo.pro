@@ -9,6 +9,9 @@ QT       += core gui xml
 TARGET = YourTodo
 TEMPLATE = app
 
+CONFIG  += qxt
+QXT     += core gui
+
 LIBS += user32.lib
 
 SOURCES += main.cpp\

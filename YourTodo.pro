@@ -12,7 +12,9 @@ TEMPLATE = app
 CONFIG  += qxt
 QXT     += core gui
 
+win32 {
 LIBS += user32.lib
+}
 
 SOURCES += main.cpp\
         mainwindow.cpp \

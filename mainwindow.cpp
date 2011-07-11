@@ -9,7 +9,9 @@
 
 #include <QxtGlobalShortcut>
 
+#ifdef Q_WS_WIN
 #include "windows.h"
+#endif
 
 #include "exceptions/loadtasksexception.h"
 
@@ -32,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #ifdef Q_WS_WIN
     XmlTaskLoader loader("c:\\temp\\list.tdl");
 #else
-    XmlTaskLoader loader("");
+    XmlTaskLoader loader("mainList.tdl");
 #endif
     TaskList *taskList = new TaskList();
     try

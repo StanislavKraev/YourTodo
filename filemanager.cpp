@@ -1,7 +1,15 @@
+#include <QMessageBox>
+#include <QFileDialog>
+
+#include "tasktree/tasklist.h"
+#include "tasktree/xmltaskloader.h"
+#include "exceptions/loadtasksexception.h"
+
 #include "filemanager.h"
 
-FileManager::FileManager(QObject *parent) :
-    QObject(parent)
+FileManager::FileManager(QWidget *parent) :
+    QObject(parent),
+    m_parent(parent)
 {
 }
 
@@ -11,6 +19,26 @@ void FileManager::onNew()
 
 void FileManager::onOpen()
 {
+    QString fileName = QFileDialog::getOpenFileName(m_parent,
+         tr("Open Tasklist"), "/home/kraevst/", tr("Task lists (*.tdl)"));
+    if (fileName.isEmpty())
+        return;
+
+    XmlTaskLoader loader(fileName);
+    TaskList *taskList = new TaskList();
+    try
+    {
+        taskList->load(&loader);
+    }
+    catch (LoadTasksException &e)
+    {
+        QMessageBox messageBox;
+        messageBox.warning(0, "Can't load task list", e.message());
+        delete taskList;
+        return;
+    }
+    m_lists.append(taskList);
+    emit(currentListChanged(taskList));
 }
 
 void FileManager::onSave()
@@ -23,4 +51,38 @@ void FileManager::onSaveAs()
 
 void FileManager::onClose()
 {
+}
+
+void FileManager::init(IToolManager *manager)
+{
+    addAction(Actions::FileNew);
+    addAction(Actions::FileOpen);
+    addAction(Actions::FileSave);
+    addAction(Actions::FileSaveAs);
+    addAction(Actions::FileClose);
+}
+
+const char * FileManager::getActionSlot(Actions::Actions action) const
+{
+    switch (action)
+    {
+    case Actions::FileNew:
+        return SLOT(onNew());
+    case Actions::FileOpen:
+        return SLOT(onOpen());
+    case Actions::FileSave:
+        return SLOT(onSave());
+    case Actions::FileSaveAll:
+        return SLOT(onSaveAll());
+    case Actions::FileClose:
+        return SLOT(onClose());
+    default:
+        return 0;
+    }
+    return 0;
+}
+
+QObject *FileManager::getReciever()
+{
+    return this;
 }

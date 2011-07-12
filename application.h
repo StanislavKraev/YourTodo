@@ -4,6 +4,8 @@
 #include <QApplication>
 
 class MainWindow;
+class FileManager;
+class UiManager;
 
 class Application : public QApplication
 {
@@ -15,6 +17,8 @@ public:
     MainWindow *mainWindow();
 private:
     MainWindow *m_mainWindow;
+    FileManager *m_fileManager;
+    UiManager *m_uiManager;
 };
 
 #endif // APPLICATION_H

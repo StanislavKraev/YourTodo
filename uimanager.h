@@ -16,23 +16,21 @@ class QWidget;
 class QToolBar;
 class QStatusBar;
 class QAction;
-class QMainWindow;
+class MainWindow;
 class QMenu;
 class QSystemTrayIcon;
+class ITaskList;
 
 class UiManager : public QObject, public IToolManager, public Tool
 {
     Q_OBJECT
 public:
-    UiManager(QWidget *parent,
-              QMenuBar *menuBar,
+    UiManager(QMenuBar *menuBar,
               QStatusBar *statusBar,
               QToolBar *toolBar,
-              QMainWindow *mainWindow);
+              MainWindow *mainWindow);
 public:
     void initManager();
-    void onMainWindowMinimized();
-    void onMainWindowRestored();
 public:
     virtual void onActionChanged(Actions::Actions id);
     virtual void addTool(ITool *tool);
@@ -47,11 +45,13 @@ public slots:
     void onShowStatusbar();
     void onMinimize();
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+    void onMainWindowMinimized();
+    void onMainWindowRestored();
+    void onCurrentListChanged(ITaskList* newList);
 private:
     void createMenu();
 private:
     QMenuBar *m_menuBar;
-    QWidget *m_parentWindow;
     QList<Action> m_actions;
     QList<ITool*> m_tools;
     QToolBar *m_toolBar;
@@ -60,7 +60,7 @@ private:
     QMap<Actions::Actions, QAction*> m_idActionMap;
     bool m_toolBarShown;
     bool m_statusBarShown;
-    QMainWindow *m_mainWindow;
+    MainWindow *m_mainWindow;
     QMenu *m_trayMenu;
     QSystemTrayIcon *m_trayIcon;
 };

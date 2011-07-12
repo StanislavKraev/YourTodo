@@ -1,4 +1,3 @@
-#include <QMainWindow>
 #include <QMenuBar>
 #include <QPair>
 #include <QMessageBox>
@@ -6,11 +5,12 @@
 #include <QStatusBar>
 #include <QApplication>
 
+#include "mainwindow.h"
+
 #include "uimanager.h"
 
-UiManager::UiManager(QWidget *parent, QMenuBar *menuBar, QStatusBar *statusBar,
-                     QToolBar *toolBar, QMainWindow *mainWindow) :
-    m_parentWindow(parent),
+UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
+                     QToolBar *toolBar, MainWindow *mainWindow) :
     m_menuBar(menuBar),
     m_toolBar(toolBar),
     m_statusBar(statusBar),
@@ -18,7 +18,7 @@ UiManager::UiManager(QWidget *parent, QMenuBar *menuBar, QStatusBar *statusBar,
     m_statusBarShown(true),
     m_mainWindow(mainWindow)
 {
-    m_trayMenu = new QMenu(m_parentWindow);
+    m_trayMenu = new QMenu(m_mainWindow);
     m_trayMenu->addAction("Exit", this, SLOT(onExit()));
     m_trayIcon = new QSystemTrayIcon(m_mainWindow);
     m_trayIcon->setContextMenu(m_trayMenu);
@@ -279,7 +279,6 @@ void UiManager::onMinimize()
 
 void UiManager::init(IToolManager *manager)
 {
-    m_manager = manager;
     addAction(Actions::FileExit);
     addAction(Actions::ViewShowStatusbar);
     addAction(Actions::ViewShowToolbar);
@@ -307,4 +306,9 @@ void UiManager::onMainWindowMinimized()
 void UiManager::onMainWindowRestored()
 {
     m_trayIcon->hide();
+}
+
+void UiManager::onCurrentListChanged(ITaskList* newList)
+{
+    m_mainWindow->updateTreeModel(newList);
 }

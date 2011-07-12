@@ -3,8 +3,13 @@
 
 #include <QMainWindow>
 
+class QMenuBar;
+class QStatusBar;
+class QToolBar;
+
 class TreeUi;
 class UiManager;
+class ITaskList;
 
 namespace Ui {
     class MainWindow;
@@ -19,15 +24,20 @@ public:
     ~MainWindow();
 public:
     void SetupEventFilter();
+    QMenuBar* menuBar();
+    QStatusBar* statusBar();
+    QToolBar* toolBar();
+    void updateTreeModel(ITaskList *taskList);
 public slots:
     void onShortcut();
 protected:
     virtual void changeEvent(QEvent *event);
-
+signals:
+    void onMainWindowMinimized();
+    void onMainWindowRestored();
 private:
     Ui::MainWindow *ui;
     TreeUi *m_treeUi;
-    UiManager *m_uiManager;
 };
 
 #endif // MAINWINDOW_H

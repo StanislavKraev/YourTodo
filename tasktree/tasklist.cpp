@@ -5,6 +5,7 @@
 
 #include "exceptions/stopiterexception.h"
 #include "itaskloader.h"
+#include "itasksaver.h"
 
 #include "tasklist.h"
 
@@ -66,6 +67,7 @@ Task::Ptr TaskList::createTask(QString title)
 bool TaskList::load(ITaskLoader *loader)
 {
     clear();
+    m_fileName = loader->fileName();
 
     Task::List allTasks;
 
@@ -159,4 +161,13 @@ void TaskList::replace(Task::Ptr oldItem, Task::Ptr newItem)
     m_idTaskMap[oldItem->id()] = newItem;
     m_idTaskMap[newItem->id()] = oldItem;
     parent->replace(oldItem, newItem);
+}
+
+bool TaskList::save(ITaskSaver *saver)
+{
+    saver->init(m_fileName);
+    foreach(Task::Ptr id, m_idTaskMap.values())
+        saver->save(TaskInfo::fromTaskPtr(id));
+    saver->finish();
+    return true;
 }

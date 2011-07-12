@@ -118,3 +118,8 @@ TaskInfo XmlTaskLoader::read()
     }
     throw StopIterException();
 }
+
+QString XmlTaskLoader::fileName() const
+{
+    return m_fileName;
+}

@@ -3,14 +3,22 @@
 
 #include "tasktree/tasklist.h"
 #include "tasktree/xmltaskloader.h"
+#include "tasktree/xmltasksaver.h"
 #include "exceptions/loadtasksexception.h"
 
 #include "filemanager.h"
 
 FileManager::FileManager(QWidget *parent) :
     QObject(parent),
-    m_parent(parent)
+    m_parent(parent),
+    m_curTaskList(0)
 {
+}
+
+FileManager::~FileManager()
+{
+    if (m_curTaskList)
+        delete m_curTaskList;
 }
 
 void FileManager::onNew()
@@ -37,12 +45,21 @@ void FileManager::onOpen()
         delete taskList;
         return;
     }
-    m_lists.append(taskList);
+    //m_lists.append(taskList);
+    TaskList* oldList = m_curTaskList;
+    m_curTaskList = taskList;
     emit(currentListChanged(taskList));
+    if (oldList)
+        delete oldList;
 }
 
 void FileManager::onSave()
 {
+    if (m_curTaskList)
+    {
+        XmlTaskSaver saver;
+        m_curTaskList->save(&saver);
+    }
 }
 
 void FileManager::onSaveAs()
@@ -59,7 +76,6 @@ void FileManager::init(IToolManager *manager)
     addAction(Actions::FileOpen);
     addAction(Actions::FileSave);
     addAction(Actions::FileSaveAs);
-    addAction(Actions::FileClose);
 }
 
 const char * FileManager::getActionSlot(Actions::Actions action) const

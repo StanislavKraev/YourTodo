@@ -24,6 +24,7 @@ struct TaskInfo
     int parentId;
 public:
     Task::Ptr toTaskPtr() const;
+    static TaskInfo fromTaskPtr(Task::Ptr task);
 };
 
 #endif // TASKINFO_H

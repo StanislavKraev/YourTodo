@@ -52,6 +52,27 @@ public:
     void setPriority(int priority);
     int iconIndex() const;
     void setIconIndex(int iconIndex);
+
+    CommentsType commentsType() const;
+    void setCommentsType(CommentsType type);
+    double cost() const;
+    void setCost(double val);
+    QDateTime creationDate() const;
+    void setCreationDate(QDateTime val);
+    QDateTime startDate() const;
+    void setStartDate(QDateTime val);
+    QDateTime doneDate() const;
+    void setDoneDate(QDateTime val);
+    QDateTime lastModDate() const;
+    void setLastModDate(QDateTime val);
+    int posAttr() const;
+    void setPosAttr(int val);
+    QColor priorityColor() const;
+    void setPriorityColor(QColor val);
+    int risk() const;
+    void setRisk(int val);
+    QColor textColor() const;
+    void setTextColor(QColor val);
 private:
     void addTask(Ptr task);
     void insertSubTask(int pos, Ptr task);

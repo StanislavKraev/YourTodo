@@ -12,6 +12,7 @@ private:
     ITaskLoader& operator=(const ITaskLoader &);
 public:
     virtual TaskInfo read() = 0;
+    virtual QString fileName() const = 0;
 };
 
 #endif // ITASKLOADER_H

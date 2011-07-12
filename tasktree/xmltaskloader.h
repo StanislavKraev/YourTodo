@@ -14,6 +14,7 @@ public:
     virtual ~XmlTaskLoader();
 public:
     virtual TaskInfo read();
+    virtual QString fileName() const;
 private:
     QDomDocument *m_document;
     QString m_fileName;

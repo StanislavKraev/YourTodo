@@ -2,6 +2,7 @@
 #define TASKLIST_H
 
 #include <QMap>
+#include <QString>
 #include "itasklist.h"
 
 class TaskList : public ITaskList
@@ -23,12 +24,14 @@ public:
     virtual void replace(Task::Ptr oldItem, Task::Ptr newItem);
 public:
     virtual bool load(ITaskLoader *loader);
+    virtual bool save(ITaskSaver *saver);
 protected:
     int nextId() const;
     void clear();
 private:
     Task::Ptr m_taskRoot;
     QMap<int, Task::Ptr> m_idTaskMap;
+    QString m_fileName;
 };
 
 #endif // TASKLIST_H

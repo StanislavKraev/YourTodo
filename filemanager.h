@@ -14,6 +14,7 @@ class FileManager : public QObject, public Tool
     Q_OBJECT
 public:
     explicit FileManager(QWidget *parent = 0);
+    virtual ~FileManager();
 public:
     virtual void init(IToolManager *manager);
     virtual const char* getActionSlot(Actions::Actions action) const;
@@ -30,6 +31,7 @@ public slots:
 private:
     QWidget *m_parent;
     QList<TaskList*> m_lists;
+    TaskList *m_curTaskList;
 };
 
 #endif // FILEMANAGER_H

@@ -4,6 +4,7 @@
 #include "task.h"
 
 class ITaskLoader;
+class ITaskSaver;
 
 class ITaskList
 {
@@ -28,6 +29,7 @@ public:
     virtual void replace(Task::Ptr oldItem, Task::Ptr newItem) = 0;
 public:
     virtual bool load(ITaskLoader *loader) = 0;
+    virtual bool save(ITaskSaver *saver) = 0;
 };
 
 #endif // ITASKLIST_H

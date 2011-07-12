@@ -223,3 +223,103 @@ unsigned short Task::calculatePercentDone() const
     }
     return (unsigned short)((double)sum / (double)m_subTaskList.count());
 }
+
+Task::CommentsType Task::commentsType() const
+{
+    return m_commentsType;
+}
+
+void Task::setCommentsType(Task::CommentsType type)
+{
+    m_commentsType = type;
+}
+
+double Task::cost() const
+{
+    return m_cost;
+}
+
+void Task::setCost(double val)
+{
+    m_cost = val;
+}
+
+QDateTime Task::creationDate() const
+{
+    return m_creationDate;
+}
+
+void Task::setCreationDate(QDateTime val)
+{
+    m_creationDate = val;
+}
+
+QDateTime Task::startDate() const
+{
+    return m_startDate;
+}
+
+void Task::setStartDate(QDateTime val)
+{
+    m_startDate = val;
+}
+
+QDateTime Task::doneDate() const
+{
+    return m_doneDate;
+}
+
+void Task::setDoneDate(QDateTime val)
+{
+    m_doneDate = val;
+}
+
+QDateTime Task::lastModDate() const
+{
+    return m_lastMod;
+}
+
+void Task::setLastModDate(QDateTime val)
+{
+    m_lastMod = val;
+}
+
+int Task::posAttr() const
+{
+    return m_pos;
+}
+
+void Task::setPosAttr(int val)
+{
+    m_pos = val;
+}
+
+QColor Task::priorityColor() const
+{
+    return m_priorityColor;
+}
+
+void Task::setPriorityColor(QColor val)
+{
+    m_priorityColor = val;
+}
+
+int Task::risk() const
+{
+    return m_risk;
+}
+
+void Task::setRisk(int val)
+{
+    m_risk = val;
+}
+
+QColor Task::textColor() const
+{
+    return m_textColor;
+}
+
+void Task::setTextColor(QColor val)
+{
+    m_textColor = val;
+}

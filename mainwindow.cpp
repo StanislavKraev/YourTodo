@@ -38,9 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->setEditTriggers(QAbstractItemView::SelectedClicked |
                                   QAbstractItemView::EditKeyPressed);
     ui->treeView->setUniformRowHeights(true);
-    ui->treeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-    ui->treeView->header()->resizeSection(1, 30);
-    ui->treeView->header()->resizeSection(2, 24);
+//    ui->treeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
+//    ui->treeView->header()->resizeSection(1, 30);
+//    ui->treeView->header()->resizeSection(2, 24);
 }
 
 MainWindow::~MainWindow()

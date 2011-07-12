@@ -34,7 +34,9 @@ SOURCES += main.cpp\
     action.cpp \
     filemanager.cpp \
     tool.cpp \
-    application.cpp
+    application.cpp \
+    tasktree/itasksaver.cpp \
+    tasktree/xmltasksaver.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -59,7 +61,9 @@ HEADERS  += mainwindow.h \
     actionids.h \
     filemanager.h \
     tool.h \
-    application.h
+    application.h \
+    tasktree/itasksaver.h \
+    tasktree/xmltasksaver.h
 
 FORMS    += mainwindow.ui
 

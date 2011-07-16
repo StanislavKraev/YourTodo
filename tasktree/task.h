@@ -25,10 +25,10 @@ public:
 public:
     Task();
     Task(int id, QString title, unsigned short percentDone, QString comments,
-         QString commentsType, double cost, double creationDate,
-         double doneDate, int iconIndex, double lastMod, int pos,
-         int priority, QString priorityColor, int risk,
-         double startDate, QString textColor);
+         CommentsType commentsType, double cost, QDateTime creationDate,
+         QDateTime doneDate, int iconIndex, QDateTime lastMod, int pos,
+         int priority, QColor priorityColor, int risk,
+         QDateTime startDate, QColor textColor);
     Task(int id, QString title);
     Task(const Task& task);
 public:

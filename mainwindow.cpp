@@ -29,8 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QFont treeViewFont = QFont(ui->treeView->font());
     treeViewFont.setStrikeOut(true);
 
-    m_treeUi = new TreeUi(treeViewFont);
-    m_treeUi->addColumn(TreeColumnData("!", Priority));
+    m_treeUi = new TreeUi(treeViewFont, ui->treeView);
+    m_treeUi->addColumn(TreeColumnData("!", Priority, TreeColumnData::PRIORITY));
     m_treeUi->addColumn(TreeColumnData("%", PercentDone));
     m_treeUi->addColumn(TreeColumnData("O", IconIndex));
     m_treeUi->addColumn(TreeColumnData("Title", Title));

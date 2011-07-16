@@ -1,3 +1,5 @@
+#include "utils.h"
+
 #include "taskinfo.h"
 
 QString color2str(QColor color)
@@ -8,23 +10,26 @@ QString color2str(QColor color)
 
 Task::Ptr TaskInfo::toTaskPtr() const
 {
+    Task::CommentsType commType = Task::UNDEFINED;
+    if (commentsType == "PLAIN_TEXT")
+        commType = Task::PLAIN_TEXT;
     Task::Ptr task = Task::Ptr(
                 new Task(id,
                          title,
                          percentDone,
                          comments,
-                         commentsType,
+                         commType,
                          cost,
-                         creationDate,
-                         doneDate,
+                         fromOleTime(creationDate),
+                         fromOleTime(doneDate),
                          iconIndex,
-                         lastMod,
+                         fromOleTime(lastMod),
                          pos,
                          priority,
-                         priorityColor,
+                         fromRawColor(priorityColor),
                          risk,
-                         startDate,
-                         textColor)
+                         fromOleTime(startDate),
+                         fromRawColor(textColor))
                 );
     return task;
 }
@@ -33,21 +38,28 @@ TaskInfo TaskInfo::fromTaskPtr(Task::Ptr task)
 {
     TaskInfo info;
     info.comments = task->comments();
-    info.commentsType = task->commentsType();
+
+    info.commentsType = "";
+    switch (task->commentsType())
+    {
+    case Task::PLAIN_TEXT:
+        info.commentsType = "PLAIN_TEXT";
+    }
+
     info.cost = task->cost();
-    info.creationDate = task->creationDate().toMSecsSinceEpoch();
-    info.doneDate = task->doneDate().toMSecsSinceEpoch();
+    info.creationDate = toOleTime(task->creationDate());
+    info.doneDate = toOleTime(task->doneDate());
     info.iconIndex = task->iconIndex();
     info.id = task->id();
-    info.lastMod = task->lastModDate().toMSecsSinceEpoch();
-    info.parentId = task->parent()->id();
+    info.lastMod = toOleTime(task->lastModDate());
+    info.parentId = task->parent()->id(); // TODO:
     info.percentDone = task->percentDone();
     info.pos = task->posAttr();
     info.priority = task->priority();
-    info.priorityColor = color2str(task->priorityColor());
+    info.priorityColor = toRawColor(task->priorityColor());
     info.risk = task->risk();
-    info.startDate = task->startDate().toMSecsSinceEpoch();
-    info.textColor = color2str(task->textColor());
+    info.startDate = toOleTime(task->startDate());
+    info.textColor = toRawColor(task->textColor());
     info.title = task->title();
 
     return info;

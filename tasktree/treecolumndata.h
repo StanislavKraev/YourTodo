@@ -14,10 +14,17 @@ enum TaskDataMember
 
 struct TreeColumnData
 {
+    enum ColumnType
+    {
+        GENERAL = 0,
+        PRIORITY
+    };
+
     QString title;
     TaskDataMember taskDataMember;
+    ColumnType colType;
 public:
-    TreeColumnData(QString _title, TaskDataMember _taskDataMember);
+    TreeColumnData(QString _title, TaskDataMember _taskDataMember, ColumnType type = GENERAL);
 };
 
 #endif // TREECOLUMNDATA_H

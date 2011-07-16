@@ -1,35 +1,25 @@
+#include "utils.h"
 #include "task.h"
 
 Task::Task() : m_id(-1)
 {
 }
 
-Task::Task(int id,
-           QString title,
-           unsigned short percentDone,
-           QString comments,
-           QString commentsType,
-           double cost,
-           double creationDate,
-           double doneDate,
-           int iconIndex,
-           double lastMod,
-           int pos,
-           int priority,
-           QString priorityColor,
-           int risk,
-           double startDate,
-           QString textColor) :
+Task::Task(int id, QString title, unsigned short percentDone, QString comments,
+           CommentsType commentsType, double cost, QDateTime creationDate,
+           QDateTime doneDate, int iconIndex, QDateTime lastMod, int pos,
+           int priority, QColor priorityColor, int risk,
+           QDateTime startDate, QColor textColor) :
     m_id(id),
     m_title(title),
     m_percentDone(percentDone),
     m_comments(comments),
     m_commentsType(UNDEFINED),
     m_cost(cost),
-    m_creationDate(QDateTime::fromTime_t((uint)creationDate)),
-    m_doneDate(QDateTime::fromTime_t((uint)doneDate)),
-    m_startDate(QDateTime::fromTime_t((uint)startDate)),
-    m_lastMod(QDateTime::fromTime_t((uint)lastMod)),
+    m_creationDate(creationDate),
+    m_doneDate(doneDate),
+    m_startDate(startDate),
+    m_lastMod(lastMod),
     m_iconIndex(iconIndex),
     m_pos(pos),
     m_priority(priority),
@@ -37,10 +27,6 @@ Task::Task(int id,
     m_risk(risk),
     m_textColor(textColor)
 {
-    if (commentsType=="PLAIN_TEXT")
-    {
-        m_commentsType = PLAIN_TEXT;
-    }
 }
 
 Task::Task(int id,

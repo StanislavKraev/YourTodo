@@ -1,6 +1,26 @@
+#include <QTreeView>
+#include <QApplication>
+#include <QStyledItemDelegate>
+
 #include "treeui.h"
 
-TreeUi::TreeUi(const QFont &strikedOutFont) : m_strikedOutFont(strikedOutFont)
+class PriorityDelegate : public QStyledItemDelegate
+{
+public:
+    virtual void paint(QPainter *painter,
+            const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+        QStyleOptionViewItemV4 opt = option;
+        initStyleOption(&opt, index);
+
+        QStyle *style = QApplication::style();
+        style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, 0);
+    }
+};
+
+TreeUi::TreeUi(const QFont &strikedOutFont, QTreeView *view) :
+    m_strikedOutFont(strikedOutFont),
+    m_view(view)
 {
 }
 
@@ -45,6 +65,8 @@ QVariant TreeUi::itemData(int column, Task::Ptr task) const
 void TreeUi::addColumn(TreeColumnData columnData)
 {
     m_columns.append(columnData);
+    if (columnData.colType == TreeColumnData::PRIORITY)
+        m_view->setItemDelegateForColumn(m_columns.count() - 1, new PriorityDelegate());
 }
 
 void TreeUi::removeColumns()

@@ -5,10 +5,12 @@
 #include "tasktree/itreeuiprovider.h"
 #include "tasktree/treecolumndata.h"
 
+class QTreeView;
+
 class TreeUi : public QObject, public ITreeUiProvider
 {
 public:
-    TreeUi(const QFont &strikedOutFont);
+    TreeUi(const QFont &strikedOutFont, QTreeView *view);
 public:
     virtual int columnsCount() const;
     virtual QString headerTitle(int section) const;
@@ -22,6 +24,7 @@ public:
 private:
     QList<TreeColumnData> m_columns;
     QFont m_strikedOutFont;
+    QAbstractItemView *m_view;
 };
 
 #endif // TREEUI_H

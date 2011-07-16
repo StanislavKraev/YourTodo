@@ -47,11 +47,15 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
         {
             return Qt::darkCyan;
         }
+        // TODO: start here. use m_treeUi to return correct font.
     }
     else if (role == Qt::BackgroundRole)
     {
-        if (index.row() % 2)
-            return QVariant(Qt::red);
+        Task::Ptr item = m_taskList->getById(index.internalId());
+        if (!item)
+            return QVariant();
+        QBrush bg(item->priorityColor());
+        return bg;
     }
     else if (role == Qt::UserRole)
     {

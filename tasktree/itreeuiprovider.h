@@ -21,6 +21,7 @@ public:
     virtual void updateData(Task::Ptr task, int column, QVariant data) = 0;
     virtual QFont strikedOutFont() const = 0;
     virtual QFont font(int column, Task::Ptr task) const = 0;
+    virtual QBrush foreground(int column, Task::Ptr task) const = 0;
 };
 
 

@@ -23,8 +23,10 @@ struct TreeColumnData
     QString title;
     TaskDataMember taskDataMember;
     ColumnType colType;
+    int width;
 public:
-    TreeColumnData(QString _title, TaskDataMember _taskDataMember, ColumnType type = GENERAL);
+    TreeColumnData(QString _title, TaskDataMember _taskDataMember,
+                   int _width = 0, ColumnType type = GENERAL);
 };
 
 #endif // TREECOLUMNDATA_H

@@ -25,22 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_treeUi(0)
 {
     ui->setupUi(this);
-
-    QFont treeViewFont = QFont(ui->treeView->font());
-    treeViewFont.setStrikeOut(true);
-
-    m_treeUi = new TreeUi(treeViewFont, ui->treeView);
-    m_treeUi->addColumn(TreeColumnData("!", Priority, TreeColumnData::PRIORITY));
-    m_treeUi->addColumn(TreeColumnData("%", PercentDone));
-    m_treeUi->addColumn(TreeColumnData("O", IconIndex));
-    m_treeUi->addColumn(TreeColumnData("Title", Title));
-
     ui->treeView->setEditTriggers(QAbstractItemView::SelectedClicked |
                                   QAbstractItemView::EditKeyPressed);
     ui->treeView->setUniformRowHeights(true);
-//    ui->treeView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
-//    ui->treeView->header()->resizeSection(1, 30);
-//    ui->treeView->header()->resizeSection(2, 24);
 }
 
 MainWindow::~MainWindow()
@@ -112,8 +99,18 @@ void MainWindow::updateTreeModel(ITaskList *taskList)
 {
     QAbstractItemModel *oldModel = ui->treeView->model();
 
+    QFont treeViewFont = QFont(ui->treeView->font());
+    treeViewFont.setStrikeOut(true);
+    m_treeUi = new TreeUi(treeViewFont, ui->treeView);
+    m_treeUi->addColumn(TreeColumnData("!", Priority, -1, TreeColumnData::PRIORITY));
+    m_treeUi->addColumn(TreeColumnData("%", PercentDone, 30));
+    m_treeUi->addColumn(TreeColumnData("O", IconIndex, 24));
+    m_treeUi->addColumn(TreeColumnData("Title", Title, -1));
+
     TreeModel *model = new TreeModel(this, taskList, m_treeUi);
     ui->treeView->setModel(model);
     if (oldModel)
         delete oldModel;
+
+    m_treeUi->init();
 }

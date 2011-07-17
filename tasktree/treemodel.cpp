@@ -41,13 +41,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     else if (role == Qt::ForegroundRole)
     {
         Task::Ptr item = m_taskList->getById(index.internalId());
-        if (!item)
-            return QVariant();
-        if (item->percentDone() >= 100)
-        {
-            return Qt::darkCyan;
-        }
-        // TODO: start here. use m_treeUi to return correct font.
+        return m_treeUi->foreground(index.column(), item);
     }
     else if (role == Qt::BackgroundRole)
     {

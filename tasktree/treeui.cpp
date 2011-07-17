@@ -1,4 +1,5 @@
 #include <QTreeView>
+#include <QHeaderView>
 #include <QApplication>
 #include <QStyledItemDelegate>
 
@@ -10,6 +11,7 @@ public:
     virtual void paint(QPainter *painter,
             const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
+        // TODO: if percent_done >= 100% - do not draw anything (or just background)
         QStyleOptionViewItemV4 opt = option;
         initStyleOption(&opt, index);
 
@@ -65,8 +67,6 @@ QVariant TreeUi::itemData(int column, Task::Ptr task) const
 void TreeUi::addColumn(TreeColumnData columnData)
 {
     m_columns.append(columnData);
-    if (columnData.colType == TreeColumnData::PRIORITY)
-        m_view->setItemDelegateForColumn(m_columns.count() - 1, new PriorityDelegate());
 }
 
 void TreeUi::removeColumns()
@@ -110,4 +110,43 @@ QFont TreeUi::font(int column, Task::Ptr task) const
         }
     }
     return QFont();
+}
+
+QBrush TreeUi::foreground(int column, Task::Ptr task) const
+{
+    if (task && column >= 0 && column <= m_columns.count() - 1)
+    {
+        TaskDataMember member = m_columns[column].taskDataMember;
+        switch (member)
+        {
+            case Priority:
+            {
+                if (task->priority() > 3)
+                    return Qt::white;
+                else
+                    return Qt::black;
+            }
+        }
+    }
+    return Qt::black;
+}
+
+void TreeUi::init()
+{
+    int index = 0;
+    foreach(const TreeColumnData &column, m_columns)
+    {
+        if (column.colType == TreeColumnData::PRIORITY)
+            m_view->setItemDelegateForColumn(index, new PriorityDelegate());
+        if (column.width < 0)
+        {
+            m_view->header()->setResizeMode(index, QHeaderView::ResizeToContents);
+        }
+        else if (column.width > 0)
+        {
+            m_view->header()->resizeSection(index, column.width);
+            m_view->header()->setResizeMode(index, QHeaderView::Fixed);
+        }
+        index++;
+    }
 }

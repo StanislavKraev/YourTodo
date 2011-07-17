@@ -22,6 +22,7 @@ public:
     virtual QFont strikedOutFont() const = 0;
     virtual QFont font(int column, Task::Ptr task) const = 0;
     virtual QBrush foreground(int column, Task::Ptr task) const = 0;
+    virtual QBrush background(int column, Task::Ptr task) const = 0;
 };
 
 

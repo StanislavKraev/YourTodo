@@ -1,24 +1,10 @@
 #include <QTreeView>
 #include <QHeaderView>
 #include <QApplication>
-#include <QStyledItemDelegate>
+
+#include "delegates.h"
 
 #include "treeui.h"
-
-class PriorityDelegate : public QStyledItemDelegate
-{
-public:
-    virtual void paint(QPainter *painter,
-            const QStyleOptionViewItem &option, const QModelIndex &index) const
-    {
-        // TODO: if percent_done >= 100% - do not draw anything (or just background)
-        QStyleOptionViewItemV4 opt = option;
-        initStyleOption(&opt, index);
-
-        QStyle *style = QApplication::style();
-        style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, 0);
-    }
-};
 
 TreeUi::TreeUi(const QFont &strikedOutFont, QTreeView *view) :
     m_strikedOutFont(strikedOutFont),
@@ -47,8 +33,6 @@ QVariant TreeUi::itemData(int column, Task::Ptr task) const
         {
         case Title:
             return task->title();
-        case Comment:
-            return task->comments();
         case Priority:
             if (task->percentDone() >= 100)
                 return QVariant();
@@ -59,6 +43,24 @@ QVariant TreeUi::itemData(int column, Task::Ptr task) const
             return QString("%1%").arg(task->percentDone());
         case IconIndex:
             return task->iconIndex();
+        case Position:
+            return task->posAttr();
+        case Risk:
+            return task->risk();
+        case Cost:
+            return task->cost();
+        case StartDate:
+            return task->startDate();
+        case DoneDate:
+            return task->doneDate();
+        case CreationDate:
+            return task->creationDate();
+        case LastModified:
+            return task->lastModDate();
+        case CommentsType:
+            return task->commentsType();
+        case Comments:
+            return task->comments();
         }
     }
     return QVariant();
@@ -137,7 +139,9 @@ void TreeUi::init()
     foreach(const TreeColumnData &column, m_columns)
     {
         if (column.colType == TreeColumnData::PRIORITY)
-            m_view->setItemDelegateForColumn(index, new PriorityDelegate());
+            m_view->setItemDelegateForColumn(index, new PriorityDelegate(m_view));
+        else if (column.colType == TreeColumnData::ICONINDEX)
+            m_view->setItemDelegateForColumn(index, new IconIndexDelegate(m_view));
         if (column.width < 0)
         {
             m_view->header()->setResizeMode(index, QHeaderView::ResizeToContents);
@@ -149,4 +153,18 @@ void TreeUi::init()
         }
         index++;
     }
+}
+
+QBrush TreeUi::background(int column, Task::Ptr task) const
+{
+    if (task && column >= 0 && column <= m_columns.count() - 1)
+    {
+        TaskDataMember member = m_columns[column].taskDataMember;
+        switch (member)
+        {
+        case Priority:
+            return task->priorityColor();
+        }
+    }
+    return Qt::white;
 }

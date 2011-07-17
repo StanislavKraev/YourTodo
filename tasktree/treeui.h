@@ -21,6 +21,7 @@ public:
     virtual QFont strikedOutFont() const;
     virtual QFont font(int column, Task::Ptr task) const;
     virtual QBrush foreground(int column, Task::Ptr task) const;
+    virtual QBrush background(int column, Task::Ptr task) const;
 public:
     void addColumn(TreeColumnData columnData);
     void removeColumns();

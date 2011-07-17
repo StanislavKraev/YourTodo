@@ -46,10 +46,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     else if (role == Qt::BackgroundRole)
     {
         Task::Ptr item = m_taskList->getById(index.internalId());
-        if (!item)
-            return QVariant();
-        QBrush bg(item->priorityColor());
-        return bg;
+        return m_treeUi->background(index.column(), item);
     }
     else if (role == Qt::UserRole)
     {

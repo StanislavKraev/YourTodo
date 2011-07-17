@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
         <file>tray.gif</file>
+        <file>task_icons.png</file>
     </qresource>
 </RCC>

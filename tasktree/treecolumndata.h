@@ -6,10 +6,18 @@
 enum TaskDataMember
 {
     Title = 1,
-    Comment,
     Priority,
     PercentDone,
-    IconIndex
+    IconIndex,
+    Position,
+    Risk,
+    Cost,
+    StartDate,
+    DoneDate,
+    CreationDate,
+    LastModified,
+    CommentsType,
+    Comments
 };
 
 struct TreeColumnData
@@ -17,7 +25,8 @@ struct TreeColumnData
     enum ColumnType
     {
         GENERAL = 0,
-        PRIORITY
+        PRIORITY,
+        ICONINDEX
     };
 
     QString title;

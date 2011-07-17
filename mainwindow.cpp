@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->setEditTriggers(QAbstractItemView::SelectedClicked |
                                   QAbstractItemView::EditKeyPressed);
     ui->treeView->setUniformRowHeights(true);
+    ui->treeView->setAlternatingRowColors(true);
 }
 
 MainWindow::~MainWindow()
@@ -102,10 +103,19 @@ void MainWindow::updateTreeModel(ITaskList *taskList)
     QFont treeViewFont = QFont(ui->treeView->font());
     treeViewFont.setStrikeOut(true);
     m_treeUi = new TreeUi(treeViewFont, ui->treeView);
-    m_treeUi->addColumn(TreeColumnData("!", Priority, -1, TreeColumnData::PRIORITY));
-    m_treeUi->addColumn(TreeColumnData("%", PercentDone, 30));
-    m_treeUi->addColumn(TreeColumnData("O", IconIndex, 24));
     m_treeUi->addColumn(TreeColumnData("Title", Title, -1));
+    m_treeUi->addColumn(TreeColumnData("!", Priority, 22, TreeColumnData::PRIORITY));
+    m_treeUi->addColumn(TreeColumnData("%", PercentDone, 30));
+    m_treeUi->addColumn(TreeColumnData("O", IconIndex, 20, TreeColumnData::ICONINDEX));
+    m_treeUi->addColumn(TreeColumnData("Pos", Position, 24));
+    m_treeUi->addColumn(TreeColumnData("Risk", Risk, 30));
+    m_treeUi->addColumn(TreeColumnData("Cost", Cost, 30));
+    m_treeUi->addColumn(TreeColumnData("Start date", StartDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Done date", DoneDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Creation date", CreationDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Last mod", LastModified, 80));
+    m_treeUi->addColumn(TreeColumnData("CT", CommentsType, 24));
+    m_treeUi->addColumn(TreeColumnData("Comments", Comments));
 
     TreeModel *model = new TreeModel(this, taskList, m_treeUi);
     ui->treeView->setModel(model);

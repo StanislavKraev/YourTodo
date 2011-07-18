@@ -1,0 +1,7 @@
+*.user
+moc_*
+qrc_*
+ui_*
+*.o
+Makefile
+YourTodo

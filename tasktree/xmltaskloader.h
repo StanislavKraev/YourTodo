@@ -4,6 +4,7 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomNode>
 #include <QString>
+#include <QDateTime>
 
 #include "itaskloader.h"
 
@@ -13,6 +14,8 @@ public:
     XmlTaskLoader(QString fileName);
     virtual ~XmlTaskLoader();
 public:
+    virtual bool readHeader(QString &projectName, int &fileFormat,
+                                int &uniqueId, int &fileVersion, QDateTime &earliestDueDate);
     virtual TaskInfo read();
     virtual QString fileName() const;
 private:

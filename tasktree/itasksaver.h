@@ -13,6 +13,8 @@ private:
     ITaskSaver& operator = (const ITaskSaver&);
 public:
     virtual void init(QString fileName) = 0;
+    virtual void saveHeader(QString projectName, int fileFormat,
+                            int uniqueId, int fileVersion, QDateTime earliestDueDate) = 0;
     virtual void save(TaskInfo info) = 0;
     virtual void finish() = 0;
 };

@@ -3,6 +3,7 @@
 
 #include <QMap>
 #include <QString>
+#include <QDateTime>
 #include "itasklist.h"
 
 class TaskList : public ITaskList
@@ -32,6 +33,11 @@ private:
     Task::Ptr m_taskRoot;
     QMap<int, Task::Ptr> m_idTaskMap;
     QString m_fileName;
+    QString m_projectName;
+    int m_fileFormat;
+    int m_nextUniqueId;
+    int m_fileVersion;
+    QDateTime m_earliestDueDate;
 };
 
 #endif // TASKLIST_H

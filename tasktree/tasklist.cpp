@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QMap>
 
+#include "exceptions/loadtasksexception.h"
 #include "exceptions/stopiterexception.h"
 #include "itaskloader.h"
 #include "itasksaver.h"
@@ -68,6 +69,17 @@ bool TaskList::load(ITaskLoader *loader)
 {
     clear();
     m_fileName = loader->fileName();
+
+    try
+    {
+        if (!loader->readHeader(m_projectName, m_fileFormat,
+                                m_nextUniqueId, m_fileVersion, m_earliestDueDate))
+            return false;
+    }
+    catch (LoadTasksException)
+    {
+        return false;
+    }
 
     Task::List allTasks;
 
@@ -166,8 +178,9 @@ void TaskList::replace(Task::Ptr oldItem, Task::Ptr newItem)
 bool TaskList::save(ITaskSaver *saver)
 {
     saver->init(m_fileName);
-    foreach(Task::Ptr id, m_idTaskMap.values())
-        saver->save(TaskInfo::fromTaskPtr(id));
+    saver->saveHeader(m_projectName, m_fileFormat, nextId(), m_fileVersion, m_earliestDueDate);
+    //foreach(Task::Ptr id, m_idTaskMap.values())
+    //    saver->save(TaskInfo::fromTaskPtr(id));
     saver->finish();
     return true;
 }

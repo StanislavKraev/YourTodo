@@ -2,12 +2,16 @@
 
 QDateTime fromOleTime(double time)
 {
+    if (abs(time) < 1.e-3)
+        return QDateTime();
     QDateTime dateTime = QDateTime(QDate(1899, 12, 30));
     return dateTime.addDays(time - 2);
 }
 
 double toOleTime(QDateTime time)
 {
+    if (!time.isValid())
+        return 0.0;
     return QDateTime(QDate(1900, 1, 1)).daysTo(time) + 2;
 }
 

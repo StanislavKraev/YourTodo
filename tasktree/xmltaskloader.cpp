@@ -3,6 +3,8 @@
 #include "exceptions/loadtasksexception.h"
 #include "exceptions/stopiterexception.h"
 
+#include "utils.h"
+
 #include "xmltaskloader.h"
 
 XmlTaskLoader::XmlTaskLoader(QString fileName) :
@@ -24,21 +26,7 @@ TaskInfo XmlTaskLoader::read()
 {
     if (!m_document)
     {
-        m_document = new QDomDocument(m_fileName);
-        QFile file(m_fileName);
-        if (!file.open(QIODevice::ReadOnly))
-            throw LoadTasksException("Can't open tasklist file.");
-
-        if (!m_document->setContent(&file))
-        {
-            file.close();
-            throw LoadTasksException("Can't parse tasklist file.");
-        }
-        file.close();
-
-        QDomElement docElem = m_document->documentElement();
-
-        m_curElement = docElem.firstChildElement("TASK");
+        throw StopIterException();
     }
 
     int curLevel = m_level;
@@ -122,4 +110,37 @@ TaskInfo XmlTaskLoader::read()
 QString XmlTaskLoader::fileName() const
 {
     return m_fileName;
+}
+
+bool XmlTaskLoader::readHeader(QString &projectName, int &fileFormat, int &uniqueId, int &fileVersion, QDateTime &earliestDueDate)
+{
+    if (!m_document)
+    {
+        m_document = new QDomDocument(m_fileName);
+        QFile file(m_fileName);
+        if (!file.open(QIODevice::ReadOnly))
+            throw LoadTasksException("Can't open tasklist file.");
+
+        if (!m_document->setContent(&file))
+        {
+            file.close();
+            throw LoadTasksException("Can't parse tasklist file.");
+        }
+        file.close();
+
+        QDomElement docElem = m_document->documentElement();
+        if (docElem.tagName() != "TODOLIST")
+            return false;
+
+        projectName = docElem.attribute("PROJECTNAME");
+        fileFormat = docElem.attribute("FILEFORMAT", "9").toInt();
+        if (fileFormat != 9)
+            throw LoadTasksException("Unknown file format.");
+        uniqueId = docElem.attribute("NEXTUNIQUEID", "0").toInt();
+        fileVersion = docElem.attribute("FILEVERSION", "0").toInt();
+        earliestDueDate = fromOleTime(docElem.attribute("EARLIESTDUEDATE", "0.0").toDouble());
+
+        m_curElement = docElem.firstChildElement("TASK");
+    }
+    return true;
 }

@@ -22,6 +22,7 @@ struct TaskInfo
     QString textColor;
     QString priorityColor;
     int parentId;
+    double calcCost;
 public:
     Task::Ptr toTaskPtr() const;
     static TaskInfo fromTaskPtr(Task::Ptr task);

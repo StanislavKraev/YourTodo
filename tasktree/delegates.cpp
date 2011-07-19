@@ -8,8 +8,17 @@
 
 #include "delegates.h"
 
+PriorityDelegate::PriorityDelegate(QTreeView *treeView)
+{
+    int gridHint = treeView->style()->styleHint(QStyle::SH_Table_GridLineColor,
+                                                new QStyleOptionViewItemV4());
+    QColor gridColor = static_cast<QRgb>(gridHint);
+    m_gridPen = QPen(gridColor);
+}
+
+
 void PriorityDelegate::paint(QPainter *painter,
-                            const QStyleOptionViewItem &option, const QModelIndex &index) const
+                             const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     // TODO: if percent_done >= 100% - do not draw anything (or just background)
     QStyleOptionViewItemV4 opt = option;
@@ -24,13 +33,21 @@ void PriorityDelegate::paint(QPainter *painter,
     painter->setPen(m_gridPen);
     painter->drawLines(lines);
 
-    opt.rect.setWidth(opt.rect.width() - 2);
-    opt.rect.setHeight(opt.rect.height() - 2);
-    opt.rect.setLeft(opt.rect.left() + 1);
-    opt.rect.setTop(opt.rect.top() + 1);
-    QStyle *style = QApplication::style();
-    opt.displayAlignment = Qt::AlignCenter;
-    style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, 0);
+    Task::Ptr task = index.data(Qt::UserRole).value<Task::Ptr>();
+    if (task->percentDone() >= 100)
+    {
+        QStyledItemDelegate::paint(painter, option, index);
+    }
+    else
+    {
+        opt.rect.setWidth(opt.rect.width() - 2);
+        opt.rect.setHeight(opt.rect.height() - 2);
+        opt.rect.setLeft(opt.rect.left() + 1);
+        opt.rect.setTop(opt.rect.top() + 1);
+        QStyle *style = QApplication::style();
+        opt.displayAlignment = Qt::AlignCenter;
+        style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, 0);
+    }
 }
 
 IconIndexDelegate::IconIndexDelegate(QTreeView *treeView)
@@ -71,12 +88,3 @@ void IconIndexDelegate::paint(QPainter *painter,
         painter->drawPixmap(opt.rect.left() + 1, opt.rect.top() + 1, m_directoryIcon.pixmap(16, 16));
     }
 }
-
-PriorityDelegate::PriorityDelegate(QTreeView *treeView)
-{
-    int gridHint = treeView->style()->styleHint(QStyle::SH_Table_GridLineColor,
-                                                new QStyleOptionViewItemV4());
-    QColor gridColor = static_cast<QRgb>(gridHint);
-    m_gridPen = QPen(gridColor);
-}
-

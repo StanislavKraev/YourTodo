@@ -47,6 +47,7 @@ TaskInfo TaskInfo::fromTaskPtr(Task::Ptr task)
     }
 
     info.cost = task->cost();
+    info.calcCost = task->calcCost();
     info.creationDate = toOleTime(task->creationDate());
     info.doneDate = toOleTime(task->doneDate());
     info.iconIndex = task->iconIndex();

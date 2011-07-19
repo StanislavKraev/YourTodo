@@ -13,6 +13,7 @@
 TaskList::TaskList()
 {
     m_taskRoot = Task::Ptr(new Task());
+    m_lastModified = QDateTime::currentDateTime();
 }
 
 Task::ListIterator TaskList::tasks()
@@ -182,7 +183,8 @@ bool TaskList::save(ITaskSaver *saver)
 {
     saver->init(m_fileName);
     m_earliestDueDate = getEarliestDueDate();
-    saver->saveHeader(m_projectName, m_fileFormat, nextId(), m_fileVersion, m_earliestDueDate);
+    saver->saveHeader(m_projectName, m_fileFormat, nextId(),
+                      m_fileVersion, m_earliestDueDate, m_lastModified);
     Task::Ptr curParent = m_taskRoot;
     int i = 0;
     int curCount = curParent->count();

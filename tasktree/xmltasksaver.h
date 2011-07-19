@@ -13,7 +13,8 @@ public:
     virtual ~XmlTaskSaver();
 public:
     virtual void saveHeader(QString projectName, int fileFormat,
-                            int uniqueId, int fileVersion, QDateTime earliestDueDate);
+                            int uniqueId, int fileVersion, QDateTime earliestDueDate,
+                            QDateTime lastModified);
     virtual void save(TaskInfo info);
     virtual void init(QString fileName);
     virtual void finish();

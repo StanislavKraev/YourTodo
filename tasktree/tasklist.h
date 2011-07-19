@@ -39,6 +39,7 @@ private:
     int m_nextUniqueId;
     int m_fileVersion;
     QDateTime m_earliestDueDate;
+    QDateTime m_lastModified;
 };
 
 #endif // TASKLIST_H

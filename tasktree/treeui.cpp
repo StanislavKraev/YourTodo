@@ -48,7 +48,7 @@ QVariant TreeUi::itemData(int column, Task::Ptr task) const
         case Risk:
             return task->risk();
         case Cost:
-            return task->cost();
+            return task->calcCost();
         case StartDate:
             return task->startDate();
         case DoneDate:

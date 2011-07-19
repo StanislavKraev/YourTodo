@@ -330,3 +330,13 @@ QDateTime Task::dueDate() const
 void Task::setDueDate(QDateTime date)
 {
 }
+
+double Task::calcCost() const
+{
+    double sum = 0;
+    foreach (Task::Ptr subTask, m_subTaskList)
+    {
+        sum += subTask->calcCost();
+    }
+    return cost() + sum;
+}

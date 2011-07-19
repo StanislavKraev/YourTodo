@@ -14,7 +14,8 @@ private:
 public:
     virtual void init(QString fileName) = 0;
     virtual void saveHeader(QString projectName, int fileFormat,
-                            int uniqueId, int fileVersion, QDateTime earliestDueDate) = 0;
+                            int uniqueId, int fileVersion, QDateTime earliestDueDate,
+                            QDateTime lastModified) = 0;
     virtual void save(TaskInfo info) = 0;
     virtual void finish() = 0;
     virtual void goDown() = 0;

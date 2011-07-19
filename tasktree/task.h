@@ -42,6 +42,7 @@ public:
     int id() const;
     void replace(Ptr oldItem, Ptr newItem);
     int calcPosAttr() const;
+    double calcCost() const;
 public:
     QString title() const;
     void setTitle(QString title);

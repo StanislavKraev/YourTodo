@@ -309,3 +309,24 @@ void Task::setTextColor(QColor val)
 {
     m_textColor = val;
 }
+
+int Task::calcPosAttr() const
+{
+    int i = 0;
+    Task::Ptr current = parent();
+    while (current)
+    {
+        i++;
+        current = current->parent();
+    }
+    return i;
+}
+
+QDateTime Task::dueDate() const
+{
+    return QDateTime();
+}
+
+void Task::setDueDate(QDateTime date)
+{
+}

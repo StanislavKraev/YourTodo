@@ -52,9 +52,8 @@ TaskInfo TaskInfo::fromTaskPtr(Task::Ptr task)
     info.iconIndex = task->iconIndex();
     info.id = task->id();
     info.lastMod = toOleTime(task->lastModDate());
-    info.parentId = task->parent()->id(); // TODO:
     info.percentDone = task->percentDone();
-    info.pos = task->posAttr();
+    info.pos = task->calcPosAttr();
     info.priority = task->priority();
     info.priorityColor = toRawColor(task->priorityColor());
     info.risk = task->risk();

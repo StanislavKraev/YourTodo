@@ -41,6 +41,7 @@ public:
     int count() const;
     int id() const;
     void replace(Ptr oldItem, Ptr newItem);
+    int calcPosAttr() const;
 public:
     QString title() const;
     void setTitle(QString title);
@@ -73,6 +74,8 @@ public:
     void setRisk(int val);
     QColor textColor() const;
     void setTextColor(QColor val);
+    QDateTime dueDate() const;
+    void setDueDate(QDateTime date);
 private:
     void addTask(Ptr task);
     void insertSubTask(int pos, Ptr task);

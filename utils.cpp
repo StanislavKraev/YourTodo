@@ -5,7 +5,7 @@ QDateTime fromOleTime(double time)
     if (abs(time) < 1.e-3)
         return QDateTime();
     QDateTime dateTime = QDateTime(QDate(1899, 12, 30));
-    return dateTime.addDays(time - 2);
+    return dateTime.addDays(time);
 }
 
 double toOleTime(QDateTime time)

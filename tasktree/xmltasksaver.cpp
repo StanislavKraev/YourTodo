@@ -46,7 +46,7 @@ void XmlTaskSaver::saveHeader(QString projectName, int fileFormat, int uniqueId,
     m_curElement.setAttribute("PROJECTNAME", projectName);
     m_curElement.setAttribute("FILEFORMAT", fileFormat);
     m_curElement.setAttribute("NEXTUNIQUEID", uniqueId);
-    m_curElement.setAttribute("FILEVERSION", fileVersion);
+    m_curElement.setAttribute("FILEVERSION", fileVersion + 1);
     m_curElement.setAttribute("EARLIESTDUEDATE", toOleTime(earliestDueDate));
 }
 
@@ -54,6 +54,25 @@ void XmlTaskSaver::save(TaskInfo info)
 {
     QDomElement newElement = m_document->createElement("TASK");
     m_lastElement = m_curElement.appendChild(newElement).toElement();
+
+    m_lastElement.setAttribute("ID", info.id);
+    m_lastElement.setAttribute("TITLE", info.title);
+    m_lastElement.setAttribute("PERCENTDONE", info.percentDone);
+    m_lastElement.setAttribute("ICONINDEX", info.iconIndex);
+    m_lastElement.setAttribute("POS", info.pos);
+    m_lastElement.setAttribute("PRIORITY", info.priority);
+    m_lastElement.setAttribute("RISK", info.risk);
+    m_lastElement.setAttribute("COST", info.cost);
+    if (info.startDate > 10.0)
+        m_lastElement.setAttribute("STARTDATE", info.startDate);
+    m_lastElement.setAttribute("CREATIONDATE", info.creationDate);
+    if (info.doneDate > 10.0)
+        m_lastElement.setAttribute("DONEDATE", info.doneDate);
+    m_lastElement.setAttribute("PRIORITYCOLOR", info.priorityColor);
+    m_lastElement.setAttribute("TEXTCOLOR", info.textColor);
+    m_lastElement.setAttribute("COMMENTS", info.comments);
+    m_lastElement.setAttribute("COMMENTSTYPE", info.commentsType);
+    m_lastElement.setAttribute("LASTMOD", info.lastMod);
 }
 
 void XmlTaskSaver::goDown()

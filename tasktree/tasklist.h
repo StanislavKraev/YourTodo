@@ -29,6 +29,7 @@ public:
 protected:
     int nextId() const;
     void clear();
+    QDateTime getEarliestDueDate() const;
 private:
     Task::Ptr m_taskRoot;
     QMap<int, Task::Ptr> m_idTaskMap;

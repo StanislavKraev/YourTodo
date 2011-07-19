@@ -114,7 +114,10 @@ bool TaskList::load(ITaskLoader *loader)
             task->setParent(parent);
         }
         else
+        {
             m_taskRoot->addTask(task);
+            task->setParent(m_taskRoot);
+        }
     }
 
     return true;
@@ -178,6 +181,7 @@ void TaskList::replace(Task::Ptr oldItem, Task::Ptr newItem)
 bool TaskList::save(ITaskSaver *saver)
 {
     saver->init(m_fileName);
+    m_earliestDueDate = getEarliestDueDate();
     saver->saveHeader(m_projectName, m_fileFormat, nextId(), m_fileVersion, m_earliestDueDate);
     Task::Ptr curParent = m_taskRoot;
     int i = 0;
@@ -188,30 +192,62 @@ bool TaskList::save(ITaskSaver *saver)
         return false;
     }
 
+    Task::Ptr curItem;
     while (true)
     {
-        Task::Ptr curItem = curParent->getAt(i);
-        saver->save(TaskInfo::fromTaskPtr(curItem));
-        if (curItem->count())
+        if (i >= curCount)
         {
-            curCount = curItem->count();
-            i = 0;
-            curParent = curItem;
-            saver->goDown();
-        }
-        else if (i < curCount - 1)
-        {
-            i++;
-        }
-        else
-        {
+            if (!curParent->parent())
+                break;
+
+            curItem = curParent;
             curParent = curParent->parent();
             if (!curParent)
                 break;
+
             i = curParent->pos(curItem) + 1;
             saver->goUp();
+            curCount = curParent->count();
+        }
+        else
+        {
+            curItem = curParent->getAt(i);
+            saver->save(TaskInfo::fromTaskPtr(curItem));
+            if (curItem->count())
+            {
+                curCount = curItem->count();
+                i = 0;
+                curParent = curItem;
+                saver->goDown();
+            }
+            else if (i < curCount - 1)
+            {
+                i++;
+            }
+            else
+            {
+                curItem = curParent;
+                curParent = curParent->parent();
+                if (!curParent)
+                    break;
+
+                i = curParent->pos(curItem) + 1;
+                saver->goUp();
+                curCount = curParent->count();
+            }
         }
     }
     saver->finish();
     return true;
+}
+
+QDateTime TaskList::getEarliestDueDate() const
+{
+    QDateTime date;
+    foreach(Task::Ptr task, m_idTaskMap.values())
+    {
+        if (task->dueDate() < date)
+            date = task->dueDate();
+    }
+    return date;
 }

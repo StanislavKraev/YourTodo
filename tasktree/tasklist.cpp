@@ -179,8 +179,39 @@ bool TaskList::save(ITaskSaver *saver)
 {
     saver->init(m_fileName);
     saver->saveHeader(m_projectName, m_fileFormat, nextId(), m_fileVersion, m_earliestDueDate);
-    //foreach(Task::Ptr id, m_idTaskMap.values())
-    //    saver->save(TaskInfo::fromTaskPtr(id));
+    Task::Ptr curParent = m_taskRoot;
+    int i = 0;
+    int curCount = curParent->count();
+    if (curCount < 1)
+    {
+        saver->finish();
+        return false;
+    }
+
+    while (true)
+    {
+        Task::Ptr curItem = curParent->getAt(i);
+        saver->save(TaskInfo::fromTaskPtr(curItem));
+        if (curItem->count())
+        {
+            curCount = curItem->count();
+            i = 0;
+            curParent = curItem;
+            saver->goDown();
+        }
+        else if (i < curCount - 1)
+        {
+            i++;
+        }
+        else
+        {
+            curParent = curParent->parent();
+            if (!curParent)
+                break;
+            i = curParent->pos(curItem) + 1;
+            saver->goUp();
+        }
+    }
     saver->finish();
     return true;
 }

@@ -17,9 +17,12 @@ public:
     virtual void save(TaskInfo info);
     virtual void init(QString fileName);
     virtual void finish();
+    virtual void goDown();
+    virtual void goUp();
 private:
     QDomDocument *m_document;
     QDomElement m_curElement;
+    QDomElement m_lastElement;
     QString m_fileName;
 };
 

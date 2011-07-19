@@ -15,11 +15,6 @@ XmlTaskSaver::~XmlTaskSaver()
         delete m_document;
 }
 
-void XmlTaskSaver::save(TaskInfo info)
-{
-
-}
-
 void XmlTaskSaver::init(QString fileName)
 {
     m_fileName = fileName;
@@ -53,4 +48,20 @@ void XmlTaskSaver::saveHeader(QString projectName, int fileFormat, int uniqueId,
     m_curElement.setAttribute("NEXTUNIQUEID", uniqueId);
     m_curElement.setAttribute("FILEVERSION", fileVersion);
     m_curElement.setAttribute("EARLIESTDUEDATE", toOleTime(earliestDueDate));
+}
+
+void XmlTaskSaver::save(TaskInfo info)
+{
+    QDomElement newElement = m_document->createElement("TASK");
+    m_lastElement = m_curElement.appendChild(newElement).toElement();
+}
+
+void XmlTaskSaver::goDown()
+{
+    m_curElement = m_lastElement;
+}
+
+void XmlTaskSaver::goUp()
+{
+    m_curElement = m_curElement.parentNode().toElement();
 }

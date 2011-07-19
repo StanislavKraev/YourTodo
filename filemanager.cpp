@@ -64,6 +64,15 @@ void FileManager::onSave()
 
 void FileManager::onSaveAs()
 {
+    if (m_curTaskList)
+    {
+        QString fileName = QFileDialog::getSaveFileName(m_parent,
+             tr("Save Tasklist As"), "/home/kraevst/", tr("Task lists (*.tdl)"));
+        if (fileName.isEmpty())
+            return;
+        m_curTaskList->setFileName(fileName);
+        onSave();
+    }
 }
 
 void FileManager::onClose()
@@ -88,8 +97,8 @@ const char * FileManager::getActionSlot(Actions::Actions action) const
         return SLOT(onOpen());
     case Actions::FileSave:
         return SLOT(onSave());
-    case Actions::FileSaveAll:
-        return SLOT(onSaveAll());
+    case Actions::FileSaveAs:
+        return SLOT(onSaveAs());
     case Actions::FileClose:
         return SLOT(onClose());
     default:

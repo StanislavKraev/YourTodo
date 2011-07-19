@@ -253,3 +253,8 @@ QDateTime TaskList::getEarliestDueDate() const
     }
     return date;
 }
+
+void TaskList::setFileName(QString fileName)
+{
+    m_fileName = fileName;
+}

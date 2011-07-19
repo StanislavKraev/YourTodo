@@ -23,6 +23,7 @@ public:
     virtual bool removeTasks(Task::Ptr task, int pos, int count);
     virtual Task::Ptr root() const;
     virtual void replace(Task::Ptr oldItem, Task::Ptr newItem);
+    void setFileName(QString fileName);
 public:
     virtual bool load(ITaskLoader *loader);
     virtual bool save(ITaskSaver *saver);

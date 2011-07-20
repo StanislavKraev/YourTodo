@@ -126,15 +126,24 @@ void TaskTreeView::toggleSelectedTasks()
 
 void TaskTreeView::addTaskBelowCursor()
 {
-    QModelIndexList selectedList = selectionModel()->selectedRows(0);
-    if (selectedList.count() != 1)
-        return;
+    int row(0);
+    QModelIndex parent;
 
-    QModelIndex selection = selectedList.first();
-    int row = selection.row() + 1;
-    QModelIndex parent = selection.parent();
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+    {
+        if (model()->rowCount() > 0)
+            return;
+        row = 0;
+    }
+    else
+    {
+        QModelIndex selection = selectedList.first();
+        row = selection.row() + 1;
+        parent = selection.parent();
+    }
     model()->insertRows(row, 1, parent);
-    QModelIndex newItemIndex = model()->index(row, 0, selection.parent());
+    QModelIndex newItemIndex = model()->index(row, 0, parent);
     selectionModel()->select(newItemIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     setCurrentIndex(newItemIndex);
     edit(newItemIndex);

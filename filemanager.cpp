@@ -23,6 +23,8 @@ FileManager::~FileManager()
 
 void FileManager::onNew()
 {
+    m_curTaskList = new TaskList();
+    emit(currentListChanged(m_curTaskList));
 }
 
 void FileManager::onOpen()

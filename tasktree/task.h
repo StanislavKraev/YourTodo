@@ -16,7 +16,7 @@ public:
         UNDEFINED = 0,
         PLAIN_TEXT = 1
     };
-
+static QList<QColor> m_priorityColors;
 public:
     typedef QSharedPointer<Task> Ptr;
     typedef QList<Ptr> List;

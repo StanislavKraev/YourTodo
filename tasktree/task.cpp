@@ -1,6 +1,27 @@
 #include "utils.h"
 #include "task.h"
 
+QList<QColor> Task::m_priorityColors;
+class InitColors
+{
+public:
+    InitColors()
+    {
+        Task::m_priorityColors << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0")
+                            << QColor("#000ff0");
+    }
+};
+static InitColors initColors;
+
 Task::Task() : m_id(-1)
 {
 }
@@ -40,8 +61,8 @@ Task::Task(int id,
     m_lastMod(QDateTime::currentDateTime()),
     m_iconIndex(-1),
     m_pos(-1),
-    m_priority(-1),
-    m_risk(-1)
+    m_priority(5),
+    m_risk(0)
 {
 }
 
@@ -193,6 +214,8 @@ int Task::priority() const
 
 void Task::setPriority(int priority)
 {
+    if (priority < 0 || priority > m_priorityColors.count() - 1)
+        return;
     m_priority = priority;
 }
 
@@ -288,7 +311,9 @@ void Task::setPosAttr(int val)
 
 QColor Task::priorityColor() const
 {
-    return m_priorityColor;
+    if (m_priority >= 0 && m_priority < m_priorityColors.count())
+        return m_priorityColors[m_priority];
+    return QColor();
 }
 
 void Task::setPriorityColor(QColor val)

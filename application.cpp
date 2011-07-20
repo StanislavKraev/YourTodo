@@ -20,6 +20,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     connect(m_mainWindow, SIGNAL(onMainWindowMinimized()), m_uiManager, SLOT(onMainWindowMinimized()));
     connect(m_mainWindow, SIGNAL(onMainWindowRestored()), m_uiManager, SLOT(onMainWindowRestored()));
     connect(m_fileManager, SIGNAL(currentListChanged(ITaskList*)), m_uiManager, SLOT(onCurrentListChanged(ITaskList*)));
+    m_fileManager->onNew();
     m_mainWindow->show();
 }
 

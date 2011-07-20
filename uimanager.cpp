@@ -82,7 +82,7 @@ void UiManager::createMenu()
 
     QList<ActionHelper> fileMenuActions;
     fileMenuActions
-            << ActionHelper("New Tasklist", Actions::FileNew, QKeySequence(Qt::CTRL + Qt::Key_N))
+            << ActionHelper("New Tasklist", Actions::FileNew, QKeySequence(Qt::ALT + Qt::Key_N))
             << Separator()
             << ActionHelper("Open Tasklist", Actions::FileOpen)
             << Separator()

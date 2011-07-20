@@ -156,7 +156,7 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
         if (item)
         {
             unsigned short curData = item->percentDone();
-            item->setPercentDone(curData == 0 ? 100 : 0);
+            item->toggleDone(curData < 100 ? 100 : 0);
             emit(dataChanged(index, createIndex(index.row(), m_treeUi->columnsCount() - 1, (int)index.internalId())));
             return true;
         }

@@ -121,7 +121,13 @@ void Task::setPercentDone(unsigned short percentDone)
 {
     if (m_subTaskList.count() > 0)
         return;
+    m_percentDone = percentDone;
+}
 
+void Task::toggleDone(unsigned short percentDone)
+{
+    foreach (Task::Ptr task, m_subTaskList)
+        task->toggleDone(percentDone);
     m_percentDone = percentDone;
 }
 

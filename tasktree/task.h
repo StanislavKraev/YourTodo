@@ -48,6 +48,7 @@ public:
     void setTitle(QString title);
     unsigned short percentDone() const;
     void setPercentDone(unsigned short percentDone);
+    void toggleDone(unsigned short percentDone);
     QString comments() const;
     void setComments(QString comments);
     int priority() const;

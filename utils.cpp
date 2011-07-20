@@ -1,8 +1,10 @@
 #include "utils.h"
 
+#include <math.h>
+
 QDateTime fromOleTime(double time)
 {
-    if (abs(time) < 1.e-3)
+    if (fabs(time) < 1.e-3)
         return QDateTime();
     QDateTime dateTime = QDateTime(QDate(1899, 12, 30));
     return dateTime.addDays(time);

@@ -6,7 +6,6 @@
 
 Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 {
-
     m_mainWindow = new MainWindow();
     m_mainWindow->SetupEventFilter();
     m_fileManager = new FileManager(m_mainWindow);
@@ -27,8 +26,8 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 Application::~Application()
 {
     m_uiManager->deleteLater();
-    m_mainWindow->deleteLater();
     delete m_fileManager;
+    m_mainWindow->deleteLater();
 }
 
 MainWindow * Application::mainWindow()

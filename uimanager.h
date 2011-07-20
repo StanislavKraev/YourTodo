@@ -29,6 +29,7 @@ public:
               QStatusBar *statusBar,
               QToolBar *toolBar,
               MainWindow *mainWindow);
+    virtual ~UiManager();
 public:
     void initManager();
 public:

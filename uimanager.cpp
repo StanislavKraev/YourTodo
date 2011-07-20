@@ -27,6 +27,14 @@ UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 }
 
+UiManager::~UiManager()
+{
+    if (m_trayIcon)
+        m_trayIcon->deleteLater();
+    if (m_trayMenu)
+        m_trayMenu->deleteLater();
+}
+
 void UiManager::initManager()
 {
     foreach(ITool *tool, m_tools)

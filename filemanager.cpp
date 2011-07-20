@@ -23,6 +23,8 @@ FileManager::~FileManager()
 
 void FileManager::onNew()
 {
+    if (m_curTaskList)
+        delete m_curTaskList;
     m_curTaskList = new TaskList();
     emit(currentListChanged(m_curTaskList));
 }

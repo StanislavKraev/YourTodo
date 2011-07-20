@@ -98,6 +98,8 @@ QToolBar * MainWindow::toolBar()
 
 void MainWindow::updateTreeModel(ITaskList *taskList)
 {
+    if (m_treeUi)
+        delete m_treeUi;
     QAbstractItemModel *oldModel = ui->treeView->model();
 
     QFont treeViewFont = QFont(ui->treeView->font());

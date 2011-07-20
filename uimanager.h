@@ -49,6 +49,7 @@ public slots:
     void onMainWindowMinimized();
     void onMainWindowRestored();
     void onCurrentListChanged(ITaskList* newList);
+    void onMaximizeTasklist();
 private:
     void createMenu();
 private:
@@ -64,6 +65,7 @@ private:
     MainWindow *m_mainWindow;
     QMenu *m_trayMenu;
     QSystemTrayIcon *m_trayIcon;
+    bool m_taskListMaximized;
 };
 
 #endif // UIMANAGER_H

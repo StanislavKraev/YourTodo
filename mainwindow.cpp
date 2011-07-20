@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
                                   QAbstractItemView::EditKeyPressed);
     ui->treeView->setUniformRowHeights(true);
     ui->treeView->setAlternatingRowColors(true);
+    QList<int> sizes;
+    sizes << 300 << 100;
+    ui->splitter->setSizes(sizes);
 }
 
 MainWindow::~MainWindow()
@@ -125,4 +128,16 @@ void MainWindow::updateTreeModel(ITaskList *taskList)
         delete oldModel;
 
     m_treeUi->init();
+}
+
+void MainWindow::maximizeTaskList(bool maximized)
+{
+    ui->textEdit->setVisible(!maximized);
+    ui->controlsArea->setVisible(!maximized);
+}
+
+bool MainWindow::isTasklistMaximized() const
+{
+    bool visible = ui->textEdit->isVisible();
+    return !visible;
 }

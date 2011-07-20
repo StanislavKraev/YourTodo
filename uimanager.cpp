@@ -16,7 +16,8 @@ UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
     m_statusBar(statusBar),
     m_toolBarShown(true),
     m_statusBarShown(true),
-    m_mainWindow(mainWindow)
+    m_mainWindow(mainWindow),
+    m_taskListMaximized(false)
 {
     m_trayMenu = new QMenu(m_mainWindow);
     m_trayMenu->addAction("Exit", this, SLOT(onExit()));
@@ -129,7 +130,7 @@ void UiManager::createMenu()
 
     QList<ActionHelper> viewMenuActions;
     viewMenuActions
-            << ActionHelper("Maximize Tasklist", Actions::ViewMaxTasklist)
+            << ActionHelper("Maximize Tasklist", Actions::ViewMaxTasklist, true, QKeySequence(Qt::CTRL + Qt::Key_M))
             << ActionHelper("Maximize Comments", Actions::ViewMaxComments)
             << Separator()
             << ActionHelper("Expand All", Actions::ViewExpandAll)
@@ -227,6 +228,8 @@ const char * UiManager::getActionSlot(Actions::Actions action) const
         return SLOT(onShowToolbar());
     case Actions::FileMinimize:
         return SLOT(onMinimize());
+    case Actions::ViewMaxTasklist:
+        return SLOT(onMaximizeTasklist());
     }
     return 0;
 }
@@ -274,6 +277,8 @@ bool UiManager::isActionChecked(Actions::Actions action) const
         return m_statusBarShown;
     case Actions::ViewShowToolbar:
         return m_toolBarShown;
+    case Actions::ViewMaxTasklist:
+        return m_taskListMaximized;
     }
 
     return Tool::isActionChecked(action);
@@ -291,6 +296,7 @@ void UiManager::init(IToolManager *manager)
     addAction(Actions::ViewShowStatusbar);
     addAction(Actions::ViewShowToolbar);
     addAction(Actions::FileMinimize);
+    addAction(Actions::ViewMaxTasklist);
 }
 
 void UiManager::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -319,4 +325,11 @@ void UiManager::onMainWindowRestored()
 void UiManager::onCurrentListChanged(ITaskList* newList)
 {
     m_mainWindow->updateTreeModel(newList);
+}
+
+void UiManager::onMaximizeTasklist()
+{
+    m_taskListMaximized = !m_taskListMaximized;
+    m_mainWindow->maximizeTaskList(m_taskListMaximized);
+    onActionChanged(Actions::ViewMaxTasklist);
 }

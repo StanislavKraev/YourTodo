@@ -28,6 +28,8 @@ public:
     QStatusBar* statusBar();
     QToolBar* toolBar();
     void updateTreeModel(ITaskList *taskList);
+    void maximizeTaskList(bool maximized);
+    bool isTasklistMaximized() const;
 public slots:
     void onShortcut();
 protected:

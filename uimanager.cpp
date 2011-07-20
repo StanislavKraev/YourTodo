@@ -124,7 +124,7 @@ void UiManager::createMenu()
             << ActionHelper("Delete Selected", Actions::EditDeleteSelected)
             << ActionHelper("Delete All", Actions::EditDeleteAll)
             << Separator()
-            << ActionHelper("Select All", Actions::EditSelectAll)
+            << ActionHelper("Select All", Actions::EditSelectAll, QKeySequence(Qt::CTRL + Qt::Key_A))
             << Separator()
             << ActionHelper("Preferences...", Actions::EditPreferences);
 

@@ -6,6 +6,7 @@
 class MainWindow;
 class FileManager;
 class UiManager;
+class SelectionTool;
 
 class Application : public QApplication
 {
@@ -19,6 +20,7 @@ private:
     MainWindow *m_mainWindow;
     FileManager *m_fileManager;
     UiManager *m_uiManager;
+    SelectionTool *m_selectionTool;
 };
 
 #endif // APPLICATION_H

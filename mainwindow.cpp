@@ -128,6 +128,7 @@ void MainWindow::updateTreeModel(ITaskList *taskList)
         delete oldModel;
 
     m_treeUi->init();
+    emit(onModelsChanged(ui->treeView->selectionModel(), model));
 }
 
 void MainWindow::maximizeTaskList(bool maximized)
@@ -140,4 +141,14 @@ bool MainWindow::isTasklistMaximized() const
 {
     bool visible = ui->textEdit->isVisible();
     return !visible;
+}
+
+QItemSelectionModel* MainWindow::selectionModel()
+{
+    return ui->treeView->selectionModel();
+}
+
+QAbstractItemModel * MainWindow::model()
+{
+    return ui->treeView->model();
 }

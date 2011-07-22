@@ -15,6 +15,8 @@
 #include "tasktree/tasklist.h"
 #include "tasktree/treemodel.h"
 #include "tasktree/treeui.h"
+#include "widgets/flowlayout.h"
+#include "widgets/prioritywidget.h"
 #include "application.h"
 
 #include "mainwindow.h"
@@ -32,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QList<int> sizes;
     sizes << 300 << 100;
     ui->splitter->setSizes(sizes);
+    ui->controlsArea->setLayout(new FlowLayout());
+    ui->controlsArea->layout()->addWidget(new PriorityWidget("Priority", ui->controlsArea));
 }
 
 MainWindow::~MainWindow()

@@ -33,5 +33,15 @@ public:
             const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
+class PriorityComboBoxDelegate : public QStyledItemDelegate
+{
+private:
+    QPen m_gridPen;
+public:
+    PriorityComboBoxDelegate();
+public:
+    virtual void paint(QPainter *painter,
+            const QStyleOptionViewItem &option, const QModelIndex &index) const;
+};
 
 #endif // DELEGATES_H

@@ -89,3 +89,51 @@ void IconIndexDelegate::paint(QPainter *painter,
         painter->drawPixmap(opt.rect.left() + 1, opt.rect.top() + 1, m_directoryIcon.pixmap(16, 16));
     }
 }
+
+PriorityComboBoxDelegate::PriorityComboBoxDelegate()
+{
+    QColor gridColor = Qt::gray;
+    m_gridPen = QPen(gridColor);
+}
+
+
+void PriorityComboBoxDelegate::paint(QPainter *painter,
+                                     const QStyleOptionViewItem &option,
+                                     const QModelIndex &index) const
+{
+    QStyleOptionViewItemV4 opt = option;
+    initStyleOption(&opt, index);
+
+    QVector<QLine> lines;
+    lines << QLine(QPoint(opt.rect.left(), opt.rect.bottom()),
+                   QPoint(opt.rect.right(), opt.rect.bottom()))
+          << QLine(QPoint(opt.rect.right(), opt.rect.top()),
+                   QPoint(opt.rect.right(), opt.rect.bottom()));
+
+    int id = index.row();
+
+//    painter->setPen(m_gridPen);
+    if (id > 0)
+    {
+        painter->drawLines(lines);
+        QColor color = Task::m_priorityColors[id - 1];
+        painter->setPen(color);
+    }
+
+    //Task::Ptr task = index.data(Qt::UserRole).value<Task::Ptr>();
+    //if (id > 0)
+    {
+        QStyledItemDelegate::paint(painter, option, index);
+    }
+    /*else
+    {
+        opt.rect.setWidth(opt.rect.width() - 2);
+        opt.rect.setHeight(opt.rect.height() - 2);
+        opt.rect.setLeft(opt.rect.left() + 1);
+        opt.rect.setTop(opt.rect.top() + 1);
+        QStyle *style = QApplication::style();
+        opt.backgroundBrush = task->priorityColor();
+        opt.displayAlignment = Qt::AlignCenter;
+        style->drawControl(QStyle::CE_ComboBoxLabel, &opt, painter, 0);
+    }*/
+}

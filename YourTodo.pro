@@ -39,7 +39,10 @@ SOURCES += main.cpp\
     tasktree/xmltasksaver.cpp \
     utils.cpp \
     tasktree/delegates.cpp \
-    selectiontool.cpp
+    selectiontool.cpp \
+    widgets/titledwidget.cpp \
+    widgets/flowlayout.cpp \
+    widgets/prioritywidget.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -69,7 +72,10 @@ HEADERS  += mainwindow.h \
     tasktree/xmltasksaver.h \
     utils.h \
     tasktree/delegates.h \
-    selectiontool.h
+    selectiontool.h \
+    widgets/titledwidget.h \
+    widgets/flowlayout.h \
+    widgets/prioritywidget.h
 
 FORMS    += mainwindow.ui
 

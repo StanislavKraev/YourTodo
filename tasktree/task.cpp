@@ -7,17 +7,17 @@ class InitColors
 public:
     InitColors()
     {
-        Task::m_priorityColors << QColor("#000ff0")
+        Task::m_priorityColors << QColor("#1ee100")
+                            << QColor("#00e43f")
+                            << QColor("#00e7a0")
+                            << QColor("#00d1ea")
+                            << QColor("#0071ed")
                             << QColor("#000ff0")
-                            << QColor("#000ff0")
-                            << QColor("#000ff0")
-                            << QColor("#000ff0")
-                            << QColor("#000ff0")
-                            << QColor("#000ff0")
-                            << QColor("#000ff0")
-                            << QColor("#000ff0")
-                            << QColor("#000ff0")
-                            << QColor("#000ff0");
+                            << QColor("#5400f3")
+                            << QColor("#ba00f6")
+                            << QColor("#f900cd")
+                            << QColor("#fc0068")
+                            << QColor("#ff0000");
     }
 };
 static InitColors initColors;

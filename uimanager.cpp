@@ -5,6 +5,9 @@
 #include <QStatusBar>
 #include <QApplication>
 
+#include "tasktree/treeui.h"
+#include "tasktree/tasktreeview.h"
+#include "itaskcontrolmanager.h"
 #include "mainwindow.h"
 
 #include "uimanager.h"
@@ -17,7 +20,9 @@ UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
     m_toolBarShown(true),
     m_statusBarShown(true),
     m_mainWindow(mainWindow),
-    m_taskListMaximized(false)
+    m_taskListMaximized(false),
+    m_treeUi(0),
+    m_taskControlManager(0)
 {
     m_trayMenu = new QMenu(m_mainWindow);
     m_trayMenu->addAction("Exit", this, SLOT(onExit()));
@@ -34,13 +39,40 @@ UiManager::~UiManager()
         m_trayIcon->deleteLater();
     if (m_trayMenu)
         m_trayMenu->deleteLater();
+    if (m_treeUi)
+        m_treeUi->deleteLater();
 }
 
 void UiManager::initManager()
 {
     foreach(ITool *tool, m_tools)
         tool->init(this);
+
+    createTreeUi();
+    createTaskControls();
     createMenu();
+}
+
+void UiManager::createTreeUi()
+{
+    if (m_treeUi)
+        delete m_treeUi;
+    QFont treeViewFont = QFont(m_mainWindow->font());
+    treeViewFont.setStrikeOut(true);
+    m_treeUi = new TreeUi(treeViewFont, m_mainWindow->treeView());
+    m_treeUi->addColumn(TreeColumnData("Title", Title, true, -1));
+    m_treeUi->addColumn(TreeColumnData("!", Priority, true, 22, TreeColumnData::PRIORITY));
+    m_treeUi->addColumn(TreeColumnData("%", PercentDone, true, 30));
+    m_treeUi->addColumn(TreeColumnData("O", IconIndex, true, 20, TreeColumnData::ICONINDEX));
+    m_treeUi->addColumn(TreeColumnData("Pos", Position, false, 24));
+    m_treeUi->addColumn(TreeColumnData("Risk", Risk, false, 30));
+    m_treeUi->addColumn(TreeColumnData("Cost", Cost, true, 30));
+    m_treeUi->addColumn(TreeColumnData("Start date", StartDate, false, 80));
+    m_treeUi->addColumn(TreeColumnData("Done date", DoneDate, false, 80));
+    m_treeUi->addColumn(TreeColumnData("Creation date", CreationDate, false, 80));
+    m_treeUi->addColumn(TreeColumnData("Last mod", LastModified, false, 80));
+    m_treeUi->addColumn(TreeColumnData("CT", CommentsType, false, 24));
+    m_treeUi->addColumn(TreeColumnData("Comments", Comments, false));
 }
 
 struct ActionHelper
@@ -324,7 +356,8 @@ void UiManager::onMainWindowRestored()
 
 void UiManager::onCurrentListChanged(ITaskList* newList)
 {
-    m_mainWindow->updateTreeModel(newList);
+    m_mainWindow->updateTreeModel(newList, m_treeUi);
+    m_treeUi->init();
 }
 
 void UiManager::onMaximizeTasklist()
@@ -332,4 +365,19 @@ void UiManager::onMaximizeTasklist()
     m_taskListMaximized = !m_taskListMaximized;
     m_mainWindow->maximizeTaskList(m_taskListMaximized);
     onActionChanged(Actions::ViewMaxTasklist);
+}
+
+void UiManager::createTaskControls()
+{
+    m_taskControlManager->createTaskControls(m_treeUi);
+}
+
+ITreeUiProvider * UiManager::treeUi() const
+{
+    return m_treeUi;
+}
+
+void UiManager::setTaskControlManager(ITaskControlManager *taskControlManager)
+{
+    m_taskControlManager = taskControlManager;
 }

@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "tasktree/itreeuiprovider.h"
-#include "tasktree/treecolumndata.h"
 
 class QTreeView;
 
@@ -22,6 +21,7 @@ public:
     virtual QFont font(int column, Task::Ptr task) const;
     virtual QBrush foreground(int column, Task::Ptr task) const;
     virtual QBrush background(int column, Task::Ptr task) const;
+    virtual TreeColumnData columnData(int column) const;
 public:
     void addColumn(TreeColumnData columnData);
     void removeColumns();

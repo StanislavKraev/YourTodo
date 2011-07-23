@@ -2,6 +2,7 @@
 #include "filemanager.h"
 #include "selectiontool.h"
 #include "uimanager.h"
+#include "taskcontrolmanager.h"
 
 #include "application.h"
 
@@ -14,6 +15,8 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 
     m_uiManager = new UiManager(m_mainWindow->menuBar(),
                                 m_mainWindow->statusBar(), m_mainWindow->toolBar(), m_mainWindow);
+    m_taskControlManager = new TaskControlManager(m_mainWindow->controlsArea());
+    m_uiManager->setTaskControlManager(m_taskControlManager);
     m_uiManager->addTool(m_uiManager);
     m_uiManager->addTool(m_fileManager);
     m_uiManager->addTool(m_selectionTool);
@@ -24,6 +27,8 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     connect(m_fileManager, SIGNAL(currentListChanged(ITaskList*)), m_uiManager, SLOT(onCurrentListChanged(ITaskList*)));
     connect(m_mainWindow, SIGNAL(onModelsChanged(QItemSelectionModel*,QAbstractItemModel*)),
             m_selectionTool, SLOT(onModelsChanged(QItemSelectionModel*,QAbstractItemModel*)));
+    connect(m_selectionTool, SIGNAL(selectionChanged(QItemSelectionModel*)),
+            m_taskControlManager, SLOT(selectionChanged(QItemSelectionModel*)));
     m_fileManager->onNew();
     m_mainWindow->show();
 }

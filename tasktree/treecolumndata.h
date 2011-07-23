@@ -5,6 +5,7 @@
 
 enum TaskDataMember
 {
+    InvalidTaskMember = 0,
     Title = 1,
     Priority,
     PercentDone,
@@ -33,8 +34,10 @@ struct TreeColumnData
     TaskDataMember taskDataMember;
     ColumnType colType;
     int width;
+    bool visible;
 public:
-    TreeColumnData(QString _title, TaskDataMember _taskDataMember,
+    TreeColumnData();
+    TreeColumnData(QString _title, TaskDataMember _taskDataMember, bool visible = true,
                    int _width = 0, ColumnType type = GENERAL);
 };
 

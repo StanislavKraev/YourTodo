@@ -4,6 +4,7 @@
 #include <QFont>
 #include <QString>
 #include <QVariant>
+#include "tasktree/treecolumndata.h"
 
 #include "tasktree/task.h"
 
@@ -23,6 +24,7 @@ public:
     virtual QFont font(int column, Task::Ptr task) const = 0;
     virtual QBrush foreground(int column, Task::Ptr task) const = 0;
     virtual QBrush background(int column, Task::Ptr task) const = 0;
+    virtual TreeColumnData columnData(int column) const = 0;
 };
 
 

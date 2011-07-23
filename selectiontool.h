@@ -19,7 +19,7 @@ public:
     virtual QObject* getReciever();
     virtual bool isActionEnabled(Actions::Actions action) const;
 signals:
-    void selectionChanged();
+    void selectionChanged(QItemSelectionModel *selectionModel);
 public slots:
     void onSelectAll();
     void onModelsChanged(QItemSelectionModel *selectionModel, QAbstractItemModel *model);

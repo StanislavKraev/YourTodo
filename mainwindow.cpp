@@ -14,17 +14,13 @@
 
 #include "tasktree/tasklist.h"
 #include "tasktree/treemodel.h"
-#include "tasktree/treeui.h"
-#include "widgets/flowlayout.h"
-#include "widgets/prioritywidget.h"
 #include "application.h"
 
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    m_treeUi(0)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->treeView->setEditTriggers(QAbstractItemView::SelectedClicked |
@@ -34,14 +30,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QList<int> sizes;
     sizes << 300 << 100;
     ui->splitter->setSizes(sizes);
-    ui->controlsArea->setLayout(new FlowLayout());
-    ui->controlsArea->layout()->addWidget(new PriorityWidget("Priority", ui->controlsArea));
 }
 
 MainWindow::~MainWindow()
 {
-    if (m_treeUi)
-        m_treeUi->deleteLater();
     delete ui;
 }
 
@@ -103,35 +95,15 @@ QToolBar * MainWindow::toolBar()
     return ui->mainToolBar;
 }
 
-void MainWindow::updateTreeModel(ITaskList *taskList)
+void MainWindow::updateTreeModel(ITaskList *taskList, ITreeUiProvider *treeUi)
 {
-    if (m_treeUi)
-        delete m_treeUi;
     QAbstractItemModel *oldModel = ui->treeView->model();
 
-    QFont treeViewFont = QFont(ui->treeView->font());
-    treeViewFont.setStrikeOut(true);
-    m_treeUi = new TreeUi(treeViewFont, ui->treeView);
-    m_treeUi->addColumn(TreeColumnData("Title", Title, -1));
-    m_treeUi->addColumn(TreeColumnData("!", Priority, 22, TreeColumnData::PRIORITY));
-    m_treeUi->addColumn(TreeColumnData("%", PercentDone, 30));
-    m_treeUi->addColumn(TreeColumnData("O", IconIndex, 20, TreeColumnData::ICONINDEX));
-    m_treeUi->addColumn(TreeColumnData("Pos", Position, 24));
-    m_treeUi->addColumn(TreeColumnData("Risk", Risk, 30));
-    m_treeUi->addColumn(TreeColumnData("Cost", Cost, 30));
-    m_treeUi->addColumn(TreeColumnData("Start date", StartDate, 80));
-    m_treeUi->addColumn(TreeColumnData("Done date", DoneDate, 80));
-    m_treeUi->addColumn(TreeColumnData("Creation date", CreationDate, 80));
-    m_treeUi->addColumn(TreeColumnData("Last mod", LastModified, 80));
-    m_treeUi->addColumn(TreeColumnData("CT", CommentsType, 24));
-    m_treeUi->addColumn(TreeColumnData("Comments", Comments));
-
-    TreeModel *model = new TreeModel(this, taskList, m_treeUi);
+    TreeModel *model = new TreeModel(this, taskList, treeUi);
     ui->treeView->setModel(model);
     if (oldModel)
         delete oldModel;
 
-    m_treeUi->init();
     emit(onModelsChanged(ui->treeView->selectionModel(), model));
 }
 
@@ -155,4 +127,14 @@ QItemSelectionModel* MainWindow::selectionModel()
 QAbstractItemModel * MainWindow::model()
 {
     return ui->treeView->model();
+}
+
+TaskTreeView * MainWindow::treeView() const
+{
+    return ui->treeView;
+}
+
+QWidget * MainWindow::controlsArea() const
+{
+    return ui->controlsArea;
 }

@@ -42,7 +42,9 @@ SOURCES += main.cpp\
     selectiontool.cpp \
     widgets/titledwidget.cpp \
     widgets/flowlayout.cpp \
-    widgets/prioritywidget.cpp
+    widgets/prioritywidget.cpp \
+    widgets/spinnerwidget.cpp \
+    taskcontrolmanager.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -75,7 +77,10 @@ HEADERS  += mainwindow.h \
     selectiontool.h \
     widgets/titledwidget.h \
     widgets/flowlayout.h \
-    widgets/prioritywidget.h
+    widgets/prioritywidget.h \
+    widgets/spinnerwidget.h \
+    taskcontrolmanager.h \
+    itaskcontrolmanager.h
 
 FORMS    += mainwindow.ui
 

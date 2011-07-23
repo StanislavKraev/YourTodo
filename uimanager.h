@@ -20,6 +20,9 @@ class MainWindow;
 class QMenu;
 class QSystemTrayIcon;
 class ITaskList;
+class TreeUi;
+class ITreeUiProvider;
+class ITaskControlManager;
 
 class UiManager : public QObject, public IToolManager, public Tool
 {
@@ -40,6 +43,8 @@ public:
     virtual bool isActionChecked(Actions::Actions action) const;
     virtual const char* getActionSlot(Actions::Actions action) const;
     virtual QObject* getReciever();
+    ITreeUiProvider* treeUi() const;
+    void setTaskControlManager(ITaskControlManager *taskControlManager);
 public slots:
     void onExit();
     void onShowToolbar();
@@ -52,6 +57,8 @@ public slots:
     void onMaximizeTasklist();
 private:
     void createMenu();
+    void createTreeUi();
+    void createTaskControls();
 private:
     QMenuBar *m_menuBar;
     QList<Action> m_actions;
@@ -66,6 +73,8 @@ private:
     QMenu *m_trayMenu;
     QSystemTrayIcon *m_trayIcon;
     bool m_taskListMaximized;
+    TreeUi *m_treeUi;
+    ITaskControlManager *m_taskControlManager;
 };
 
 #endif // UIMANAGER_H

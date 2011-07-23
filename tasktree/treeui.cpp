@@ -14,21 +14,28 @@ TreeUi::TreeUi(const QFont &strikedOutFont, QTreeView *view) :
 
 int TreeUi::columnsCount() const
 {
-    return m_columns.count();
+    int count = 0;
+    foreach(const TreeColumnData &column, m_columns)
+    {
+        if (column.visible)
+            count++;
+    }
+
+    return count;
 }
 
 QString TreeUi::headerTitle(int section) const
 {
-    if (section >= 0 && section <= m_columns.count() - 1)
-        return m_columns[section].title;
+    if (section >= 0 && section <= columnsCount() - 1)
+        return columnData(section).title;
     return QString();
 }
 
 QVariant TreeUi::itemData(int column, Task::Ptr task) const
 {
-    if (column >= 0 && column <= m_columns.count() - 1)
+    if (column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = m_columns[column].taskDataMember;
+        TaskDataMember member = columnData(column).taskDataMember;
         switch (member)
         {
         case Title:
@@ -78,13 +85,17 @@ void TreeUi::removeColumns()
 
 void TreeUi::updateData(Task::Ptr task, int column, QVariant data)
 {
-    if (column >= 0 && column <= m_columns.count() - 1)
+    if (column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = m_columns[column].taskDataMember;
+        TaskDataMember member = columnData(column).taskDataMember;
         switch (member)
         {
         case Title:
             task->setTitle(data.toString());
+        case Cost:
+            task->setCost(data.toDouble());
+        case PercentDone:
+            task->setPercentDone(data.toInt());
         }
     }
 }
@@ -96,9 +107,9 @@ QFont TreeUi::strikedOutFont() const
 
 QFont TreeUi::font(int column, Task::Ptr task) const
 {
-    if (column >= 0 && column <= m_columns.count() - 1)
+    if (column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = m_columns[column].taskDataMember;
+        TaskDataMember member = columnData(column).taskDataMember;
         if (member == Title)
         {
             QFont font;
@@ -116,9 +127,9 @@ QFont TreeUi::font(int column, Task::Ptr task) const
 
 QBrush TreeUi::foreground(int column, Task::Ptr task) const
 {
-    if (task && column >= 0 && column <= m_columns.count() - 1)
+    if (task && column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = m_columns[column].taskDataMember;
+        TaskDataMember member = columnData(column).taskDataMember;
         switch (member)
         {
             case Priority:
@@ -135,9 +146,10 @@ QBrush TreeUi::foreground(int column, Task::Ptr task) const
 
 void TreeUi::init()
 {
-    int index = 0;
-    foreach(const TreeColumnData &column, m_columns)
+    int count = columnsCount();
+    for (int index = 0; index < count; ++index)
     {
+        TreeColumnData column = columnData(index);
         if (column.colType == TreeColumnData::PRIORITY)
             m_view->setItemDelegateForColumn(index, new PriorityDelegate(m_view));
         else if (column.colType == TreeColumnData::ICONINDEX)
@@ -151,15 +163,14 @@ void TreeUi::init()
             m_view->header()->resizeSection(index, column.width);
             m_view->header()->setResizeMode(index, QHeaderView::Fixed);
         }
-        index++;
     }
 }
 
 QBrush TreeUi::background(int column, Task::Ptr task) const
 {
-    if (task && column >= 0 && column <= m_columns.count() - 1)
+    if (task && column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = m_columns[column].taskDataMember;
+        TaskDataMember member = columnData(column).taskDataMember;
         switch (member)
         {
         case Priority:
@@ -167,4 +178,22 @@ QBrush TreeUi::background(int column, Task::Ptr task) const
         }
     }
     return Qt::white;
+}
+
+TreeColumnData TreeUi::columnData(int column) const
+{
+    if (column >= 0 && column <  columnsCount())
+    {
+        int i = -1;
+        foreach (const TreeColumnData &data, m_columns)
+        {
+            if (data.visible)
+            {
+                ++i;
+                if (i == column)
+                    return data;
+            }
+        }
+    }
+    return TreeColumnData();
 }

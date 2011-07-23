@@ -7,11 +7,12 @@ class QMenuBar;
 class QStatusBar;
 class QToolBar;
 
-class TreeUi;
 class UiManager;
 class ITaskList;
 class QItemSelectionModel;
 class QAbstractItemModel;
+class TaskTreeView;
+class ITreeUiProvider;
 
 namespace Ui {
     class MainWindow;
@@ -29,11 +30,13 @@ public:
     QMenuBar* menuBar();
     QStatusBar* statusBar();
     QToolBar* toolBar();
-    void updateTreeModel(ITaskList *taskList);
+    void updateTreeModel(ITaskList *taskList, ITreeUiProvider *treeUi);
     void maximizeTaskList(bool maximized);
     bool isTasklistMaximized() const;
     QItemSelectionModel *selectionModel();
     QAbstractItemModel *model();
+    TaskTreeView *treeView() const;
+    QWidget* controlsArea() const;
 public slots:
     void onShortcut();
 protected:
@@ -44,7 +47,6 @@ signals:
     void onModelsChanged(QItemSelectionModel *selectionModel, QAbstractItemModel *model);
 private:
     Ui::MainWindow *ui;
-    TreeUi *m_treeUi;
 };
 
 #endif // MAINWINDOW_H

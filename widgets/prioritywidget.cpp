@@ -28,4 +28,5 @@ PriorityWidget::PriorityWidget(QString title, QWidget *parent) :
     m_comboBox->setMaxCount(20);
     m_comboBox->setMaxVisibleItems(20);
     m_comboBox->setItemDelegate(new PriorityComboBoxDelegate());
+    m_comboBox->setMinimumWidth(80);
 }

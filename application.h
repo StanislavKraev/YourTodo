@@ -7,6 +7,7 @@ class MainWindow;
 class FileManager;
 class UiManager;
 class SelectionTool;
+class TaskControlManager;
 
 class Application : public QApplication
 {
@@ -21,6 +22,7 @@ private:
     FileManager *m_fileManager;
     UiManager *m_uiManager;
     SelectionTool *m_selectionTool;
+    TaskControlManager *m_taskControlManager;
 };
 
 #endif // APPLICATION_H

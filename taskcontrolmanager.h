@@ -9,12 +9,13 @@
 
 class QWidget;
 class QItemSelectionModel;
+class IPreferences;
 
 class TaskControlManager : public QObject, public ITaskControlManager
 {
     Q_OBJECT
 public:
-    TaskControlManager(QWidget *parentWidget);
+    TaskControlManager(QWidget *parentWidget, IPreferences *prefs);
     virtual ~TaskControlManager();
 public:
     virtual void createTaskControls();
@@ -26,6 +27,7 @@ private:
 private:
     QWidget *m_parentWidget;
     QMap<TaskDataMember, DataWidget*> m_widgets;
+    IPreferences *m_prefs;
 };
 
 #endif // TASKCONTROLMANAGER_H

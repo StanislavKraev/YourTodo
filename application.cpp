@@ -18,7 +18,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     m_uiManager = new UiManager(m_mainWindow->menuBar(),
                                 m_mainWindow->statusBar(), m_mainWindow->toolBar(),
                                 m_mainWindow, m_prefsManager);
-    m_taskControlManager = new TaskControlManager(m_mainWindow->controlsArea());
+    m_taskControlManager = new TaskControlManager(m_mainWindow->controlsArea(), m_prefsManager);
     m_uiManager->setTaskControlManager(m_taskControlManager);
     m_uiManager->addTool(m_uiManager);
     m_uiManager->addTool(m_fileManager);

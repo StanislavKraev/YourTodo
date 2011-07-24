@@ -8,6 +8,8 @@ SelectionTool::SelectionTool(QItemSelectionModel* selectionModel,
     m_selectionModel(selectionModel),
     m_model(model)
 {
+    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(selectionChanged(QItemSelection,QItemSelection)));
 }
 
 void SelectionTool::init(IToolManager *manager)
@@ -23,7 +25,7 @@ const char * SelectionTool::getActionSlot(Actions::Actions action) const
     return 0;
 }
 
-QObject * SelectionTool::getReciever()
+QObject *SelectionTool::getReciever()
 {
     return this;
 }
@@ -46,4 +48,13 @@ void SelectionTool::onModelsChanged(QItemSelectionModel *selectionModel, QAbstra
     m_selectionModel = selectionModel;
     m_model = model;
     m_manager->onActionChanged(Actions::EditSelectAll);
+
+    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            SLOT(selectionChanged(QItemSelection,QItemSelection)));
+    emit(selectionChanged(m_selectionModel));
+}
+
+void SelectionTool::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+{
+    emit(selectionChanged(m_selectionModel));
 }

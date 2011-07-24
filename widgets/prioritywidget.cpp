@@ -55,3 +55,8 @@ int PriorityWidget::indexFromPriority(int priority) const
         return 0;
     return priority + 1;
 }
+
+void PriorityWidget::clear()
+{
+    m_comboBox->setCurrentIndex(0);
+}

@@ -13,6 +13,7 @@ public:
 public:
     virtual void setData(const QVariant &data);
     virtual QVariant data() const;
+    virtual void clear();
 
 signals:
 

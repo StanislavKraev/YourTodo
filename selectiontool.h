@@ -2,6 +2,7 @@
 #define SELECTIONTOOL_H
 
 #include <QObject>
+#include <QItemSelection>
 #include "tool.h"
 
 class IToolManager;
@@ -23,6 +24,7 @@ signals:
 public slots:
     void onSelectAll();
     void onModelsChanged(QItemSelectionModel *selectionModel, QAbstractItemModel *model);
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 private:
     IToolManager *m_manager;
     QItemSelectionModel *m_selectionModel;

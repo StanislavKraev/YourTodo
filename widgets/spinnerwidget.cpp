@@ -20,3 +20,8 @@ QVariant SpinnerWidget::data() const
 {
     return QVariant();
 }
+
+void SpinnerWidget::clear()
+{
+    m_spinner->setValue(m_spinner->minimum());
+}

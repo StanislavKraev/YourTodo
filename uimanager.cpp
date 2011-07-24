@@ -63,7 +63,6 @@ void UiManager::createTreeUi()
     treeViewFont.setStrikeOut(true);
     m_treeUi = new TreeUi(treeViewFont, m_mainWindow->treeView(), m_prefs);
     m_treeUi->addColumn(TreeColumnData("O", IconIndex, -1, TreeColumnData::ICONINDEX));
-    m_treeUi->addColumn(TreeColumnData("Title", Title, -1));
     m_treeUi->addColumn(TreeColumnData("!", Priority, 22, TreeColumnData::PRIORITY));
     m_treeUi->addColumn(TreeColumnData("%", PercentDone, 30));
     m_treeUi->addColumn(TreeColumnData("Pos", Position, 24));
@@ -75,6 +74,7 @@ void UiManager::createTreeUi()
     m_treeUi->addColumn(TreeColumnData("Last mod", LastModified, 80));
     m_treeUi->addColumn(TreeColumnData("CT", CommentsType, 24));
     m_treeUi->addColumn(TreeColumnData("Comments", Comments));
+    m_treeUi->addColumn(TreeColumnData("Title", Title, -1));
 }
 
 struct ActionHelper

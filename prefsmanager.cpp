@@ -4,7 +4,6 @@ PrefsManager::PrefsManager()
 {
     m_selectedColumns << Title
                       << Priority
-                      << PercentDone
                       << IconIndex
                       << PercentDone;
 }

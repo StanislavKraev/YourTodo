@@ -13,6 +13,7 @@ public:
 public:
     virtual void setData(const QVariant &data);
     virtual QVariant data() const;
+    virtual void clear();
 private:
     int priorityFromIndex(int index) const;
     int indexFromPriority(int priority) const;

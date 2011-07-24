@@ -12,6 +12,7 @@ public:
 public:
     virtual void setData(const QVariant &data) = 0;
     virtual QVariant data() const = 0;
+    virtual void clear() = 0;
 signals:
 
 public slots:

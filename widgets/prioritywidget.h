@@ -20,6 +20,7 @@ private:
 signals:
 
 public slots:
+    void currentIndexChanged(int newIndex);
 private:
     QComboBox *m_comboBox;
 };

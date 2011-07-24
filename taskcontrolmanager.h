@@ -6,6 +6,7 @@
 #include "widgets/datawidget.h"
 #include "itaskcontrolmanager.h"
 #include "tasktree/treecolumndata.h"
+#include "tasktree/task.h"
 
 class QWidget;
 class QItemSelectionModel;
@@ -22,12 +23,10 @@ public:
 public slots:
     void selectionChanged(QItemSelectionModel *selectionModel);
 private:
-    void clearAndDisableControls();
-    void enableControls();
-private:
     QWidget *m_parentWidget;
-    QMap<TaskDataMember, DataWidget*> m_widgets;
+    QMap<nsTaskData::TaskDataMember, DataWidget*> m_widgets;
     IPreferences *m_prefs;
+    Task::Ptr m_curTask;
 };
 
 #endif // TASKCONTROLMANAGER_H

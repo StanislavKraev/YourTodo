@@ -135,7 +135,7 @@ int TaskList::pos(Task::Ptr task) const
     return m_taskRoot->pos(task);
 }
 
-bool TaskList::insertNewTasks(Task::Ptr task, int pos, int count)
+bool TaskList::insertNewTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher)
 {
     if (pos < 0 ||
         ((pos > task->count()) && (task->count() > 0)))
@@ -148,6 +148,7 @@ bool TaskList::insertNewTasks(Task::Ptr task, int pos, int count)
         m_idTaskMap[newTask->id()] = newTask;
         task->insertSubTask(curPos, newTask);
         ++curPos;
+        newTask->addWatch(watcher);
     }
     return true;
 }
@@ -157,7 +158,7 @@ Task::Ptr TaskList::root() const
     return m_taskRoot;
 }
 
-bool TaskList::removeTasks(Task::Ptr task, int pos, int count)
+bool TaskList::removeTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher)
 {
     if (pos < 0 || (pos + count > task->count()))
         return false;
@@ -167,6 +168,7 @@ bool TaskList::removeTasks(Task::Ptr task, int pos, int count)
         Task::Ptr removingTask = task->getAt(pos);
         m_idTaskMap.remove(removingTask->id());
         task->removeAt(pos);
+        removingTask->removeWatch(watcher);
     }
     return true;
 }
@@ -257,4 +259,12 @@ QDateTime TaskList::getEarliestDueDate() const
 void TaskList::setFileName(QString fileName)
 {
     m_fileName = fileName;
+}
+
+void TaskList::addTaskWatcher(ITaskWatcher *watcher)
+{
+    foreach(Task::Ptr task, m_idTaskMap.values())
+    {
+        task->addWatch(watcher);
+    }
 }

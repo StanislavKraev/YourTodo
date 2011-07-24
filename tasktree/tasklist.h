@@ -19,11 +19,12 @@ public:
     virtual int count() const;
     virtual void add(Task::Ptr task);
     virtual Task::Ptr createTask(QString title);
-    virtual bool insertNewTasks(Task::Ptr task, int pos, int count);
-    virtual bool removeTasks(Task::Ptr task, int pos, int count);
+    virtual bool insertNewTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher);
+    virtual bool removeTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher);
     virtual Task::Ptr root() const;
     virtual void replace(Task::Ptr oldItem, Task::Ptr newItem);
     void setFileName(QString fileName);
+    virtual void addTaskWatcher(ITaskWatcher *watcher);
 public:
     virtual bool load(ITaskLoader *loader);
     virtual bool save(ITaskSaver *saver);

@@ -8,7 +8,10 @@
 #include "QSharedPointer"
 #include "QVariant"
 
-class Task
+#include "tasktree/treecolumndata.h"
+#include "watchobserver.h"
+
+class Task : public WatchObserver
 {
 public:
     enum CommentsType
@@ -43,6 +46,9 @@ public:
     void replace(Ptr oldItem, Ptr newItem);
     int calcPosAttr() const;
     double calcCost() const;
+    QVariant memberData(nsTaskData::TaskDataMember member) const;
+    void setMemberData(nsTaskData::TaskDataMember member, QVariant data);
+    bool editable(nsTaskData::TaskDataMember member) const;
 public:
     QString title() const;
     void setTitle(QString title);

@@ -8,8 +8,9 @@ SelectionTool::SelectionTool(QItemSelectionModel* selectionModel,
     m_selectionModel(selectionModel),
     m_model(model)
 {
-    connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(selectionChanged(QItemSelection,QItemSelection)));
+    if (m_selectionModel)
+        connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                SLOT(selectionChanged(QItemSelection,QItemSelection)));
 }
 
 void SelectionTool::init(IToolManager *manager)

@@ -67,11 +67,13 @@ Task::Task(int id,
 }
 
 Task::Task(const Task &task) :
+    WatchObserver(task),
     m_id(task.m_id),
     m_title(task.m_title),
     m_subTaskList(task.m_subTaskList),
     m_parent(task.m_parent),
     m_percentDone(task.m_percentDone)
+  // , TODO:
 {
 }
 
@@ -370,4 +372,96 @@ double Task::calcCost() const
         sum += subTask->calcCost();
     }
     return cost() + sum;
+}
+
+QVariant Task::memberData(nsTaskData::TaskDataMember member) const
+{
+    switch(member)
+    {
+    case nsTaskData::Title:
+        return m_title;
+    case nsTaskData::Priority:
+        return m_priority;
+    case nsTaskData::PercentDone:
+        return m_percentDone;
+    case nsTaskData::IconIndex:
+        return m_iconIndex;
+    case nsTaskData::Position:
+        return m_pos;
+    case nsTaskData::Risk:
+        return m_risk;
+    case nsTaskData::Cost:
+        return m_cost;
+    case nsTaskData::StartDate:
+        return m_startDate;
+    case nsTaskData::DoneDate:
+        return m_doneDate;
+    case nsTaskData::CreationDate:
+        return m_creationDate;
+    case nsTaskData::LastModified:
+        return m_lastMod;
+    case nsTaskData::CommentsType:
+        return m_commentsType;
+    case nsTaskData::Comments:
+        return m_comments;
+    }
+
+    return QVariant();
+}
+
+bool Task::editable(nsTaskData::TaskDataMember member) const
+{
+    switch(member)
+    {
+    case nsTaskData::PercentDone:
+        return m_subTaskList.count() == 0;
+    }
+    return true;
+}
+
+void Task::setMemberData(nsTaskData::TaskDataMember member, QVariant data)
+{
+    switch(member)
+    {
+    case nsTaskData::Title:
+        m_title = data.toString();
+        break;
+    case nsTaskData::Priority:
+        m_priority = data.toInt();
+        break;
+    case nsTaskData::PercentDone:
+        m_percentDone = data.toUInt();
+        break;
+    case nsTaskData::IconIndex:
+        m_iconIndex = data.toInt();
+        break;
+    case nsTaskData::Position:
+        m_pos = data.toInt();
+        break;
+    case nsTaskData::Risk:
+        m_risk = data.toInt();
+        break;
+    case nsTaskData::Cost:
+        m_cost = data.toDouble();
+        break;
+    case nsTaskData::StartDate:
+        m_startDate = data.toDateTime();
+        break;
+    case nsTaskData::DoneDate:
+        m_doneDate = data.toDateTime();
+        break;
+    case nsTaskData::CreationDate:
+        m_creationDate = data.toDateTime();
+        break;
+    case nsTaskData::LastModified:
+        m_lastMod = data.toDateTime();
+        break;
+    case nsTaskData::CommentsType:
+        m_commentsType = (Task::CommentsType)data.toInt();
+        break;
+    case nsTaskData::Comments:
+        m_comments = data.toString();
+        break;
+    }
+    notifyMemberChange(member, this);
 }

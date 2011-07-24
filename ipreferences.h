@@ -12,7 +12,7 @@ private:
     IPreferences(const IPreferences&);
     IPreferences& operator=(const IPreferences&);
 public:
-    virtual bool isColumnSelected(TaskDataMember member) const = 0;
+    virtual bool isColumnSelected(nsTaskData::TaskDataMember member) const = 0;
 };
 
 #endif // IPREFERENCES_H

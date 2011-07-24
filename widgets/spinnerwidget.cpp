@@ -14,11 +14,17 @@ SpinnerWidget::SpinnerWidget(QString title, int min, int max, QWidget *parent) :
 
 void SpinnerWidget::setData(const QVariant &data)
 {
+    int percent = data.toInt();
+    if (percent < m_spinner->minimum())
+        percent = m_spinner->minimum();
+    if (percent > m_spinner->maximum())
+        percent = m_spinner->maximum();
+    m_spinner->setValue(percent);
 }
 
 QVariant SpinnerWidget::data() const
 {
-    return QVariant();
+    return m_spinner->value();
 }
 
 void SpinnerWidget::clear()

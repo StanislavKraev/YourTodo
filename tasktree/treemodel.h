@@ -3,10 +3,12 @@
 
 #include "QAbstractItemModel"
 
+#include "tasktree/itaskwatcher.h"
+
 class ITaskList;
 class ITreeUiProvider;
 
-class TreeModel : public QAbstractItemModel
+class TreeModel : public QAbstractItemModel, public ITaskWatcher
 {
 public:
     TreeModel(QObject* parent, ITaskList *taskStorage, ITreeUiProvider *treeUi);
@@ -22,6 +24,10 @@ public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+public:
+    virtual void taskChanged(nsTaskData::TaskDataMember member, Task* task);
+private:
+    QModelIndex idFromPtr(Task* task, QModelIndex parent = QModelIndex()) const;
 private:
     ITaskList *m_taskList;
     ITreeUiProvider *m_treeUi;

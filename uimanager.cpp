@@ -62,19 +62,19 @@ void UiManager::createTreeUi()
     QFont treeViewFont = QFont(m_mainWindow->font());
     treeViewFont.setStrikeOut(true);
     m_treeUi = new TreeUi(treeViewFont, m_mainWindow->treeView(), m_prefs);
-    m_treeUi->addColumn(TreeColumnData("O", IconIndex, -1, TreeColumnData::ICONINDEX));
-    m_treeUi->addColumn(TreeColumnData("!", Priority, 22, TreeColumnData::PRIORITY));
-    m_treeUi->addColumn(TreeColumnData("%", PercentDone, 30));
-    m_treeUi->addColumn(TreeColumnData("Pos", Position, 24));
-    m_treeUi->addColumn(TreeColumnData("Risk", Risk, 30));
-    m_treeUi->addColumn(TreeColumnData("Cost", Cost, 30));
-    m_treeUi->addColumn(TreeColumnData("Start date", StartDate, 80));
-    m_treeUi->addColumn(TreeColumnData("Done date", DoneDate, 80));
-    m_treeUi->addColumn(TreeColumnData("Creation date", CreationDate, 80));
-    m_treeUi->addColumn(TreeColumnData("Last mod", LastModified, 80));
-    m_treeUi->addColumn(TreeColumnData("CT", CommentsType, 24));
-    m_treeUi->addColumn(TreeColumnData("Comments", Comments));
-    m_treeUi->addColumn(TreeColumnData("Title", Title, -1));
+    m_treeUi->addColumn(TreeColumnData("O", nsTaskData::IconIndex, -1, TreeColumnData::ICONINDEX));
+    m_treeUi->addColumn(TreeColumnData("!", nsTaskData::Priority, 22, TreeColumnData::PRIORITY));
+    m_treeUi->addColumn(TreeColumnData("%", nsTaskData::PercentDone, 30));
+    m_treeUi->addColumn(TreeColumnData("Pos", nsTaskData::Position, 24));
+    m_treeUi->addColumn(TreeColumnData("Risk", nsTaskData::Risk, 30));
+    m_treeUi->addColumn(TreeColumnData("Cost", nsTaskData::Cost, 30));
+    m_treeUi->addColumn(TreeColumnData("Start date", nsTaskData::StartDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Done date", nsTaskData::DoneDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Creation date", nsTaskData::CreationDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Last mod", nsTaskData::LastModified, 80));
+    m_treeUi->addColumn(TreeColumnData("CT", nsTaskData::CommentsType, 24));
+    m_treeUi->addColumn(TreeColumnData("Comments", nsTaskData::Comments));
+    m_treeUi->addColumn(TreeColumnData("Title", nsTaskData::Title, -1));
 }
 
 struct ActionHelper

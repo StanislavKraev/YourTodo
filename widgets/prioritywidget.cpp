@@ -29,6 +29,7 @@ PriorityWidget::PriorityWidget(QString title, QWidget *parent) :
     m_comboBox->setMaxVisibleItems(20);
     m_comboBox->setItemDelegate(new PriorityComboBoxDelegate());
     m_comboBox->setMinimumWidth(80);
+    connect(m_comboBox, SIGNAL(currentIndexChanged(int)), SLOT(currentIndexChanged(int)));
 }
 
 void PriorityWidget::setData(const QVariant &data)
@@ -45,7 +46,7 @@ QVariant PriorityWidget::data() const
 int PriorityWidget::priorityFromIndex(int index) const
 {
     if (index <= 0 || index > m_comboBox->count() - 1)
-        return -1;
+        return -2;
     return index - 1;
 }
 
@@ -59,4 +60,11 @@ int PriorityWidget::indexFromPriority(int priority) const
 void PriorityWidget::clear()
 {
     m_comboBox->setCurrentIndex(0);
+}
+
+void PriorityWidget::currentIndexChanged(int newIndex)
+{
+    bool prevBlock = m_comboBox->blockSignals(true);
+    onDataChanged(priorityFromIndex(newIndex));
+    m_comboBox->blockSignals(prevBlock);
 }

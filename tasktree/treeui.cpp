@@ -37,38 +37,38 @@ QVariant TreeUi::itemData(int column, Task::Ptr task) const
 {
     if (column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = columnData(column).taskDataMember;
+        nsTaskData::TaskDataMember member = columnData(column).taskDataMember;
         switch (member)
         {
-        case Title:
+        case nsTaskData::Title:
             return task->title();
-        case Priority:
+        case nsTaskData::Priority:
             if (task->percentDone() >= 100)
                 return QVariant();
             return task->priority();
-        case PercentDone:
+        case nsTaskData::PercentDone:
             if (task->percentDone() >= 100)
                 return QVariant();
             return QString("%1%").arg(task->percentDone());
-        case IconIndex:
+        case nsTaskData::IconIndex:
             return task->iconIndex();
-        case Position:
+        case nsTaskData::Position:
             return task->posAttr();
-        case Risk:
+        case nsTaskData::Risk:
             return task->risk();
-        case Cost:
+        case nsTaskData::Cost:
             return task->calcCost();
-        case StartDate:
+        case nsTaskData::StartDate:
             return task->startDate();
-        case DoneDate:
+        case nsTaskData::DoneDate:
             return task->doneDate();
-        case CreationDate:
+        case nsTaskData::CreationDate:
             return task->creationDate();
-        case LastModified:
+        case nsTaskData::LastModified:
             return task->lastModDate();
-        case CommentsType:
+        case nsTaskData::CommentsType:
             return task->commentsType();
-        case Comments:
+        case nsTaskData::Comments:
             return task->comments();
         }
     }
@@ -89,15 +89,21 @@ void TreeUi::updateData(Task::Ptr task, int column, QVariant data)
 {
     if (column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = columnData(column).taskDataMember;
+        nsTaskData::TaskDataMember member = columnData(column).taskDataMember;
         switch (member)
         {
-        case Title:
+        case nsTaskData::Title:
             task->setTitle(data.toString());
-        case Cost:
+            task->notifyMemberChange(member, &(*task));
+            break;
+        case nsTaskData::Cost:
             task->setCost(data.toDouble());
-        case PercentDone:
+            task->notifyMemberChange(member, &(*task));
+            break;
+        case nsTaskData::PercentDone:
             task->setPercentDone(data.toInt());
+            task->notifyMemberChange(member, &(*task));
+            break;
         }
     }
 }
@@ -111,8 +117,8 @@ QFont TreeUi::font(int column, Task::Ptr task) const
 {
     if (column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = columnData(column).taskDataMember;
-        if (member == Title)
+        nsTaskData::TaskDataMember member = columnData(column).taskDataMember;
+        if (member == nsTaskData::Title)
         {
             QFont font;
             if (task->percentDone() >= 100)
@@ -131,10 +137,10 @@ QBrush TreeUi::foreground(int column, Task::Ptr task) const
 {
     if (task && column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = columnData(column).taskDataMember;
+        nsTaskData::TaskDataMember member = columnData(column).taskDataMember;
         switch (member)
         {
-            case Priority:
+            case nsTaskData::Priority:
             {
                 if (task->priority() > 3)
                     return Qt::white;
@@ -172,10 +178,10 @@ QBrush TreeUi::background(int column, Task::Ptr task) const
 {
     if (task && column >= 0 && column <= columnsCount() - 1)
     {
-        TaskDataMember member = columnData(column).taskDataMember;
+        nsTaskData::TaskDataMember member = columnData(column).taskDataMember;
         switch (member)
         {
-        case Priority:
+        case nsTaskData::Priority:
             return task->priorityColor();
         }
     }

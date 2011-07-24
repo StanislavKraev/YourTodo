@@ -10,9 +10,9 @@ class PrefsManager : public IPreferences
 public:
     PrefsManager();
 public:
-    virtual bool isColumnSelected(TaskDataMember member) const;
+    virtual bool isColumnSelected(nsTaskData::TaskDataMember member) const;
 private:
-    QSet<TaskDataMember> m_selectedColumns;
+    QSet<nsTaskData::TaskDataMember> m_selectedColumns;
 };
 
 #endif // PREFSMANAGER_H

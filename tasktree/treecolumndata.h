@@ -3,23 +3,26 @@
 
 #include <QString>
 
-enum TaskDataMember
+namespace nsTaskData
 {
-    InvalidTaskMember = 0,
-    Title = 1,
-    Priority,
-    PercentDone,
-    IconIndex,
-    Position,
-    Risk,
-    Cost,
-    StartDate,
-    DoneDate,
-    CreationDate,
-    LastModified,
-    CommentsType,
-    Comments
-};
+    enum TaskDataMember
+    {
+        InvalidTaskMember = 0,
+        Title = 1,
+        Priority,
+        PercentDone,
+        IconIndex,
+        Position,
+        Risk,
+        Cost,
+        StartDate,
+        DoneDate,
+        CreationDate,
+        LastModified,
+        CommentsType,
+        Comments
+    };
+}
 
 struct TreeColumnData
 {
@@ -31,12 +34,12 @@ struct TreeColumnData
     };
 
     QString title;
-    TaskDataMember taskDataMember;
+    nsTaskData::TaskDataMember taskDataMember;
     ColumnType colType;
     int width;
 public:
     TreeColumnData();
-    TreeColumnData(QString _title, TaskDataMember _taskDataMember,
+    TreeColumnData(QString _title, nsTaskData::TaskDataMember _taskDataMember,
                    int _width = 0, ColumnType type = GENERAL);
 };
 

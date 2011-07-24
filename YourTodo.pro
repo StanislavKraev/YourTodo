@@ -44,7 +44,9 @@ SOURCES += main.cpp\
     widgets/flowlayout.cpp \
     widgets/prioritywidget.cpp \
     widgets/spinnerwidget.cpp \
-    taskcontrolmanager.cpp
+    taskcontrolmanager.cpp \
+    prefsmanager.cpp \
+    widgets/datawidget.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -80,7 +82,10 @@ HEADERS  += mainwindow.h \
     widgets/prioritywidget.h \
     widgets/spinnerwidget.h \
     taskcontrolmanager.h \
-    itaskcontrolmanager.h
+    itaskcontrolmanager.h \
+    prefsmanager.h \
+    ipreferences.h \
+    widgets/datawidget.h
 
 FORMS    += mainwindow.ui
 

@@ -2,9 +2,11 @@
 #define TASKCONTROLMANAGER_H
 
 #include <QObject>
+#include <QList>
+#include "widgets/datawidget.h"
 #include "itaskcontrolmanager.h"
+#include "tasktree/treecolumndata.h"
 
-class ITreeUiProvider;
 class QWidget;
 class QItemSelectionModel;
 
@@ -15,15 +17,15 @@ public:
     TaskControlManager(QWidget *parentWidget);
     virtual ~TaskControlManager();
 public:
-    virtual void createTaskControls(ITreeUiProvider *treeUi);
+    virtual void createTaskControls();
 public slots:
     void selectionChanged(QItemSelectionModel *selectionModel);
 private:
     void clearAndDisableControls();
     void enableControls();
 private:
-    ITreeUiProvider *m_treeUi;
     QWidget *m_parentWidget;
+    QMap<TaskDataMember, DataWidget*> m_widgets;
 };
 
 #endif // TASKCONTROLMANAGER_H

@@ -34,10 +34,9 @@ struct TreeColumnData
     TaskDataMember taskDataMember;
     ColumnType colType;
     int width;
-    bool visible;
 public:
     TreeColumnData();
-    TreeColumnData(QString _title, TaskDataMember _taskDataMember, bool visible = true,
+    TreeColumnData(QString _title, TaskDataMember _taskDataMember,
                    int _width = 0, ColumnType type = GENERAL);
 };
 

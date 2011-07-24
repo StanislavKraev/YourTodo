@@ -4,7 +4,7 @@
 #include "titledwidget.h"
 
 TitledWidget::TitledWidget(QString title, QWidget *parent) :
-    QWidget(parent)
+    DataWidget(parent)
 {
     m_layout = new QHBoxLayout();
     this->setLayout(m_layout);

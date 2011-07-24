@@ -5,11 +5,12 @@
 #include "tasktree/itreeuiprovider.h"
 
 class QTreeView;
+class IPreferences;
 
 class TreeUi : public QObject, public ITreeUiProvider
 {
 public:
-    TreeUi(const QFont &strikedOutFont, QTreeView *view);
+    TreeUi(const QFont &strikedOutFont, QTreeView *view, IPreferences* prefs);
 public:
     void init();
 public:
@@ -29,6 +30,7 @@ private:
     QList<TreeColumnData> m_columns;
     QFont m_strikedOutFont;
     QTreeView *m_view;
+    IPreferences* m_prefs;
 };
 
 #endif // TREEUI_H

@@ -1,11 +1,11 @@
 #ifndef TITLEDWIDGET_H
 #define TITLEDWIDGET_H
 
-#include <QWidget>
+#include "datawidget.h"
 class QLabel;
 class QHBoxLayout;
 
-class TitledWidget : public QWidget
+class TitledWidget : public DataWidget
 {
     Q_OBJECT
 public:

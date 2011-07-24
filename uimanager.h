@@ -23,6 +23,7 @@ class ITaskList;
 class TreeUi;
 class ITreeUiProvider;
 class ITaskControlManager;
+class IPreferences;
 
 class UiManager : public QObject, public IToolManager, public Tool
 {
@@ -31,7 +32,8 @@ public:
     UiManager(QMenuBar *menuBar,
               QStatusBar *statusBar,
               QToolBar *toolBar,
-              MainWindow *mainWindow);
+              MainWindow *mainWindow,
+              IPreferences *prefs);
     virtual ~UiManager();
 public:
     void initManager();
@@ -75,6 +77,7 @@ private:
     bool m_taskListMaximized;
     TreeUi *m_treeUi;
     ITaskControlManager *m_taskControlManager;
+    IPreferences *m_prefs;
 };
 
 #endif // UIMANAGER_H

@@ -3,18 +3,21 @@
 #include "selectiontool.h"
 #include "uimanager.h"
 #include "taskcontrolmanager.h"
+#include "prefsmanager.h"
 
 #include "application.h"
 
 Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 {
+    m_prefsManager = new PrefsManager();
     m_mainWindow = new MainWindow();
     m_mainWindow->SetupEventFilter();
     m_fileManager = new FileManager(m_mainWindow);
     m_selectionTool = new SelectionTool(m_mainWindow->selectionModel(), m_mainWindow->model());
 
     m_uiManager = new UiManager(m_mainWindow->menuBar(),
-                                m_mainWindow->statusBar(), m_mainWindow->toolBar(), m_mainWindow);
+                                m_mainWindow->statusBar(), m_mainWindow->toolBar(),
+                                m_mainWindow, m_prefsManager);
     m_taskControlManager = new TaskControlManager(m_mainWindow->controlsArea());
     m_uiManager->setTaskControlManager(m_taskControlManager);
     m_uiManager->addTool(m_uiManager);
@@ -39,6 +42,7 @@ Application::~Application()
     delete m_selectionTool;
     delete m_fileManager;
     m_mainWindow->deleteLater();
+    delete m_prefsManager;
 }
 
 MainWindow * Application::mainWindow()

@@ -30,3 +30,28 @@ PriorityWidget::PriorityWidget(QString title, QWidget *parent) :
     m_comboBox->setItemDelegate(new PriorityComboBoxDelegate());
     m_comboBox->setMinimumWidth(80);
 }
+
+void PriorityWidget::setData(const QVariant &data)
+{
+    int priority = data.toInt();
+    m_comboBox->setCurrentIndex(indexFromPriority(priority));
+}
+
+QVariant PriorityWidget::data() const
+{
+    return priorityFromIndex(m_comboBox->currentIndex());
+}
+
+int PriorityWidget::priorityFromIndex(int index) const
+{
+    if (index <= 0 || index > m_comboBox->count() - 1)
+        return -1;
+    return index - 1;
+}
+
+int PriorityWidget::indexFromPriority(int priority) const
+{
+    if (priority < 0 || priority > 10)
+        return 0;
+    return priority + 1;
+}

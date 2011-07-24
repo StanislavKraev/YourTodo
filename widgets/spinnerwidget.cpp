@@ -11,3 +11,12 @@ SpinnerWidget::SpinnerWidget(QString title, int min, int max, QWidget *parent) :
     m_spinner->setMinimumWidth(80);
     layout()->addWidget(m_spinner);
 }
+
+void SpinnerWidget::setData(const QVariant &data)
+{
+}
+
+QVariant SpinnerWidget::data() const
+{
+    return QVariant();
+}

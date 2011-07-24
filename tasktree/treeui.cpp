@@ -3,12 +3,14 @@
 #include <QApplication>
 
 #include "delegates.h"
+#include "ipreferences.h"
 
 #include "treeui.h"
 
-TreeUi::TreeUi(const QFont &strikedOutFont, QTreeView *view) :
+TreeUi::TreeUi(const QFont &strikedOutFont, QTreeView *view, IPreferences* prefs) :
     m_strikedOutFont(strikedOutFont),
-    m_view(view)
+    m_view(view),
+    m_prefs(prefs)
 {
 }
 
@@ -17,7 +19,7 @@ int TreeUi::columnsCount() const
     int count = 0;
     foreach(const TreeColumnData &column, m_columns)
     {
-        if (column.visible)
+        if (m_prefs->isColumnSelected(column.taskDataMember))
             count++;
     }
 
@@ -187,7 +189,7 @@ TreeColumnData TreeUi::columnData(int column) const
         int i = -1;
         foreach (const TreeColumnData &data, m_columns)
         {
-            if (data.visible)
+            if (m_prefs->isColumnSelected(data.taskDataMember))
             {
                 ++i;
                 if (i == column)

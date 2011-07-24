@@ -8,6 +8,7 @@ class FileManager;
 class UiManager;
 class SelectionTool;
 class TaskControlManager;
+class PrefsManager;
 
 class Application : public QApplication
 {
@@ -23,6 +24,7 @@ private:
     UiManager *m_uiManager;
     SelectionTool *m_selectionTool;
     TaskControlManager *m_taskControlManager;
+    PrefsManager *m_prefsManager;
 };
 
 #endif // APPLICATION_H

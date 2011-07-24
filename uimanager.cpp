@@ -13,7 +13,8 @@
 #include "uimanager.h"
 
 UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
-                     QToolBar *toolBar, MainWindow *mainWindow) :
+                     QToolBar *toolBar, MainWindow *mainWindow,
+                     IPreferences *prefs) :
     m_menuBar(menuBar),
     m_toolBar(toolBar),
     m_statusBar(statusBar),
@@ -22,7 +23,8 @@ UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
     m_mainWindow(mainWindow),
     m_taskListMaximized(false),
     m_treeUi(0),
-    m_taskControlManager(0)
+    m_taskControlManager(0),
+    m_prefs(prefs)
 {
     m_trayMenu = new QMenu(m_mainWindow);
     m_trayMenu->addAction("Exit", this, SLOT(onExit()));
@@ -59,20 +61,20 @@ void UiManager::createTreeUi()
         delete m_treeUi;
     QFont treeViewFont = QFont(m_mainWindow->font());
     treeViewFont.setStrikeOut(true);
-    m_treeUi = new TreeUi(treeViewFont, m_mainWindow->treeView());
-    m_treeUi->addColumn(TreeColumnData("Title", Title, true, -1));
-    m_treeUi->addColumn(TreeColumnData("!", Priority, true, 22, TreeColumnData::PRIORITY));
-    m_treeUi->addColumn(TreeColumnData("%", PercentDone, true, 30));
-    m_treeUi->addColumn(TreeColumnData("O", IconIndex, true, 20, TreeColumnData::ICONINDEX));
-    m_treeUi->addColumn(TreeColumnData("Pos", Position, false, 24));
-    m_treeUi->addColumn(TreeColumnData("Risk", Risk, false, 30));
-    m_treeUi->addColumn(TreeColumnData("Cost", Cost, true, 30));
-    m_treeUi->addColumn(TreeColumnData("Start date", StartDate, false, 80));
-    m_treeUi->addColumn(TreeColumnData("Done date", DoneDate, false, 80));
-    m_treeUi->addColumn(TreeColumnData("Creation date", CreationDate, false, 80));
-    m_treeUi->addColumn(TreeColumnData("Last mod", LastModified, false, 80));
-    m_treeUi->addColumn(TreeColumnData("CT", CommentsType, false, 24));
-    m_treeUi->addColumn(TreeColumnData("Comments", Comments, false));
+    m_treeUi = new TreeUi(treeViewFont, m_mainWindow->treeView(), m_prefs);
+    m_treeUi->addColumn(TreeColumnData("O", IconIndex, -1, TreeColumnData::ICONINDEX));
+    m_treeUi->addColumn(TreeColumnData("Title", Title, -1));
+    m_treeUi->addColumn(TreeColumnData("!", Priority, 22, TreeColumnData::PRIORITY));
+    m_treeUi->addColumn(TreeColumnData("%", PercentDone, 30));
+    m_treeUi->addColumn(TreeColumnData("Pos", Position, 24));
+    m_treeUi->addColumn(TreeColumnData("Risk", Risk, 30));
+    m_treeUi->addColumn(TreeColumnData("Cost", Cost, 30));
+    m_treeUi->addColumn(TreeColumnData("Start date", StartDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Done date", DoneDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Creation date", CreationDate, 80));
+    m_treeUi->addColumn(TreeColumnData("Last mod", LastModified, 80));
+    m_treeUi->addColumn(TreeColumnData("CT", CommentsType, 24));
+    m_treeUi->addColumn(TreeColumnData("Comments", Comments));
 }
 
 struct ActionHelper
@@ -369,7 +371,7 @@ void UiManager::onMaximizeTasklist()
 
 void UiManager::createTaskControls()
 {
-    m_taskControlManager->createTaskControls(m_treeUi);
+    m_taskControlManager->createTaskControls();
 }
 
 ITreeUiProvider * UiManager::treeUi() const

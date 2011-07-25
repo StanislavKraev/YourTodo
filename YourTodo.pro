@@ -47,8 +47,7 @@ SOURCES += main.cpp\
     taskcontrolmanager.cpp \
     prefsmanager.cpp \
     widgets/datawidget.cpp \
-    widgets/datawidgetmodel.cpp \
-    watchobserver.cpp
+    widgets/datawidgetmodel.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -89,8 +88,7 @@ HEADERS  += mainwindow.h \
     ipreferences.h \
     widgets/datawidget.h \
     widgets/datawidgetmodel.h \
-    tasktree/itaskwatcher.h \
-    watchobserver.h
+    tasktree/itaskwatcher.h
 
 FORMS    += mainwindow.ui
 

@@ -2,7 +2,7 @@
 #define FLOWLAYOUT_H
 
 #include <QLayout>
-#include <Qstyle>
+#include <QStyle>
 #include <QRect>
 
 class FlowLayout : public QLayout

@@ -9,9 +9,10 @@
 #include "QVariant"
 
 #include "tasktree/treecolumndata.h"
-#include "watchobserver.h"
 
-class Task : public WatchObserver
+class ITaskList;
+
+class Task
 {
 public:
     enum CommentsType
@@ -108,6 +109,7 @@ private:
     QColor m_textColor;
     QColor m_priorityColor;
     Task::Ptr m_parent;
+    ITaskList* m_taskList;
 
 friend class TaskList;
 };

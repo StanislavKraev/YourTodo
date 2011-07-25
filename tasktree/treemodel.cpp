@@ -12,10 +12,7 @@ TreeModel::TreeModel(QObject *parent, ITaskList *taskList, ITreeUiProvider *tree
     m_taskList(taskList),
     m_treeUi(treeUi)
 {
-    if (m_taskList->count())
-    {
-        m_taskList->addTaskWatcher(this);
-    }
+    m_taskList->addWatch(this);
 }
 
 int TreeModel::columnCount(const QModelIndex &parent) const
@@ -176,7 +173,7 @@ bool TreeModel::insertRows(int row, int count, const QModelIndex &parent)
     if (task)
     {
         emit(beginInsertRows(parent, row, row + count - 1));
-        bool result = m_taskList->insertNewTasks(task, row, count, this);
+        bool result = m_taskList->insertNewTasks(task, row, count);
         emit(endInsertRows());
         return result;
     }
@@ -191,14 +188,14 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
     if (task)
     {
         emit(beginRemoveRows(parent, row, row + count - 1));
-        bool result = m_taskList->removeTasks(task, row, count, this);
+        bool result = m_taskList->removeTasks(task, row, count);
         emit(endRemoveRows());
         return result;
     }
     return false;
 }
 
-void TreeModel::taskChanged(nsTaskData::TaskDataMember member, Task* task)
+void TreeModel::taskChanged(nsTaskData::TaskDataMember member, Task::Ptr task)
 {
     QModelIndex id = idFromPtr(task);
 
@@ -209,7 +206,7 @@ void TreeModel::taskChanged(nsTaskData::TaskDataMember member, Task* task)
     }
 }
 
-QModelIndex TreeModel::idFromPtr(Task* task, QModelIndex parent) const
+QModelIndex TreeModel::idFromPtr(Task::Ptr task, QModelIndex parent) const
 {
     int count = rowCount(parent);
     for (int i = 0; i < count; ++i)

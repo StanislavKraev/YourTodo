@@ -5,7 +5,9 @@
 
 #include "exceptions/loadtasksexception.h"
 #include "exceptions/stopiterexception.h"
+#include "tasktree/itaskwatcher.h"
 #include "itaskloader.h"
+#include "itaskwatcher.h"
 #include "itasksaver.h"
 
 #include "tasklist.h"
@@ -135,7 +137,7 @@ int TaskList::pos(Task::Ptr task) const
     return m_taskRoot->pos(task);
 }
 
-bool TaskList::insertNewTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher)
+bool TaskList::insertNewTasks(Task::Ptr task, int pos, int count)
 {
     if (pos < 0 ||
         ((pos > task->count()) && (task->count() > 0)))
@@ -148,7 +150,6 @@ bool TaskList::insertNewTasks(Task::Ptr task, int pos, int count, ITaskWatcher *
         m_idTaskMap[newTask->id()] = newTask;
         task->insertSubTask(curPos, newTask);
         ++curPos;
-        newTask->addWatch(watcher);
     }
     return true;
 }
@@ -158,7 +159,7 @@ Task::Ptr TaskList::root() const
     return m_taskRoot;
 }
 
-bool TaskList::removeTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher)
+bool TaskList::removeTasks(Task::Ptr task, int pos, int count)
 {
     if (pos < 0 || (pos + count > task->count()))
         return false;
@@ -168,7 +169,6 @@ bool TaskList::removeTasks(Task::Ptr task, int pos, int count, ITaskWatcher *wat
         Task::Ptr removingTask = task->getAt(pos);
         m_idTaskMap.remove(removingTask->id());
         task->removeAt(pos);
-        removingTask->removeWatch(watcher);
     }
     return true;
 }
@@ -261,10 +261,24 @@ void TaskList::setFileName(QString fileName)
     m_fileName = fileName;
 }
 
-void TaskList::addTaskWatcher(ITaskWatcher *watcher)
+void TaskList::addWatch(ITaskWatcher *watch)
 {
-    foreach(Task::Ptr task, m_idTaskMap.values())
-    {
-        task->addWatch(watcher);
-    }
+    if (watch)
+        m_watchers.insert(watch);
 }
+
+void TaskList::removeWatch(ITaskWatcher *watch)
+{
+    if (watch)
+        m_watchers.remove(watch);
+}
+
+void TaskList::notifyMemberChange(nsTaskData::TaskDataMember member, Task::Ptr task)
+{
+    if (!task)
+        return;
+
+    foreach(ITaskWatcher *watcher, m_watchers)
+        watcher->taskChanged(member, task);
+}
+

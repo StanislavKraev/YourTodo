@@ -4,7 +4,7 @@
 
 QString color2str(QColor color)
 {
-    int i = color.red() + color.green() << 8 + color.blue() << 16;
+    int i = color.red() + (color.green() << 8) + (color.blue() << 16);
     return QString("%1").arg(i);
 }
 

@@ -24,11 +24,14 @@ public:
     virtual int count() const = 0;
     virtual void add(Task::Ptr task) = 0;
     virtual Task::Ptr createTask(QString title) = 0;
-    virtual bool insertNewTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher) = 0;
-    virtual bool removeTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher) = 0;
+    virtual bool insertNewTasks(Task::Ptr task, int pos, int count) = 0;
+    virtual bool removeTasks(Task::Ptr task, int pos, int count) = 0;
     virtual Task::Ptr root() const = 0;
     virtual void replace(Task::Ptr oldItem, Task::Ptr newItem) = 0;
-    virtual void addTaskWatcher(ITaskWatcher *watcher) = 0;
+public:
+    virtual void addWatch(ITaskWatcher* watch) = 0;
+    virtual void removeWatch(ITaskWatcher* watch) = 0;
+    virtual void notifyMemberChange(nsTaskData::TaskDataMember member, Task::Ptr task) = 0;
 public:
     virtual bool load(ITaskLoader *loader) = 0;
     virtual bool save(ITaskSaver *saver) = 0;

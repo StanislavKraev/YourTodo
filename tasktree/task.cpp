@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "itasklist.h"
 #include "task.h"
 
 QList<QColor> Task::m_priorityColors;
@@ -46,7 +47,8 @@ Task::Task(int id, QString title, unsigned short percentDone, QString comments,
     m_priority(priority),
     m_priorityColor(priorityColor),
     m_risk(risk),
-    m_textColor(textColor)
+    m_textColor(textColor),
+    m_taskList(0)
 {
 }
 
@@ -62,17 +64,18 @@ Task::Task(int id,
     m_iconIndex(-1),
     m_pos(-1),
     m_priority(5),
-    m_risk(0)
+    m_risk(0),
+    m_taskList(0)
 {
 }
 
 Task::Task(const Task &task) :
-    WatchObserver(task),
     m_id(task.m_id),
     m_title(task.m_title),
     m_subTaskList(task.m_subTaskList),
     m_parent(task.m_parent),
-    m_percentDone(task.m_percentDone)
+    m_percentDone(task.m_percentDone),
+    m_taskList(task.m_taskList)
   // , TODO:
 {
 }
@@ -191,6 +194,7 @@ void Task::replace(Task::Ptr oldItem, Task::Ptr newItem)
         oldItem->m_subTaskList = newItem->m_subTaskList;
         oldItem->m_textColor = newItem->m_textColor;
         oldItem->m_title = newItem->m_title;
+        oldItem->m_taskList = newItem->m_taskList;
 
         foreach (Task::Ptr subTask, oldItem->m_subTaskList)
             subTask->setParent(oldItem);
@@ -463,5 +467,5 @@ void Task::setMemberData(nsTaskData::TaskDataMember member, QVariant data)
         m_comments = data.toString();
         break;
     }
-    notifyMemberChange(member, this);
+    m_taskList->notifyMemberChange(member, Task::Ptr(this));
 }

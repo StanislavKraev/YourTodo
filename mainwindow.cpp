@@ -100,6 +100,7 @@ void MainWindow::updateTreeModel(ITaskList *taskList, ITreeUiProvider *treeUi)
     QAbstractItemModel *oldModel = ui->treeView->model();
 
     TreeModel *model = new TreeModel(this, taskList, treeUi);
+
     ui->treeView->setModel(model);
     if (oldModel)
         delete oldModel;

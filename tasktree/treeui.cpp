@@ -94,15 +94,12 @@ void TreeUi::updateData(Task::Ptr task, int column, QVariant data)
         {
         case nsTaskData::Title:
             task->setTitle(data.toString());
-            task->notifyMemberChange(member, &(*task));
             break;
         case nsTaskData::Cost:
             task->setCost(data.toDouble());
-            task->notifyMemberChange(member, &(*task));
             break;
         case nsTaskData::PercentDone:
             task->setPercentDone(data.toInt());
-            task->notifyMemberChange(member, &(*task));
             break;
         }
     }

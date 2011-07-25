@@ -5,7 +5,7 @@ DataWidgetModel::DataWidgetModel(nsTaskData::TaskDataMember member) : QObject(),
 {
 }
 
-void DataWidgetModel::taskChanged(nsTaskData::TaskDataMember member, Task* task)
+void DataWidgetModel::taskChanged(nsTaskData::TaskDataMember member, Task::Ptr task)
 {
     if (m_task && (member == m_member) && (task == m_task))
     {
@@ -21,14 +21,9 @@ QVariant DataWidgetModel::data() const
 
 void DataWidgetModel::setTask(Task::Ptr task)
 {
-    if (m_task)
-        m_task->removeWatch(this);
     m_task = task;
     if (m_task)
-    {
-        m_task->addWatch(this);
         m_data = task->memberData(m_member);
-    }
     else
         m_data = QVariant();
     emit(dataChanged());

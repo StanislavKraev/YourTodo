@@ -4,6 +4,8 @@
 #include <QMap>
 #include <QString>
 #include <QDateTime>
+#include <QSet>
+#include "itaskwatcher.h"
 #include "itasklist.h"
 
 class TaskList : public ITaskList
@@ -19,12 +21,15 @@ public:
     virtual int count() const;
     virtual void add(Task::Ptr task);
     virtual Task::Ptr createTask(QString title);
-    virtual bool insertNewTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher);
-    virtual bool removeTasks(Task::Ptr task, int pos, int count, ITaskWatcher *watcher);
+    virtual bool insertNewTasks(Task::Ptr task, int pos, int count);
+    virtual bool removeTasks(Task::Ptr task, int pos, int count);
     virtual Task::Ptr root() const;
     virtual void replace(Task::Ptr oldItem, Task::Ptr newItem);
     void setFileName(QString fileName);
-    virtual void addTaskWatcher(ITaskWatcher *watcher);
+public:
+    virtual void addWatch(ITaskWatcher* watch);
+    virtual void removeWatch(ITaskWatcher* watch);
+    virtual void notifyMemberChange(nsTaskData::TaskDataMember member, Task::Ptr task);
 public:
     virtual bool load(ITaskLoader *loader);
     virtual bool save(ITaskSaver *saver);
@@ -33,6 +38,7 @@ protected:
     void clear();
     QDateTime getEarliestDueDate() const;
 private:
+    QSet<ITaskWatcher*> m_watchers;
     Task::Ptr m_taskRoot;
     QMap<int, Task::Ptr> m_idTaskMap;
     QString m_fileName;

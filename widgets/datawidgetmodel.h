@@ -18,7 +18,7 @@ public:
     void setTask(Task::Ptr task);
     void updateData(QVariant data);
 public:
-    virtual void taskChanged(nsTaskData::TaskDataMember member, Task::Ptr task);
+    virtual void taskChanged(nsTaskData::TaskDataMember member, Task* task);
 signals:
     void dataChanged();
 public slots:

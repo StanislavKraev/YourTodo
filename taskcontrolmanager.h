@@ -11,6 +11,7 @@
 class QWidget;
 class QItemSelectionModel;
 class IPreferences;
+class ITaskList;
 
 class TaskControlManager : public QObject, public ITaskControlManager
 {
@@ -22,11 +23,13 @@ public:
     virtual void createTaskControls();
 public slots:
     void selectionChanged(QItemSelectionModel *selectionModel);
+    void onCurrentListChanged(ITaskList* newList);
 private:
     QWidget *m_parentWidget;
     QMap<nsTaskData::TaskDataMember, DataWidget*> m_widgets;
     IPreferences *m_prefs;
     Task::Ptr m_curTask;
+    ITaskList* m_taskList;
 };
 
 #endif // TASKCONTROLMANAGER_H

@@ -195,7 +195,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
     return false;
 }
 
-void TreeModel::taskChanged(nsTaskData::TaskDataMember member, Task::Ptr task)
+void TreeModel::taskChanged(nsTaskData::TaskDataMember member, Task* task)
 {
     QModelIndex id = idFromPtr(task);
 
@@ -206,7 +206,7 @@ void TreeModel::taskChanged(nsTaskData::TaskDataMember member, Task::Ptr task)
     }
 }
 
-QModelIndex TreeModel::idFromPtr(Task::Ptr task, QModelIndex parent) const
+QModelIndex TreeModel::idFromPtr(Task* task, QModelIndex parent) const
 {
     int count = rowCount(parent);
     for (int i = 0; i < count; ++i)

@@ -35,7 +35,9 @@ PriorityWidget::PriorityWidget(QString title, QWidget *parent) :
 void PriorityWidget::setData(const QVariant &data)
 {
     int priority = data.toInt();
+    bool prevBlock = m_comboBox->blockSignals(true);
     m_comboBox->setCurrentIndex(indexFromPriority(priority));
+    m_comboBox->blockSignals(prevBlock);
 }
 
 QVariant PriorityWidget::data() const
@@ -59,7 +61,9 @@ int PriorityWidget::indexFromPriority(int priority) const
 
 void PriorityWidget::clear()
 {
+    bool prevBlock = m_comboBox->blockSignals(true);
     m_comboBox->setCurrentIndex(0);
+    m_comboBox->blockSignals(prevBlock);
 }
 
 void PriorityWidget::currentIndexChanged(int newIndex)

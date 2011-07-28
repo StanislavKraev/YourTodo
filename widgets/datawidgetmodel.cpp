@@ -5,7 +5,7 @@ DataWidgetModel::DataWidgetModel(nsTaskData::TaskDataMember member) : QObject(),
 {
 }
 
-void DataWidgetModel::taskChanged(nsTaskData::TaskDataMember member, Task::Ptr task)
+void DataWidgetModel::taskChanged(nsTaskData::TaskDataMember member, Task* task)
 {
     if (m_task && (member == m_member) && (task == m_task))
     {

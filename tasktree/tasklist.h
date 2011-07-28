@@ -29,7 +29,7 @@ public:
 public:
     virtual void addWatch(ITaskWatcher* watch);
     virtual void removeWatch(ITaskWatcher* watch);
-    virtual void notifyMemberChange(nsTaskData::TaskDataMember member, Task::Ptr task);
+    virtual void notifyMemberChange(nsTaskData::TaskDataMember member, Task* task);
 public:
     virtual bool load(ITaskLoader *loader);
     virtual bool save(ITaskSaver *saver);

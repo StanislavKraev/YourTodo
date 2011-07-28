@@ -50,6 +50,7 @@ public:
     QVariant memberData(nsTaskData::TaskDataMember member) const;
     void setMemberData(nsTaskData::TaskDataMember member, QVariant data);
     bool editable(nsTaskData::TaskDataMember member) const;
+    void setTaskList(ITaskList *taskList);
 public:
     QString title() const;
     void setTitle(QString title);

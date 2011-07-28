@@ -63,6 +63,7 @@ int TaskList::nextId() const
 Task::Ptr TaskList::createTask(QString title)
 {
     Task::Ptr newTask = Task::Ptr(new Task(nextId(), title));
+    newTask->setTaskList(this);
     add(newTask);
     m_idTaskMap[newTask->id()] = newTask;
     return newTask;
@@ -97,6 +98,7 @@ bool TaskList::load(ITaskLoader *loader)
             TaskInfo info = loader->read();
             childParentMap.insert(info.id, info.parentId);
             Task::Ptr taskPtr = info.toTaskPtr();
+            taskPtr->setTaskList(this);
             idTaskMap[info.id] = taskPtr;
             allTasks.append(taskPtr);
             m_idTaskMap[taskPtr->id()] = taskPtr;
@@ -146,6 +148,7 @@ bool TaskList::insertNewTasks(Task::Ptr task, int pos, int count)
     for (int taskToInsert = count; taskToInsert; taskToInsert--)
     {
         Task::Ptr newTask = Task::Ptr(new Task(nextId(), ""));
+        newTask->setTaskList(this);
         newTask->setParent(task);
         m_idTaskMap[newTask->id()] = newTask;
         task->insertSubTask(curPos, newTask);
@@ -273,7 +276,7 @@ void TaskList::removeWatch(ITaskWatcher *watch)
         m_watchers.remove(watch);
 }
 
-void TaskList::notifyMemberChange(nsTaskData::TaskDataMember member, Task::Ptr task)
+void TaskList::notifyMemberChange(nsTaskData::TaskDataMember member, Task* task)
 {
     if (!task)
         return;

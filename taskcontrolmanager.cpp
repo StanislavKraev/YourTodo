@@ -4,6 +4,7 @@
 #include <QItemSelectionModel>
 
 #include "ipreferences.h"
+#include "tasktree/itasklist.h"
 #include "widgets/flowlayout.h"
 #include "widgets/prioritywidget.h"
 #include "widgets/spinnerwidget.h"
@@ -13,7 +14,8 @@
 
 TaskControlManager::TaskControlManager(QWidget *parentWidget, IPreferences *prefs) :
     m_parentWidget(parentWidget),
-    m_prefs(prefs)
+    m_prefs(prefs),
+    m_taskList(0)
 {
     m_parentWidget->setLayout(new FlowLayout(1, 1, 1));
 }
@@ -33,7 +35,10 @@ void TaskControlManager::createTaskControls()
         m_widgets[pair.first] = pair.second;
         pair.second->setVisible(m_prefs->isColumnSelected(pair.first));
         m_parentWidget->layout()->addWidget(pair.second);
-        pair.second->setModel(new DataWidgetModel(pair.first));
+        DataWidgetModel *model = new DataWidgetModel(pair.first);
+        pair.second->setModel(model);
+        if (m_taskList)
+            m_taskList->addWatch(model);
     }
 }
 
@@ -52,11 +57,24 @@ void TaskControlManager::selectionChanged(QItemSelectionModel *selectionModel)
     else
     {
         QModelIndex id = selectedRows.first();
-        m_curTask = id.data(Qt::UserRole).value<Task::Ptr>();
+        QVariant var = id.data(Qt::UserRole);
+
+        m_curTask = var.value<Task::Ptr>();
         foreach (DataWidget *widget, m_widgets)
         {
             DataWidgetModel *model = widget->model();
             model->setTask(m_curTask);
         }
     }
+}
+
+void TaskControlManager::onCurrentListChanged(ITaskList *newList)
+{
+    if (m_taskList)
+        foreach(DataWidget* widget, m_widgets.values())
+            m_taskList->removeWatch(widget->model());
+    m_taskList = newList;
+    if (m_taskList)
+        foreach(DataWidget* widget, m_widgets.values())
+            m_taskList->addWatch(widget->model());
 }

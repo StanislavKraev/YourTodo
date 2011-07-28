@@ -25,9 +25,9 @@ public:
     virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 public:
-    virtual void taskChanged(nsTaskData::TaskDataMember member, Task::Ptr task);
+    virtual void taskChanged(nsTaskData::TaskDataMember member, Task* task);
 private:
-    QModelIndex idFromPtr(Task::Ptr task, QModelIndex parent = QModelIndex()) const;
+    QModelIndex idFromPtr(Task* task, QModelIndex parent = QModelIndex()) const;
 private:
     ITaskList *m_taskList;
     ITreeUiProvider *m_treeUi;

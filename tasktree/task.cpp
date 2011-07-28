@@ -132,7 +132,10 @@ void Task::setParent(Task::Ptr parent)
 
 void Task::setTitle(QString title)
 {
+    bool changed = title != m_title;
     m_title = title;
+    if (changed && m_taskList)
+        m_taskList->notifyMemberChange(nsTaskData::Title, this);
 }
 
 unsigned short Task::percentDone() const
@@ -222,7 +225,10 @@ void Task::setPriority(int priority)
 {
     if (priority < 0 || priority > m_priorityColors.count() - 1)
         return;
+    bool changed = m_priority != priority;
     m_priority = priority;
+    if (changed && m_taskList)
+        m_taskList->notifyMemberChange(nsTaskData::Priority, this);
 }
 
 int Task::iconIndex() const
@@ -466,6 +472,13 @@ void Task::setMemberData(nsTaskData::TaskDataMember member, QVariant data)
     case nsTaskData::Comments:
         m_comments = data.toString();
         break;
+    default:
+        return;
     }
-    m_taskList->notifyMemberChange(member, Task::Ptr(this));
+    m_taskList->notifyMemberChange(member, this);
+}
+
+void Task::setTaskList(ITaskList *taskList)
+{
+    m_taskList = taskList;
 }

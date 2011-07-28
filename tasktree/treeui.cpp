@@ -101,6 +101,9 @@ void TreeUi::updateData(Task::Ptr task, int column, QVariant data)
         case nsTaskData::PercentDone:
             task->setPercentDone(data.toInt());
             break;
+        case nsTaskData::Priority:
+            task->setPriority(data.toInt());
+            break;
         }
     }
 }

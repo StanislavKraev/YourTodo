@@ -31,7 +31,7 @@ public:
 public:
     virtual void addWatch(ITaskWatcher* watch) = 0;
     virtual void removeWatch(ITaskWatcher* watch) = 0;
-    virtual void notifyMemberChange(nsTaskData::TaskDataMember member, Task::Ptr task) = 0;
+    virtual void notifyMemberChange(nsTaskData::TaskDataMember member, Task *task) = 0;
 public:
     virtual bool load(ITaskLoader *loader) = 0;
     virtual bool save(ITaskSaver *saver) = 0;

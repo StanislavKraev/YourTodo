@@ -20,7 +20,9 @@ void SpinnerWidget::setData(const QVariant &data)
         percent = m_spinner->minimum();
     if (percent > m_spinner->maximum())
         percent = m_spinner->maximum();
+    bool prevBlock = m_spinner->blockSignals(true);
     m_spinner->setValue(percent);
+    m_spinner->blockSignals(prevBlock);
 }
 
 QVariant SpinnerWidget::data() const

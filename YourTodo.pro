@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     prefsmanager.cpp \
     widgets/datawidget.cpp \
     widgets/datawidgetmodel.cpp \
-    widgets/texteditmodel.cpp
+    widgets/texteditmodel.cpp \
+    widgets/floatpointingwidget.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -90,7 +91,8 @@ HEADERS  += mainwindow.h \
     widgets/datawidget.h \
     widgets/datawidgetmodel.h \
     tasktree/itaskwatcher.h \
-    widgets/texteditmodel.h
+    widgets/texteditmodel.h \
+    widgets/floatpointingwidget.h
 
 FORMS    += mainwindow.ui
 

@@ -216,7 +216,10 @@ QString Task::comments() const
 
 void Task::setComments(QString comments)
 {
+    bool changed = m_comments != comments;
     m_comments = comments;
+    if (changed && m_taskList)
+        m_taskList->notifyMemberChange(nsTaskData::Comments, this);
 }
 
 int Task::priority() const
@@ -271,7 +274,10 @@ double Task::cost() const
 
 void Task::setCost(double val)
 {
+    bool changed = m_cost != val;
     m_cost = val;
+    if (changed && m_taskList)
+        m_taskList->notifyMemberChange(nsTaskData::Cost, this);
 }
 
 QDateTime Task::creationDate() const
@@ -427,6 +433,7 @@ bool Task::editable(nsTaskData::TaskDataMember member) const
     switch(member)
     {
     case nsTaskData::PercentDone:
+    case nsTaskData::Cost:
         return m_subTaskList.count() == 0;
     }
     return true;

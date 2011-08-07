@@ -5,7 +5,8 @@ PrefsManager::PrefsManager()
     m_selectedColumns << nsTaskData::Title
                       << nsTaskData::Priority
                       << nsTaskData::IconIndex
-                      << nsTaskData::PercentDone;
+                      << nsTaskData::PercentDone
+                      << nsTaskData::Cost;
 }
 
 bool PrefsManager::isColumnSelected(nsTaskData::TaskDataMember member) const

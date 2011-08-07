@@ -1,6 +1,8 @@
 #ifndef ITASKCONTROLMANAGER_H
 #define ITASKCONTROLMANAGER_H
 
+class QTextEdit;
+
 class ITaskControlManager
 {
 protected:
@@ -10,7 +12,7 @@ private:
     ITaskControlManager& operator = (const ITaskControlManager&);
     ITaskControlManager(const ITaskControlManager&);
 public:
-    virtual void createTaskControls() = 0;
+    virtual void createTaskControls(QTextEdit *commentsControl) = 0;
 };
 
 #endif // ITASKCONTROLMANAGER_H

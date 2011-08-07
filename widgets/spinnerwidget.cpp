@@ -10,6 +10,7 @@ SpinnerWidget::SpinnerWidget(QString title, int min, int max, QWidget *parent) :
     m_spinner->setRange(min, max);
     m_spinner->setMinimumWidth(80);
     layout()->addWidget(m_spinner);
+    connect(m_spinner, SIGNAL(valueChanged(int)), SLOT(onValueChanged(int)));
 }
 
 void SpinnerWidget::setData(const QVariant &data)
@@ -30,4 +31,11 @@ QVariant SpinnerWidget::data() const
 void SpinnerWidget::clear()
 {
     m_spinner->setValue(m_spinner->minimum());
+}
+
+void SpinnerWidget::onValueChanged(int value)
+{
+    bool prevBlock = m_spinner->blockSignals(true);
+    onDataChanged(value);
+    m_spinner->blockSignals(prevBlock);
 }

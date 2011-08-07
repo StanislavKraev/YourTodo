@@ -6,6 +6,7 @@
 class QMenuBar;
 class QStatusBar;
 class QToolBar;
+class QTextEdit;
 
 class UiManager;
 class ITaskList;
@@ -37,6 +38,7 @@ public:
     QAbstractItemModel *model();
     TaskTreeView *treeView() const;
     QWidget* controlsArea() const;
+    QTextEdit* commentsControl() const;
 public slots:
     void onShortcut();
 protected:

@@ -17,7 +17,8 @@ public:
 
 signals:
 
-public slots:
+private slots:
+    void onValueChanged(int value);
 private:
     QSpinBox *m_spinner;
 };

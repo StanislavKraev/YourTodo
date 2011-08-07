@@ -12,6 +12,7 @@ class QWidget;
 class QItemSelectionModel;
 class IPreferences;
 class ITaskList;
+class TextEditModel;
 
 class TaskControlManager : public QObject, public ITaskControlManager
 {
@@ -20,7 +21,7 @@ public:
     TaskControlManager(QWidget *parentWidget, IPreferences *prefs);
     virtual ~TaskControlManager();
 public:
-    virtual void createTaskControls();
+    virtual void createTaskControls(QTextEdit *commentsControl);
 public slots:
     void selectionChanged(QItemSelectionModel *selectionModel);
     void onCurrentListChanged(ITaskList* newList);
@@ -30,6 +31,7 @@ private:
     IPreferences *m_prefs;
     Task::Ptr m_curTask;
     ITaskList* m_taskList;
+    TextEditModel* m_commentsModel;
 };
 
 #endif // TASKCONTROLMANAGER_H

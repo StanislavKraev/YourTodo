@@ -150,7 +150,10 @@ void Task::setPercentDone(unsigned short percentDone)
 {
     if (m_subTaskList.count() > 0)
         return;
+    bool changed = percentDone != m_percentDone;
     m_percentDone = percentDone;
+    if (changed && m_taskList)
+        m_taskList->notifyMemberChange(nsTaskData::PercentDone, this);
 }
 
 void Task::toggleDone(unsigned short percentDone)

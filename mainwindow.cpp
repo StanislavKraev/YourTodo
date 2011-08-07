@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QList<int> sizes;
     sizes << 300 << 100;
     ui->splitter->setSizes(sizes);
+
+    ui->textEdit->setText("comment");
 }
 
 MainWindow::~MainWindow()
@@ -138,4 +140,9 @@ TaskTreeView * MainWindow::treeView() const
 QWidget * MainWindow::controlsArea() const
 {
     return ui->controlsArea;
+}
+
+QTextEdit * MainWindow::commentsControl() const
+{
+    return ui->textEdit;
 }

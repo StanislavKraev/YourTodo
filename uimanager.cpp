@@ -371,7 +371,7 @@ void UiManager::onMaximizeTasklist()
 
 void UiManager::createTaskControls()
 {
-    m_taskControlManager->createTaskControls();
+    m_taskControlManager->createTaskControls(m_mainWindow->commentsControl());
 }
 
 ITreeUiProvider * UiManager::treeUi() const

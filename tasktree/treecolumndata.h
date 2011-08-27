@@ -20,7 +20,8 @@ namespace nsTaskData
         CreationDate,
         LastModified,
         CommentsType,
-        Comments
+        Comments,
+        TextColor
     };
 }
 

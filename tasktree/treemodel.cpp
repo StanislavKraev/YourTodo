@@ -22,6 +22,11 @@ int TreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
+    if (role == Qt::UserRole + 2)
+    {
+        return m_treeUi->column(nsTaskData::Title);
+    }
+
     if (!index.isValid())
         return QVariant();
 
@@ -64,7 +69,12 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return 0;
 
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    int titleIndex = m_treeUi->column(nsTaskData::Title);
+    if ((titleIndex >= 0) && (index.column() == titleIndex))
+        flags |= Qt::ItemIsEditable;
+
+    return flags;
 }
 
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation,

@@ -23,7 +23,7 @@ public:
 };
 static InitColors initColors;
 
-Task::Task() : m_id(-1)
+Task::Task() : m_id(-1), m_taskList(0)
 {
 }
 
@@ -75,8 +75,20 @@ Task::Task(const Task &task) :
     m_subTaskList(task.m_subTaskList),
     m_parent(task.m_parent),
     m_percentDone(task.m_percentDone),
-    m_taskList(task.m_taskList)
-  // , TODO:
+    m_taskList(task.m_taskList),
+    m_risk(task.m_risk),
+    m_iconIndex(task.m_iconIndex),
+    m_comments(task.m_comments),
+    m_pos(task.m_pos),
+    m_priority(task.m_priority),
+    m_cost(task.m_cost),
+    m_doneDate(task.m_doneDate),
+    m_startDate(task.m_startDate),
+    m_creationDate(task.m_creationDate),
+    m_lastMod(task.m_lastMod),
+    m_commentsType(task.m_commentsType),
+    m_textColor(task.m_textColor),
+    m_priorityColor(task.m_priorityColor)
 {
 }
 
@@ -90,9 +102,11 @@ QList<Task::Ptr>::ConstIterator Task::tasks() const
     return m_subTaskList.begin();
 }
 
-void Task::addTask(Ptr task)
+void Task::addTask(Ptr task, bool touch)
 {
     m_subTaskList.append(task);
+    if (touch)
+        this->touch();
 }
 
 int Task::id() const
@@ -135,7 +149,10 @@ void Task::setTitle(QString title)
     bool changed = title != m_title;
     m_title = title;
     if (changed && m_taskList)
+    {
         m_taskList->notifyMemberChange(nsTaskData::Title, this);
+        touch();
+    }
 }
 
 unsigned short Task::percentDone() const
@@ -153,7 +170,10 @@ void Task::setPercentDone(unsigned short percentDone)
     bool changed = percentDone != m_percentDone;
     m_percentDone = percentDone;
     if (changed && m_taskList)
+    {
         m_taskList->notifyMemberChange(nsTaskData::PercentDone, this);
+        touch();
+    }
 }
 
 void Task::toggleDone(unsigned short percentDone)
@@ -169,6 +189,7 @@ void Task::insertSubTask(int pos, Task::Ptr task)
         ((pos > count()) && (count() > 0)))
         return;
     m_subTaskList.insert(pos, task);
+    touch();
 }
 
 void Task::removeAt(int pos)
@@ -176,6 +197,7 @@ void Task::removeAt(int pos)
     if (pos < 0 || pos > count() - 1)
         return;
     m_subTaskList.removeAt(pos);
+    touch();
 }
 
 void Task::replace(Task::Ptr oldItem, Task::Ptr newItem)
@@ -206,6 +228,7 @@ void Task::replace(Task::Ptr oldItem, Task::Ptr newItem)
             subTask->setParent(oldItem);
 
         newItem->m_id = oldId;
+        touch();
     }
 }
 
@@ -219,7 +242,10 @@ void Task::setComments(QString comments)
     bool changed = m_comments != comments;
     m_comments = comments;
     if (changed && m_taskList)
+    {
         m_taskList->notifyMemberChange(nsTaskData::Comments, this);
+        touch();
+    }
 }
 
 int Task::priority() const
@@ -234,7 +260,10 @@ void Task::setPriority(int priority)
     bool changed = m_priority != priority;
     m_priority = priority;
     if (changed && m_taskList)
+    {
         m_taskList->notifyMemberChange(nsTaskData::Priority, this);
+        touch();
+    }
 }
 
 int Task::iconIndex() const
@@ -244,7 +273,13 @@ int Task::iconIndex() const
 
 void Task::setIconIndex(int iconIndex)
 {
+    bool changed = m_iconIndex != iconIndex;
     m_iconIndex = iconIndex;
+    if (changed && m_taskList)
+    {
+        m_taskList->notifyMemberChange(nsTaskData::IconIndex, this);
+        touch();
+    }
 }
 
 unsigned short Task::calculatePercentDone() const
@@ -264,7 +299,13 @@ Task::CommentsType Task::commentsType() const
 
 void Task::setCommentsType(Task::CommentsType type)
 {
+    bool changed = m_commentsType != type;
     m_commentsType = type;
+    if (changed && m_taskList)
+    {
+        m_taskList->notifyMemberChange(nsTaskData::CommentsType, this);
+        touch();
+    }
 }
 
 double Task::cost() const
@@ -277,17 +318,15 @@ void Task::setCost(double val)
     bool changed = m_cost != val;
     m_cost = val;
     if (changed && m_taskList)
+    {
         m_taskList->notifyMemberChange(nsTaskData::Cost, this);
+        touch();
+    }
 }
 
 QDateTime Task::creationDate() const
 {
     return m_creationDate;
-}
-
-void Task::setCreationDate(QDateTime val)
-{
-    m_creationDate = val;
 }
 
 QDateTime Task::startDate() const
@@ -297,7 +336,13 @@ QDateTime Task::startDate() const
 
 void Task::setStartDate(QDateTime val)
 {
+    bool changed = m_startDate != val;
     m_startDate = val;
+    if (changed && m_taskList)
+    {
+        m_taskList->notifyMemberChange(nsTaskData::StartDate, this);
+        touch();
+    }
 }
 
 QDateTime Task::doneDate() const
@@ -307,7 +352,13 @@ QDateTime Task::doneDate() const
 
 void Task::setDoneDate(QDateTime val)
 {
+    bool changed = m_doneDate != val;
     m_doneDate = val;
+    if (changed && m_taskList)
+    {
+        m_taskList->notifyMemberChange(nsTaskData::DoneDate, this);
+        touch();
+    }
 }
 
 QDateTime Task::lastModDate() const
@@ -315,19 +366,10 @@ QDateTime Task::lastModDate() const
     return m_lastMod;
 }
 
-void Task::setLastModDate(QDateTime val)
-{
-    m_lastMod = val;
-}
-
 int Task::posAttr() const
 {
+    // TODO: return calculated value.
     return m_pos;
-}
-
-void Task::setPosAttr(int val)
-{
-    m_pos = val;
 }
 
 QColor Task::priorityColor() const
@@ -337,11 +379,6 @@ QColor Task::priorityColor() const
     return QColor();
 }
 
-void Task::setPriorityColor(QColor val)
-{
-    m_priorityColor = val;
-}
-
 int Task::risk() const
 {
     return m_risk;
@@ -349,7 +386,13 @@ int Task::risk() const
 
 void Task::setRisk(int val)
 {
+    bool changed = m_risk != val;
     m_risk = val;
+    if (changed && m_taskList)
+    {
+        m_taskList->notifyMemberChange(nsTaskData::Risk, this);
+        touch();
+    }
 }
 
 QColor Task::textColor() const
@@ -359,7 +402,13 @@ QColor Task::textColor() const
 
 void Task::setTextColor(QColor val)
 {
+    bool changed = m_textColor != val;
     m_textColor = val;
+    if (changed && m_taskList)
+    {
+        m_taskList->notifyMemberChange(nsTaskData::TextColor, this);
+        touch();
+    }
 }
 
 int Task::calcPosAttr() const
@@ -372,15 +421,6 @@ int Task::calcPosAttr() const
         current = current->parent();
     }
     return i;
-}
-
-QDateTime Task::dueDate() const
-{
-    return QDateTime();
-}
-
-void Task::setDueDate(QDateTime date)
-{
 }
 
 double Task::calcCost() const
@@ -423,6 +463,8 @@ QVariant Task::memberData(nsTaskData::TaskDataMember member) const
         return m_commentsType;
     case nsTaskData::Comments:
         return m_comments;
+    case nsTaskData::TextColor:
+        return m_textColor;
     }
 
     return QVariant();
@@ -441,54 +483,74 @@ bool Task::editable(nsTaskData::TaskDataMember member) const
 
 void Task::setMemberData(nsTaskData::TaskDataMember member, QVariant data)
 {
+    bool changed(false);
+
     switch(member)
     {
     case nsTaskData::Title:
+        changed = m_title != data.toString();
         m_title = data.toString();
         break;
     case nsTaskData::Priority:
+        changed = m_priority != data.toInt();
         m_priority = data.toInt();
         break;
     case nsTaskData::PercentDone:
+        changed = m_percentDone != data.toUInt();
         m_percentDone = data.toUInt();
         break;
     case nsTaskData::IconIndex:
+        changed = m_iconIndex != data.toInt();
         m_iconIndex = data.toInt();
         break;
-    case nsTaskData::Position:
-        m_pos = data.toInt();
-        break;
     case nsTaskData::Risk:
+        changed = m_risk != data.toInt();
         m_risk = data.toInt();
         break;
     case nsTaskData::Cost:
+        changed = m_cost != data.toDouble();
         m_cost = data.toDouble();
         break;
     case nsTaskData::StartDate:
+        changed = m_startDate != data.toDateTime();
         m_startDate = data.toDateTime();
         break;
     case nsTaskData::DoneDate:
+        changed = m_doneDate != data.toDateTime();
         m_doneDate = data.toDateTime();
         break;
     case nsTaskData::CreationDate:
+        changed = m_creationDate != data.toDateTime();
         m_creationDate = data.toDateTime();
         break;
-    case nsTaskData::LastModified:
-        m_lastMod = data.toDateTime();
-        break;
     case nsTaskData::CommentsType:
+        changed = m_commentsType != (Task::CommentsType)data.toInt();
         m_commentsType = (Task::CommentsType)data.toInt();
         break;
     case nsTaskData::Comments:
+        changed = m_comments != data.toString();
         m_comments = data.toString();
+        break;
+    case nsTaskData::TextColor:
+        changed = m_textColor != data.value<QColor>();
+        m_textColor = data.value<QColor>();
         break;
     default:
         return;
     }
     m_taskList->notifyMemberChange(member, this);
+    if (changed)
+        touch();
 }
 
 void Task::setTaskList(ITaskList *taskList)
 {
     m_taskList = taskList;
+}
+
+void Task::touch()
+{
+    m_lastMod = QDateTime::currentDateTime();
+    if (m_taskList)
+        m_taskList->notifyMemberChange(nsTaskData::LastModified, this);
 }

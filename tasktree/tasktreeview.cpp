@@ -143,7 +143,8 @@ void TaskTreeView::addTaskBelowCursor()
         parent = selection.parent();
     }
     model()->insertRows(row, 1, parent);
-    QModelIndex newItemIndex = model()->index(row, 0, parent);
+    int titleColumn = model()->data(QModelIndex(), Qt::UserRole + 2).toInt();
+    QModelIndex newItemIndex = model()->index(row, titleColumn, parent);
     selectionModel()->select(newItemIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
     setCurrentIndex(newItemIndex);
     edit(newItemIndex);

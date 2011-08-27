@@ -115,12 +115,12 @@ bool TaskList::load(ITaskLoader *loader)
         if (parentId != -1)
         {
             Task::Ptr parent = idTaskMap[parentId];
-            parent->addTask(task);
+            parent->addTask(task, false);
             task->setParent(parent);
         }
         else
         {
-            m_taskRoot->addTask(task);
+            m_taskRoot->addTask(task, false);
             task->setParent(m_taskRoot);
         }
     }
@@ -253,8 +253,9 @@ QDateTime TaskList::getEarliestDueDate() const
     QDateTime date;
     foreach(Task::Ptr task, m_idTaskMap.values())
     {
-        if (task->dueDate() < date)
-            date = task->dueDate();
+        // TODO: replace with due date.
+        if (task->startDate() < date)
+            date = task->startDate();
     }
     return date;
 }

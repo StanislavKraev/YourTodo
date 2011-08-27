@@ -25,6 +25,7 @@ public:
     virtual QBrush foreground(int column, Task::Ptr task) const = 0;
     virtual QBrush background(int column, Task::Ptr task) const = 0;
     virtual TreeColumnData columnData(int column) const = 0;
+    virtual int column(nsTaskData::TaskDataMember member) const = 0;
 };
 
 

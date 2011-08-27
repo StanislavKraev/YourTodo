@@ -23,9 +23,13 @@ public:
     virtual QBrush foreground(int column, Task::Ptr task) const;
     virtual QBrush background(int column, Task::Ptr task) const;
     virtual TreeColumnData columnData(int column) const;
+    virtual int column(nsTaskData::TaskDataMember member) const;
 public:
     void addColumn(TreeColumnData columnData);
     void removeColumns();
+private:
+    static QString formatDate(const QDateTime &dateTime);
+    static QString formatDateTime(const QDateTime &dateTime);
 private:
     QList<TreeColumnData> m_columns;
     QFont m_strikedOutFont;

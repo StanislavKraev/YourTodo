@@ -69,28 +69,23 @@ public:
     double cost() const;
     void setCost(double val);
     QDateTime creationDate() const;
-    void setCreationDate(QDateTime val);
     QDateTime startDate() const;
     void setStartDate(QDateTime val);
     QDateTime doneDate() const;
     void setDoneDate(QDateTime val);
     QDateTime lastModDate() const;
-    void setLastModDate(QDateTime val);
     int posAttr() const;
-    void setPosAttr(int val);
     QColor priorityColor() const;
-    void setPriorityColor(QColor val);
     int risk() const;
     void setRisk(int val);
     QColor textColor() const;
     void setTextColor(QColor val);
-    QDateTime dueDate() const;
-    void setDueDate(QDateTime date);
 private:
-    void addTask(Ptr task);
+    void addTask(Ptr task, bool touch = true);
     void insertSubTask(int pos, Ptr task);
     void removeAt(int pos);
     unsigned short calculatePercentDone() const;
+    void touch();
 private:
     QList<Ptr> m_subTaskList;
     int m_id;   // unique

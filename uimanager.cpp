@@ -71,7 +71,7 @@ void UiManager::createTreeUi()
     m_treeUi->addColumn(TreeColumnData("Start date", nsTaskData::StartDate, 80));
     m_treeUi->addColumn(TreeColumnData("Done date", nsTaskData::DoneDate, 80));
     m_treeUi->addColumn(TreeColumnData("Creation date", nsTaskData::CreationDate, 80));
-    m_treeUi->addColumn(TreeColumnData("Last mod", nsTaskData::LastModified, 80));
+    m_treeUi->addColumn(TreeColumnData("Last mod", nsTaskData::LastModified, 100));
     m_treeUi->addColumn(TreeColumnData("CT", nsTaskData::CommentsType, 24));
     m_treeUi->addColumn(TreeColumnData("Comments", nsTaskData::Comments));
     m_treeUi->addColumn(TreeColumnData("Title", nsTaskData::Title, -1));

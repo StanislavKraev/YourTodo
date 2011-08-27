@@ -59,13 +59,13 @@ QVariant TreeUi::itemData(int column, Task::Ptr task) const
         case nsTaskData::Cost:
             return task->calcCost();
         case nsTaskData::StartDate:
-            return task->startDate();
+            return formatDate(task->startDate());
         case nsTaskData::DoneDate:
-            return task->doneDate();
+            return formatDate(task->doneDate());
         case nsTaskData::CreationDate:
-            return task->creationDate();
+            return formatDate(task->creationDate());
         case nsTaskData::LastModified:
-            return task->lastModDate();
+            return formatDateTime(task->lastModDate());
         case nsTaskData::CommentsType:
             return task->commentsType();
         case nsTaskData::Comments:
@@ -128,7 +128,7 @@ QFont TreeUi::font(int column, Task::Ptr task) const
             {
                 font = strikedOutFont();
             }
-            else if (!task->parent())
+            else if (!task->parent() || !task->parent()->parent())
                 font.setBold(true);
             return font;
         }
@@ -207,4 +207,23 @@ TreeColumnData TreeUi::columnData(int column) const
         }
     }
     return TreeColumnData();
+}
+
+QString TreeUi::formatDate(const QDateTime &dateTime)
+{
+    return dateTime.toString("d.MM.yyyy");
+}
+
+QString TreeUi::formatDateTime(const QDateTime &dateTime)
+{
+    return dateTime.toString("d.MM.yyyy hh:mm");
+}
+
+int TreeUi::column(nsTaskData::TaskDataMember member) const
+{
+    int count = columnsCount();
+    for (int index = 0; index < count; ++index)
+        if (columnData(index).taskDataMember == member)
+            return index;
+    return -1;
 }

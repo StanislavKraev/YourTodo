@@ -4,6 +4,7 @@
 
 QDateTime fromOleTime(double time)
 {
+    // TODO: use hours, seconds, minutes as well
     if (fabs(time) < 1.e-3)
         return QDateTime();
     QDateTime dateTime = QDateTime(QDate(1899, 12, 30));
@@ -12,6 +13,7 @@ QDateTime fromOleTime(double time)
 
 double toOleTime(QDateTime time)
 {
+    // TODO: use hours, seconds, minutes as well
     if (!time.isValid())
         return 0.0;
     return QDateTime(QDate(1900, 1, 1)).daysTo(time) + 2;

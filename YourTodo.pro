@@ -49,7 +49,8 @@ SOURCES += main.cpp\
     widgets/datawidget.cpp \
     widgets/datawidgetmodel.cpp \
     widgets/texteditmodel.cpp \
-    widgets/floatpointingwidget.cpp
+    widgets/floatpointingwidget.cpp \
+    widgets/comboboxwidget.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -92,9 +93,13 @@ HEADERS  += mainwindow.h \
     widgets/datawidgetmodel.h \
     tasktree/itaskwatcher.h \
     widgets/texteditmodel.h \
-    widgets/floatpointingwidget.h
+    widgets/floatpointingwidget.h \
+    widgets/comboboxwidget.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     resources.qrc
+
+OTHER_FILES += \
+    add_column_checklist.txt

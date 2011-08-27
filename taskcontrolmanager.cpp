@@ -12,6 +12,7 @@
 #include "widgets/datawidgetmodel.h"
 #include "widgets/texteditmodel.h"
 #include "widgets/floatpointingwidget.h"
+#include "widgets/comboboxwidget.h"
 
 #include "taskcontrolmanager.h"
 
@@ -34,6 +35,7 @@ void TaskControlManager::createTaskControls(QTextEdit *commentsControl)
     typedef QPair<nsTaskData::TaskDataMember, DataWidget*> DataWidgetPair;
     QList<DataWidgetPair> pairs;
     pairs << DataWidgetPair(nsTaskData::Priority, new PriorityWidget("Priority", m_parentWidget))
+          << DataWidgetPair(nsTaskData::Risk, new ComboBoxWidget("Risk", m_parentWidget))
           << DataWidgetPair(nsTaskData::PercentDone, new SpinnerWidget("% Complete", 0, 100, m_parentWidget))
           << DataWidgetPair(nsTaskData::Cost, new FloatPointingWidget("Cost", m_parentWidget));
 

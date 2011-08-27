@@ -1,0 +1,5 @@
+1. Add to preferences: prefsmanager.cpp
+2. Update on edit: TreeUi::updateData
+3. Create apropriate widget.
+4. Instantiate widget TaskControlManager::createTaskControls
+5.

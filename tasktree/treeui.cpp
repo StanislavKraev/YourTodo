@@ -104,6 +104,9 @@ void TreeUi::updateData(Task::Ptr task, int column, QVariant data)
         case nsTaskData::Priority:
             task->setPriority(data.toInt());
             break;
+        case nsTaskData::Risk:
+            task->setRisk(data.toInt());
+            break;
         }
     }
 }

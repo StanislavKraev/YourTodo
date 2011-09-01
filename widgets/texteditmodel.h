@@ -22,6 +22,7 @@ private slots:
 private:
     QTextEdit *m_control;
     Task::Ptr m_task;
+    bool m_blocked;
 };
 
 #endif // TEXTEDITMODEL_H

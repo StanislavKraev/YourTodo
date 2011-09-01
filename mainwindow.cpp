@@ -169,6 +169,7 @@ void MainWindow::rememberUiState()
     int windowHeight = height();
     int left = pos().x();
     int top = pos().y();
+    QList<int> splitter_sizes = ui->splitter->sizes();
 
     QSettings settings;
     settings.beginGroup("Ui");
@@ -176,6 +177,15 @@ void MainWindow::rememberUiState()
     settings.setValue("height", windowHeight);
     settings.setValue("left", left);
     settings.setValue("top", top);
+
+    settings.beginWriteArray("splitter_size", splitter_sizes.length());
+    for(int i = 0; i < splitter_sizes.length(); ++i)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("size", splitter_sizes[i]);
+    }
+    settings.endArray();
+
     settings.endGroup();
 }
 
@@ -187,6 +197,16 @@ void MainWindow::restoreUiState()
     int windowHeight = settings.value("height", 600).toInt();
     int left = settings.value("left", 50).toInt();
     int top = settings.value("top", 50).toInt();
+
+    QList<int> splitter_sizes;
+    int splitter_size_count = settings.beginReadArray("splitter_size");
+    for(int i = 0; i < splitter_size_count; ++i)
+    {
+        settings.setArrayIndex(i);
+        int splitter_size = settings.value("size", 0).toInt();
+        splitter_sizes.append(fixIntToRange(50, 1950, splitter_size));
+    }
+    settings.endArray();
     settings.endGroup();
 
     windowWidth = fixIntToRange(400, 2000, windowWidth);
@@ -197,4 +217,5 @@ void MainWindow::restoreUiState()
 
     resize(windowWidth, windowHeight);
     move(left, top);
+    ui->splitter->setSizes(splitter_sizes);
 }

@@ -5,6 +5,9 @@
 #include <QTimer>
 #include <QAbstractEventDispatcher>
 #include <QDebug>
+#include <QSettings>
+#include <QApplication>
+#include <QDesktopWidget>
 
 #include <QxtGlobalShortcut>
 
@@ -14,6 +17,7 @@
 
 #include "tasktree/tasklist.h"
 #include "tasktree/treemodel.h"
+#include "utils.h"
 #include "application.h"
 
 #include "mainwindow.h"
@@ -32,12 +36,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->splitter->setSizes(sizes);
 
     ui->textEdit->setText("comment");
+
+    restoreUiState();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::closeEvent(QCloseEvent *event)
+ {
+     if (true) {
+         rememberUiState();
+         event->accept();
+     } else {
+         event->ignore();
+     }
+ }
 
 void MainWindow::changeEvent(QEvent * event)
 {
@@ -145,4 +161,40 @@ QWidget * MainWindow::controlsArea() const
 QTextEdit * MainWindow::commentsControl() const
 {
     return ui->textEdit;
+}
+
+void MainWindow::rememberUiState()
+{
+    int windowWidth = width();
+    int windowHeight = height();
+    int left = pos().x();
+    int top = pos().y();
+
+    QSettings settings;
+    settings.beginGroup("Ui");
+    settings.setValue("width", windowWidth);
+    settings.setValue("height", windowHeight);
+    settings.setValue("left", left);
+    settings.setValue("top", top);
+    settings.endGroup();
+}
+
+void MainWindow::restoreUiState()
+{
+    QSettings settings;
+    settings.beginGroup("Ui");
+    int windowWidth = settings.value("width", 800).toInt();
+    int windowHeight = settings.value("height", 600).toInt();
+    int left = settings.value("left", 50).toInt();
+    int top = settings.value("top", 50).toInt();
+    settings.endGroup();
+
+    windowWidth = fixIntToRange(400, 2000, windowWidth);
+    windowHeight = fixIntToRange(300, 1500, windowHeight);
+
+    left = fixIntToRange(0, qApp->desktop()->width() - 50, left);
+    top = fixIntToRange(0, qApp->desktop()->height() - 50, top);
+
+    resize(windowWidth, windowHeight);
+    move(left, top);
 }

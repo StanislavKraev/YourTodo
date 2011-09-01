@@ -66,8 +66,8 @@ void UiManager::createTreeUi()
     m_treeUi->addColumn(TreeColumnData("!", nsTaskData::Priority, 22, TreeColumnData::PRIORITY));
     m_treeUi->addColumn(TreeColumnData("%", nsTaskData::PercentDone, 30));
     m_treeUi->addColumn(TreeColumnData("Pos", nsTaskData::Position, 24));
-    m_treeUi->addColumn(TreeColumnData("Risk", nsTaskData::Risk, 30));
-    m_treeUi->addColumn(TreeColumnData("Cost", nsTaskData::Cost, 30));
+    m_treeUi->addColumn(TreeColumnData("Risk", nsTaskData::Risk, 40));
+    m_treeUi->addColumn(TreeColumnData("Cost", nsTaskData::Cost, 40));
     m_treeUi->addColumn(TreeColumnData("Start date", nsTaskData::StartDate, 80));
     m_treeUi->addColumn(TreeColumnData("Done date", nsTaskData::DoneDate, 80));
     m_treeUi->addColumn(TreeColumnData("Creation date", nsTaskData::CreationDate, 80));

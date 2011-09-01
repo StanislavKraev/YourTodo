@@ -40,3 +40,12 @@ QString toRawColor(QColor col)
 
     return QString("%1").arg(val);
 }
+
+int fixIntToRange(int min, int max, int current)
+{
+    if (current < min)
+        return min;
+    if (current > max)
+        return max;
+    return current;
+}

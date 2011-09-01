@@ -43,6 +43,10 @@ public slots:
     void onShortcut();
 protected:
     virtual void changeEvent(QEvent *event);
+    virtual void closeEvent(QCloseEvent *event);
+private:
+    void rememberUiState();
+    void restoreUiState();
 signals:
     void onMainWindowMinimized();
     void onMainWindowRestored();

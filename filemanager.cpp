@@ -1,5 +1,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QFileInfo>
+#include <QSettings>
 
 #include "tasktree/tasklist.h"
 #include "tasktree/xmltaskloader.h"
@@ -17,6 +19,25 @@ FileManager::FileManager(QWidget *parent) :
 
 FileManager::~FileManager()
 {
+    QSettings settings;
+
+    settings.beginGroup("List");
+
+    bool setFile = false;
+    if (m_curTaskList)
+    {
+        QString fileName = m_curTaskList->filePath();
+        QFileInfo fi(fileName);
+        if (fi.exists())
+        {
+            settings.setValue("current_path", fileName);
+            setFile = true;
+        }
+    }
+    if (!setFile)
+        settings.remove("current_path");
+    settings.endGroup();
+
     if (m_curTaskList)
         delete m_curTaskList;
 }
@@ -36,25 +57,7 @@ void FileManager::onOpen()
     if (fileName.isEmpty())
         return;
 
-    XmlTaskLoader loader(fileName);
-    TaskList *taskList = new TaskList();
-    try
-    {
-        taskList->load(&loader);
-    }
-    catch (LoadTasksException &e)
-    {
-        QMessageBox messageBox;
-        messageBox.warning(0, "Can't load task list", e.message());
-        delete taskList;
-        return;
-    }
-    //m_lists.append(taskList);
-    TaskList* oldList = m_curTaskList;
-    m_curTaskList = taskList;
-    emit(currentListChanged(taskList));
-    if (oldList)
-        delete oldList;
+    loadTaskList(fileName);
 }
 
 void FileManager::onSave()
@@ -115,4 +118,51 @@ const char * FileManager::getActionSlot(Actions::Actions action) const
 QObject *FileManager::getReciever()
 {
     return this;
+}
+
+const ITaskList * FileManager::currentTaskList() const
+{
+    return m_curTaskList;
+}
+
+bool FileManager::loadTaskList(QString fileName)
+{
+    XmlTaskLoader loader(fileName);
+    TaskList *taskList = new TaskList();
+    try
+    {
+        taskList->load(&loader);
+    }
+    catch (LoadTasksException &e)
+    {
+        QMessageBox messageBox;
+        messageBox.warning(0, "Can't load task list", e.message());
+        delete taskList;
+        return false;
+    }
+
+    TaskList* oldList = m_curTaskList;
+    m_curTaskList = taskList;
+    emit(currentListChanged(taskList));
+    if (oldList)
+        delete oldList;
+    return true;
+}
+
+void FileManager::startUp()
+{
+    QSettings settings;
+
+    QString currentTaskListPath = settings.value("List/current_path", "").toString();
+
+    QFileInfo fi(currentTaskListPath);
+    if (!fi.exists())
+        settings.remove("List/current_path");
+    else
+    {
+        if (!loadTaskList(currentTaskListPath))
+            settings.remove("List/current_path");
+    }
+    if (!m_curTaskList)
+        onNew();
 }

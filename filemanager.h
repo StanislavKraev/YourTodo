@@ -19,15 +19,19 @@ public:
     virtual void init(IToolManager *manager);
     virtual const char* getActionSlot(Actions::Actions action) const;
     virtual QObject* getReciever();
+    const ITaskList *currentTaskList() const;
 
 signals:
     void currentListChanged(ITaskList* newList);
 public slots:
+    void startUp();
     void onNew();
     void onOpen();
     void onSave();
     void onSaveAs();
     void onClose();
+private:
+    bool loadTaskList(QString fileName);
 private:
     QWidget *m_parent;
     QList<TaskList*> m_lists;

@@ -33,6 +33,7 @@ public:
 public:
     virtual bool load(ITaskLoader *loader);
     virtual bool save(ITaskSaver *saver);
+    virtual QString filePath() const;
 protected:
     int nextId() const;
     void clear();

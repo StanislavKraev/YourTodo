@@ -286,3 +286,8 @@ void TaskList::notifyMemberChange(nsTaskData::TaskDataMember member, Task* task)
         watcher->taskChanged(member, task);
 }
 
+QString TaskList::filePath() const
+{
+    return m_fileName;
+}
+

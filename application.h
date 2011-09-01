@@ -19,6 +19,8 @@ public:
 public:
     MainWindow *mainWindow();
 private:
+    void createSettings();
+private:
     MainWindow *m_mainWindow;
     FileManager *m_fileManager;
     UiManager *m_uiManager;

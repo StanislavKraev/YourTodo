@@ -1,14 +1,19 @@
+#include <QCoreApplication>
+#include <QSettings>
+
 #include "mainwindow.h"
 #include "filemanager.h"
 #include "selectiontool.h"
 #include "uimanager.h"
 #include "taskcontrolmanager.h"
 #include "prefsmanager.h"
+#include "tasktree/itasklist.h"
 
 #include "application.h"
 
 Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 {
+    createSettings();
     m_prefsManager = new PrefsManager();
     m_mainWindow = new MainWindow();
     m_mainWindow->SetupEventFilter();
@@ -35,7 +40,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
             m_selectionTool, SLOT(onModelsChanged(QItemSelectionModel*,QAbstractItemModel*)));
     connect(m_selectionTool, SIGNAL(selectionChanged(QItemSelectionModel*)),
             m_taskControlManager, SLOT(selectionChanged(QItemSelectionModel*)));
-    m_fileManager->onNew();
+    m_fileManager->startUp();
     m_mainWindow->show();
 }
 
@@ -51,4 +56,11 @@ Application::~Application()
 MainWindow * Application::mainWindow()
 {
     return m_mainWindow;
+}
+
+void Application::createSettings()
+{
+    QCoreApplication::setOrganizationName("OpenSource");
+    QCoreApplication::setOrganizationDomain(".org");
+    QCoreApplication::setApplicationName("YourTodo");
 }

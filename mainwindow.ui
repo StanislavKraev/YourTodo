@@ -52,7 +52,30 @@
 QTreeView::item:selected {
     background-color: #3399ff;
  }
-</string>
+
+QTreeView::branch:has-siblings:!adjoins-item {
+     border-image: url(images/vline.png) 0;
+ }
+
+ QTreeView::branch:has-siblings:adjoins-item {
+     border-image: url(images/branch-more.png) 0;
+ }
+
+ QTreeView::branch:!has-children:!has-siblings:adjoins-item {
+     border-image: url(images/branch-end.png) 0;
+ }
+
+ QTreeView::branch:has-children:!has-siblings:closed,
+ QTreeView::branch:closed:has-children:has-siblings {
+         border-image: none;
+         image: url(images/branch-closed.png);
+ }
+
+ QTreeView::branch:open:has-children:!has-siblings,
+ QTreeView::branch:open:has-children:has-siblings  {
+         border-image: none;
+         image: url(images/branch-open.png);
+ }</string>
        </property>
        <property name="selectionMode">
         <enum>QAbstractItemView::ContiguousSelection</enum>
@@ -75,8 +98,6 @@ QTreeView::item:selected {
         <height>100</height>
        </size>
       </property>
-      <zorder>splitter</zorder>
-      <zorder>splitter</zorder>
      </widget>
     </item>
    </layout>
@@ -87,7 +108,7 @@ QTreeView::item:selected {
      <x>0</x>
      <y>0</y>
      <width>647</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuQTodoList">

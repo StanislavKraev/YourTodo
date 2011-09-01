@@ -85,6 +85,7 @@ void FileManager::onClose()
 
 void FileManager::init(IToolManager *manager)
 {
+    (void)manager;
     addAction(Actions::FileNew);
     addAction(Actions::FileOpen);
     addAction(Actions::FileSave);

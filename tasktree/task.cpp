@@ -23,7 +23,8 @@ public:
 };
 static InitColors initColors;
 
-Task::Task() : m_id(-1), m_taskList(0)
+Task::Task() : m_id(-1), m_iconIndex(-1), m_pos(-1), m_priority(-1), m_risk(-1), m_percentDone(-1),
+    m_cost(0.0), m_commentsType(Task::UNDEFINED), m_taskList(0)
 {
 }
 
@@ -34,20 +35,20 @@ Task::Task(int id, QString title, unsigned short percentDone, QString comments,
            QDateTime startDate, QColor textColor) :
     m_id(id),
     m_title(title),
-    m_percentDone(percentDone),
-    m_comments(comments),
-    m_commentsType(UNDEFINED),
-    m_cost(cost),
-    m_creationDate(creationDate),
-    m_doneDate(doneDate),
-    m_startDate(startDate),
-    m_lastMod(lastMod),
     m_iconIndex(iconIndex),
+    m_comments(comments),
     m_pos(pos),
     m_priority(priority),
-    m_priorityColor(priorityColor),
     m_risk(risk),
+    m_percentDone(percentDone),
+    m_cost(cost),
+    m_doneDate(doneDate),
+    m_startDate(startDate),
+    m_creationDate(creationDate),
+    m_lastMod(lastMod),
+    m_commentsType(commentsType),
     m_textColor(textColor),
+    m_priorityColor(priorityColor),
     m_taskList(0)
 {
 }
@@ -56,31 +57,29 @@ Task::Task(int id,
            QString title) :
     m_id(id),
     m_title(title),
-    m_percentDone(0),
-    m_commentsType(UNDEFINED),
-    m_cost(0.0),
-    m_creationDate(QDateTime::currentDateTime()),
-    m_lastMod(QDateTime::currentDateTime()),
     m_iconIndex(-1),
     m_pos(-1),
     m_priority(5),
     m_risk(0),
+    m_percentDone(0),
+    m_cost(0.0),
+    m_creationDate(QDateTime::currentDateTime()),
+    m_lastMod(QDateTime::currentDateTime()),
+    m_commentsType(UNDEFINED),
     m_taskList(0)
 {
 }
 
 Task::Task(const Task &task) :
+    m_subTaskList(task.m_subTaskList),
     m_id(task.m_id),
     m_title(task.m_title),
-    m_subTaskList(task.m_subTaskList),
-    m_parent(task.m_parent),
-    m_percentDone(task.m_percentDone),
-    m_taskList(task.m_taskList),
-    m_risk(task.m_risk),
     m_iconIndex(task.m_iconIndex),
     m_comments(task.m_comments),
     m_pos(task.m_pos),
     m_priority(task.m_priority),
+    m_risk(task.m_risk),
+    m_percentDone(task.m_percentDone),
     m_cost(task.m_cost),
     m_doneDate(task.m_doneDate),
     m_startDate(task.m_startDate),
@@ -88,7 +87,9 @@ Task::Task(const Task &task) :
     m_lastMod(task.m_lastMod),
     m_commentsType(task.m_commentsType),
     m_textColor(task.m_textColor),
-    m_priorityColor(task.m_priorityColor)
+    m_priorityColor(task.m_priorityColor),
+    m_parent(task.m_parent),
+    m_taskList(task.m_taskList)
 {
 }
 
@@ -465,6 +466,10 @@ QVariant Task::memberData(nsTaskData::TaskDataMember member) const
         return m_comments;
     case nsTaskData::TextColor:
         return m_textColor;
+    case nsTaskData::InvalidTaskMember:
+        return QVariant();
+    default:
+        return QVariant();
     }
 
     return QVariant();
@@ -477,6 +482,8 @@ bool Task::editable(nsTaskData::TaskDataMember member) const
     case nsTaskData::PercentDone:
     case nsTaskData::Cost:
         return m_subTaskList.count() == 0;
+    default:
+        break;
     }
     return true;
 }

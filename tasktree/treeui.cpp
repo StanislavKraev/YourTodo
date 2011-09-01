@@ -70,6 +70,8 @@ QVariant TreeUi::itemData(int column, Task::Ptr task) const
             return task->commentsType();
         case nsTaskData::Comments:
             return task->comments();
+        default:
+            return QVariant();
         }
     }
     return QVariant();
@@ -106,6 +108,8 @@ void TreeUi::updateData(Task::Ptr task, int column, QVariant data)
             break;
         case nsTaskData::Risk:
             task->setRisk(data.toInt());
+            break;
+        default:
             break;
         }
     }
@@ -150,6 +154,8 @@ QBrush TreeUi::foreground(int column, Task::Ptr task) const
                 else
                     return Qt::black;
             }
+            default:
+                break;
         }
     }
     return Qt::black;
@@ -186,6 +192,8 @@ QBrush TreeUi::background(int column, Task::Ptr task) const
         {
         case nsTaskData::Priority:
             return task->priorityColor();
+        default:
+            break;
         }
     }
     return Qt::white;

@@ -17,6 +17,7 @@ TreeModel::TreeModel(QObject *parent, ITaskList *taskList, ITreeUiProvider *tree
 
 int TreeModel::columnCount(const QModelIndex &parent) const
 {
+    (void)parent;
     return m_treeUi->columnsCount();
 }
 
@@ -207,6 +208,7 @@ bool TreeModel::removeRows(int row, int count, const QModelIndex &parent)
 
 void TreeModel::taskChanged(nsTaskData::TaskDataMember member, Task* task)
 {
+    (void)member;
     QModelIndex id = idFromPtr(task);
 
     if (id.isValid())

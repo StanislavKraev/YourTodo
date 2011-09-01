@@ -14,6 +14,7 @@ bool Tool::isActionEnabled(Actions::Actions action) const
 
 bool Tool::isActionChecked(Actions::Actions action) const
 {
+    (void)action;
     return false;
 }
 

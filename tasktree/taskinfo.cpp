@@ -44,6 +44,8 @@ TaskInfo TaskInfo::fromTaskPtr(Task::Ptr task)
     {
     case Task::PLAIN_TEXT:
         info.commentsType = "PLAIN_TEXT";
+    default:
+        break;
     }
 
     info.cost = task->cost();

@@ -57,5 +57,7 @@ void SelectionTool::onModelsChanged(QItemSelectionModel *selectionModel, QAbstra
 
 void SelectionTool::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
+    (void)selected;
+    (void)deselected;
     emit(selectionChanged(m_selectionModel));
 }

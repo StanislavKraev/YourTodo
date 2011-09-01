@@ -264,6 +264,8 @@ const char * UiManager::getActionSlot(Actions::Actions action) const
         return SLOT(onMinimize());
     case Actions::ViewMaxTasklist:
         return SLOT(onMaximizeTasklist());
+    default:
+        break;
     }
     return 0;
 }
@@ -313,6 +315,8 @@ bool UiManager::isActionChecked(Actions::Actions action) const
         return m_toolBarShown;
     case Actions::ViewMaxTasklist:
         return m_taskListMaximized;
+    default:
+        break;
     }
 
     return Tool::isActionChecked(action);
@@ -326,6 +330,7 @@ void UiManager::onMinimize()
 
 void UiManager::init(IToolManager *manager)
 {
+    (void)manager;
     addAction(Actions::FileExit);
     addAction(Actions::ViewShowStatusbar);
     addAction(Actions::ViewShowToolbar);
@@ -342,6 +347,8 @@ void UiManager::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
          m_trayIcon->hide();
          m_mainWindow->showNormal();
          m_mainWindow->activateWindow();
+         break;
+     default:
          break;
      }
 }

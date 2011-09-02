@@ -8,8 +8,9 @@ class TaskList;
 class ITaskList;
 
 #include "tool.h"
+#include "ifilemanager.h"
 
-class FileManager : public QObject, public Tool
+class FileManager : public QObject, public Tool, public IFileManager
 {
     Q_OBJECT
 public:
@@ -20,7 +21,8 @@ public:
     virtual const char* getActionSlot(Actions::Actions action) const;
     virtual QObject* getReciever();
     const ITaskList *currentTaskList() const;
-
+public:
+    virtual void autoSave();
 signals:
     void currentListChanged(ITaskList* newList);
 public slots:

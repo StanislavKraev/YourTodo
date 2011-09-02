@@ -52,6 +52,7 @@ signals:
     void onMainWindowMinimized();
     void onMainWindowRestored();
     void onModelsChanged(QItemSelectionModel *selectionModel, QAbstractItemModel *model);
+    void onMainWindowClosing();
 private:
     Ui::MainWindow *ui;
 };

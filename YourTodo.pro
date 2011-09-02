@@ -51,7 +51,9 @@ SOURCES += main.cpp\
     widgets/texteditmodel.cpp \
     widgets/floatpointingwidget.cpp \
     widgets/comboboxwidget.cpp \
-    taskeditortool.cpp
+    taskeditortool.cpp \
+    prefsdialog.cpp \
+    preferencesmodel.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -96,9 +98,13 @@ HEADERS  += mainwindow.h \
     widgets/texteditmodel.h \
     widgets/floatpointingwidget.h \
     widgets/comboboxwidget.h \
-    taskeditortool.h
+    taskeditortool.h \
+    prefsdialog.h \
+    preferencesmodel.h \
+    ifilemanager.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    prefsdialog.ui
 
 RESOURCES += \
     resources.qrc

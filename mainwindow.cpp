@@ -49,6 +49,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
  {
      if (true) {
          rememberUiState();
+         emit(onMainWindowClosing());
          event->accept();
      } else {
          event->ignore();

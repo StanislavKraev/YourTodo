@@ -10,12 +10,14 @@
 #include "tasktree/itasklist.h"
 #include "itaskcontrolmanager.h"
 #include "mainwindow.h"
+#include "filemanager.h"
+#include "ipreferences.h"
 
 #include "uimanager.h"
 
 UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
                      QToolBar *toolBar, MainWindow *mainWindow,
-                     IPreferences *prefs) :
+                     IPreferences *prefs, IFileManager *fileManager) :
     m_menuBar(menuBar),
     m_toolBar(toolBar),
     m_statusBar(statusBar),
@@ -25,7 +27,8 @@ UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
     m_taskListMaximized(false),
     m_treeUi(0),
     m_taskControlManager(0),
-    m_prefs(prefs)
+    m_prefs(prefs),
+    m_fileManager(fileManager)
 {
     m_trayMenu = new QMenu(m_mainWindow);
     m_trayMenu->addAction("Exit", this, SLOT(onExit()));
@@ -357,6 +360,8 @@ void UiManager::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void UiManager::onMainWindowMinimized()
 {
     m_trayIcon->show();
+    if (m_prefs->saveOnMinimize())
+        m_fileManager->autoSave();
 }
 
 void UiManager::onMainWindowRestored()
@@ -391,4 +396,10 @@ ITreeUiProvider * UiManager::treeUi() const
 void UiManager::setTaskControlManager(ITaskControlManager *taskControlManager)
 {
     m_taskControlManager = taskControlManager;
+}
+
+void UiManager::onMainWindowClosing()
+{
+    if (m_prefs->saveOnExit())
+        m_fileManager->autoSave();
 }

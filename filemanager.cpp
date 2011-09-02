@@ -175,3 +175,9 @@ void FileManager::startUp()
     if (!m_curTaskList)
         onNew();
 }
+
+void FileManager::autoSave()
+{
+    if (m_curTaskList && m_curTaskList->filePath().length() > 0)
+        onSave();
+}

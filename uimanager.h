@@ -24,6 +24,7 @@ class TreeUi;
 class ITreeUiProvider;
 class ITaskControlManager;
 class IPreferences;
+class IFileManager;
 
 class UiManager : public QObject, public IToolManager, public Tool
 {
@@ -33,7 +34,8 @@ public:
               QStatusBar *statusBar,
               QToolBar *toolBar,
               MainWindow *mainWindow,
-              IPreferences *prefs);
+              IPreferences *prefs,
+              IFileManager *fileManager);
     virtual ~UiManager();
 public:
     void initManager();
@@ -55,6 +57,7 @@ public slots:
     void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
     void onMainWindowMinimized();
     void onMainWindowRestored();
+    void onMainWindowClosing();
     void onCurrentListChanged(ITaskList* newList);
     void onMaximizeTasklist();
 private:
@@ -78,6 +81,7 @@ private:
     TreeUi *m_treeUi;
     ITaskControlManager *m_taskControlManager;
     IPreferences *m_prefs;
+    IFileManager *m_fileManager;
 };
 
 #endif // UIMANAGER_H

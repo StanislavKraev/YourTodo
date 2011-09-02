@@ -7,6 +7,7 @@
 
 #include "tasktree/treeui.h"
 #include "tasktree/tasktreeview.h"
+#include "tasktree/itasklist.h"
 #include "itaskcontrolmanager.h"
 #include "mainwindow.h"
 
@@ -366,6 +367,7 @@ void UiManager::onMainWindowRestored()
 void UiManager::onCurrentListChanged(ITaskList* newList)
 {
     m_mainWindow->updateTreeModel(newList, m_treeUi);
+    m_mainWindow->setWindowTitle(newList->title());
     m_treeUi->init();
 }
 

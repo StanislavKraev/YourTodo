@@ -36,6 +36,7 @@ public:
     virtual bool load(ITaskLoader *loader) = 0;
     virtual bool save(ITaskSaver *saver) = 0;
     virtual QString filePath() const = 0;
+    virtual QString title() const = 0;
 };
 
 #endif // ITASKLIST_H

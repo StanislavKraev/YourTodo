@@ -1,6 +1,7 @@
 #include <QtXml/QDomDocument>
 
 #include <QFile>
+#include <QFileInfo>
 #include <QMap>
 
 #include "exceptions/loadtasksexception.h"
@@ -289,5 +290,13 @@ void TaskList::notifyMemberChange(nsTaskData::TaskDataMember member, Task* task)
 QString TaskList::filePath() const
 {
     return m_fileName;
+}
+
+QString TaskList::title() const
+{
+    if (m_fileName.length() < 1)
+        return "Unnamed";
+    QFileInfo fi(m_fileName);
+    return fi.baseName();
 }
 

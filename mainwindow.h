@@ -41,6 +41,7 @@ public:
     QTextEdit* commentsControl() const;
 public slots:
     void onShortcut();
+    void setWindowTitle(const QString &title);
 protected:
     virtual void changeEvent(QEvent *event);
     virtual void closeEvent(QCloseEvent *event);

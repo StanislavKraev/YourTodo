@@ -457,3 +457,92 @@ QModelIndex TaskTreeView::getFirstSelection(const QModelIndexList &selectedList)
     }
     return QModelIndex();
 }
+
+bool TaskTreeView::canMoveUp() const
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+        return false;
+
+    QModelIndex firstItem = getFirstSelection(selectedList);
+
+    QModelIndex mainParent = firstItem.parent();
+    if (firstItem.row() < 1)
+        return false;
+
+    selectedList.removeOne(firstItem);
+    if (selectedList.count() && !checkAllAreChildren(mainParent, selectedList))
+        return false;
+    return true;
+}
+
+bool TaskTreeView::canMoveDown() const
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+        return false;
+
+    QModelIndex firstItem = getFirstSelection(selectedList);
+    QModelIndexList itemsToMove;
+    itemsToMove.append(firstItem);
+
+    QModelIndex mainParent = firstItem.parent();
+    int parentChildrenCount = model()->rowCount(mainParent);
+
+    selectedList.removeOne(firstItem);
+    if (selectedList.count())
+    {
+        if (!checkAllAreChildren(mainParent, selectedList))
+            return false;
+
+        QModelIndexList topLevelChildren;
+        getItemChildren(mainParent, selectedList, topLevelChildren);
+        itemsToMove.append(topLevelChildren);
+    }
+
+    const int count = itemsToMove.count();
+    if (firstItem.row() + count >= parentChildrenCount)
+        return false;
+
+    return count > 0;
+}
+
+bool TaskTreeView::canMoveLeft() const
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+        return false;
+
+    QModelIndex firstItem = getFirstSelection(selectedList);
+
+    QModelIndex mainParent = firstItem.parent();
+    if (!mainParent.isValid())
+        return false;
+
+    selectedList.removeOne(firstItem);
+    if (selectedList.count() && !checkAllAreChildren(mainParent, selectedList))
+        return false;
+    return true;
+}
+
+bool TaskTreeView::canMoveRight() const
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() < 1)
+        return false;
+
+    QModelIndex firstItem = getFirstSelection(selectedList);
+
+    QModelIndex mainParent = firstItem.parent();
+    if (firstItem.row() < 1)
+        return false;
+
+    selectedList.removeOne(firstItem);
+    if (selectedList.count() && !checkAllAreChildren(mainParent, selectedList))
+        return false;
+
+    QModelIndex newParent = model()->index(firstItem.row() - 1, 0, mainParent);
+    if (!newParent.isValid())
+        return false;
+    return true;
+}

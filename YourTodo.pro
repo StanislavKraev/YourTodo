@@ -50,7 +50,8 @@ SOURCES += main.cpp\
     widgets/datawidgetmodel.cpp \
     widgets/texteditmodel.cpp \
     widgets/floatpointingwidget.cpp \
-    widgets/comboboxwidget.cpp
+    widgets/comboboxwidget.cpp \
+    taskeditortool.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -94,7 +95,8 @@ HEADERS  += mainwindow.h \
     tasktree/itaskwatcher.h \
     widgets/texteditmodel.h \
     widgets/floatpointingwidget.h \
-    widgets/comboboxwidget.h
+    widgets/comboboxwidget.h \
+    taskeditortool.h
 
 FORMS    += mainwindow.ui
 

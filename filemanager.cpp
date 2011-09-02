@@ -64,6 +64,11 @@ void FileManager::onSave()
 {
     if (m_curTaskList)
     {
+        if (m_curTaskList->filePath().length() < 1)
+        {
+            onSaveAs();
+            return;
+        }
         XmlTaskSaver saver;
         m_curTaskList->save(&saver);
     }
@@ -77,6 +82,10 @@ void FileManager::onSaveAs()
              tr("Save Tasklist As"), "/home/kraevst/", tr("Task lists (*.tdl)"));
         if (fileName.isEmpty())
             return;
+
+        QFileInfo fi(fileName);
+        if (fi.suffix().length() < 1)
+            fileName += ".tdl";
         m_curTaskList->setFileName(fileName);
         onSave();
     }

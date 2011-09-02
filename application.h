@@ -9,6 +9,7 @@ class UiManager;
 class SelectionTool;
 class TaskControlManager;
 class PrefsManager;
+class TaskEditorTool;
 
 class Application : public QApplication
 {
@@ -27,6 +28,7 @@ private:
     SelectionTool *m_selectionTool;
     TaskControlManager *m_taskControlManager;
     PrefsManager *m_prefsManager;
+    TaskEditorTool *m_taskEditTool;
 };
 
 #endif // APPLICATION_H

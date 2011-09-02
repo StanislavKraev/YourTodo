@@ -34,6 +34,7 @@ public:
     virtual bool load(ITaskLoader *loader);
     virtual bool save(ITaskSaver *saver);
     virtual QString filePath() const;
+    virtual QString title() const;
 protected:
     int nextId() const;
     void clear();

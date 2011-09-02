@@ -219,3 +219,8 @@ void MainWindow::restoreUiState()
     move(left, top);
     ui->splitter->setSizes(splitter_sizes);
 }
+
+void MainWindow::setWindowTitle(const QString &title)
+{
+    QWidget::setWindowTitle(title + " - YourTodo");
+}

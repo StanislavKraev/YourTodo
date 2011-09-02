@@ -1,5 +1,3 @@
-#include <QSettings>
-
 #include "preferencesmodel.h"
 
 PreferencesModel::PreferencesModel()
@@ -42,4 +40,23 @@ void PreferencesModel::load()
     m_saveOnMinimize = settings.value("onMinimize", true).toBool();
     m_saveOnExit = settings.value("onExit", true).toBool();
     settings.endGroup();
+    loadShortcuts(settings);
+}
+
+void PreferencesModel::loadShortcuts(QSettings &settings)
+{
+    settings.beginGroup("Shortcuts");
+    m_shortcuts[Actions::FileNew] = QKeySequence(settings.value("FileNew", "Alt+N").toString());
+    m_shortcuts[Actions::FileOpen] = QKeySequence(settings.value("FileOpen", "Alt+O").toString());
+    m_shortcuts[Actions::FileSave] = QKeySequence(settings.value("FileSave", "Ctrl+S").toString());
+    m_shortcuts[Actions::FileSaveAs] = QKeySequence(settings.value("FileSaveAs", "").toString());
+    m_shortcuts[Actions::FileMinimize] = QKeySequence(settings.value("FileMinimize", "").toString());
+    m_shortcuts[Actions::FileExit] = QKeySequence(settings.value("FileExit", "Ctrl+F4").toString());
+
+    settings.endGroup();
+}
+
+const QMap<Actions::Actions, QKeySequence> PreferencesModel::shortcuts() const
+{
+    return m_shortcuts;
 }

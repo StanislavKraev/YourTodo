@@ -4,7 +4,8 @@
 #include "preferencesmodel.h"
 #include "prefsmanager.h"
 
-PrefsManager::PrefsManager(QWidget *parent) : m_manager(0), m_parentWindow(parent)
+PrefsManager::PrefsManager(QWidget *parent) :
+    m_manager(0), m_parentWindow(parent), m_uiManager(0)
 {
     m_prefs = new PreferencesModel();
     m_selectedColumns << nsTaskData::Title
@@ -52,7 +53,7 @@ bool PrefsManager::isActionEnabled(Actions::Actions action) const
 
 void PrefsManager::showPreferences()
 {
-    PrefsDialog *dialog = new PrefsDialog(m_parentWindow, m_prefs);
+    PrefsDialog *dialog = new PrefsDialog(m_parentWindow, m_prefs, m_uiManager);
     dialog->exec();
     dialog->deleteLater();
 }
@@ -65,4 +66,9 @@ bool PrefsManager::saveOnMinimize() const
 bool PrefsManager::saveOnExit() const
 {
     return m_prefs->saveOnExit();
+}
+
+void PrefsManager::setUiManager(IUiManager *uiManager)
+{
+    m_uiManager = uiManager;
 }

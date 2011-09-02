@@ -122,7 +122,7 @@ void UiManager::createMenu()
 
 
     QMenu *fileMenu = m_menuBar->addMenu("&File");
-    QMenu *newTaskMenu = m_menuBar->addMenu("&New Task");
+    QMenu *newTaskMenu = m_menuBar->addMenu("New &Task");
     QMenu *editMenu = m_menuBar->addMenu("&Edit");
     QMenu *viewMenu = m_menuBar->addMenu("&View");
     QMenu *moveMenu = m_menuBar->addMenu("&Move");
@@ -402,4 +402,9 @@ void UiManager::onMainWindowClosing()
 {
     if (m_prefs->saveOnExit())
         m_fileManager->autoSave();
+}
+
+const QAction * UiManager::action(Actions::Actions searchAction) const
+{
+    return m_idActionMap[searchAction];
 }

@@ -10,6 +10,7 @@
 #include "tool.h"
 #include "action.h"
 #include "actionids.h"
+#include "iuimanager.h"
 
 class QMenuBar;
 class QWidget;
@@ -26,7 +27,7 @@ class ITaskControlManager;
 class IPreferences;
 class IFileManager;
 
-class UiManager : public QObject, public IToolManager, public Tool
+class UiManager : public QObject, public IToolManager, public Tool, public IUiManager
 {
     Q_OBJECT
 public:
@@ -49,6 +50,7 @@ public:
     virtual QObject* getReciever();
     ITreeUiProvider* treeUi() const;
     void setTaskControlManager(ITaskControlManager *taskControlManager);
+    virtual const QAction* action(Actions::Actions searchAction) const;
 public slots:
     void onExit();
     void onShowToolbar();

@@ -28,3 +28,8 @@ void Action::setEnabled(bool val)
         m_action->setEnabled(val);
 }
 
+QAction * Action::action() const
+{
+    return m_action;
+}
+

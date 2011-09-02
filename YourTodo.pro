@@ -53,7 +53,8 @@ SOURCES += main.cpp\
     widgets/comboboxwidget.cpp \
     taskeditortool.cpp \
     prefsdialog.cpp \
-    preferencesmodel.cpp
+    preferencesmodel.cpp \
+    widgets/keyassignwidget.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -101,7 +102,9 @@ HEADERS  += mainwindow.h \
     taskeditortool.h \
     prefsdialog.h \
     preferencesmodel.h \
-    ifilemanager.h
+    ifilemanager.h \
+    iuimanager.h \
+    widgets/keyassignwidget.h
 
 FORMS    += mainwindow.ui \
     prefsdialog.ui

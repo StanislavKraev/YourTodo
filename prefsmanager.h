@@ -9,6 +9,7 @@
 
 class IToolManager;
 class PreferencesModel;
+class IUiManager;
 
 class PrefsManager : public QObject, public Tool, public IPreferences
 {
@@ -16,6 +17,8 @@ class PrefsManager : public QObject, public Tool, public IPreferences
 public:
     PrefsManager(QWidget *parent);
     virtual ~PrefsManager();
+public:
+    void setUiManager(IUiManager *uiManager);
 public:
     virtual void init(IToolManager *manager);
     virtual const char* getActionSlot(Actions::Actions action) const;
@@ -32,6 +35,7 @@ private:
     IToolManager *m_manager;
     QWidget *m_parentWindow;
     PreferencesModel *m_prefs;
+    IUiManager *m_uiManager;
 };
 
 #endif // PREFSMANAGER_H

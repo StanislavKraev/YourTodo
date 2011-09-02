@@ -14,6 +14,7 @@ public:
     Actions::Actions id() const;
     bool enabled() const;
     void setEnabled(bool val);
+    QAction *action() const;
 private:
     QAction *m_action;
     Actions::Actions m_id;

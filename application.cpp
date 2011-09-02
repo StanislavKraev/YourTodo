@@ -34,6 +34,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     m_uiManager->addTool(m_taskEditTool);
     m_uiManager->addTool(m_prefsManager);
     m_uiManager->initManager();
+    m_prefsManager->setUiManager(m_uiManager);
 
     connect(m_mainWindow, SIGNAL(onMainWindowMinimized()), m_uiManager, SLOT(onMainWindowMinimized()));
     connect(m_mainWindow, SIGNAL(onMainWindowRestored()), m_uiManager, SLOT(onMainWindowRestored()));

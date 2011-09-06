@@ -63,6 +63,7 @@ public slots:
     void onMainWindowClosing();
     void onCurrentListChanged(ITaskList* newList);
     void onMaximizeTasklist();
+    void filenameChanged(QString title);
 private:
     void createMenu();
     void createTreeUi();

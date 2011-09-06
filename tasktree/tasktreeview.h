@@ -17,16 +17,18 @@ public:
     bool canMoveDown() const;
     bool canMoveLeft() const;
     bool canMoveRight() const;
+    bool canAddBelow() const;
+
     void shiftSelectedTasksRight();
     void shiftSelectedTasksLeft();
     void shiftSelectedTasksUp();
     void shiftSelectedTasksDown();
+    void addTaskBelowCursor();
+    void removeSelectedTasks();
 protected:
     virtual void keyPressEvent(QKeyEvent *event);
 private:
     void toggleSelectedTasks();
-    void addTaskBelowCursor();
-    void removeSelectedTasks();
     void getSelectedRowsRange(const QModelIndexList &selectedList, int &startRow, int &endRow) const;
     bool checkAllAreChildren(const QModelIndex &parent, const QModelIndexList &selectedList) const;
     void getItemChildren(const QModelIndex &parent, const QModelIndexList &selectedList, QModelIndexList &topLevelChildren) const;

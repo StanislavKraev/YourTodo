@@ -25,6 +25,7 @@ public:
     virtual void autoSave();
 signals:
     void currentListChanged(ITaskList* newList);
+    void filenameChanged(QString fileName);
 public slots:
     void startUp();
     void onNew();

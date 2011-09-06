@@ -1,12 +1,15 @@
 #include <QItemSelectionModel>
 #include "itoolmanager.h"
+#include "tasktree/tasktreeview.h"
 
 #include "selectiontool.h"
 
 SelectionTool::SelectionTool(QItemSelectionModel* selectionModel,
-                             QAbstractItemModel* model) :
+                             QAbstractItemModel* model,
+                             TaskTreeView* view) :
     m_selectionModel(selectionModel),
-    m_model(model)
+    m_model(model),
+    m_view(view)
 {
     if (m_selectionModel)
         connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -40,8 +43,7 @@ bool SelectionTool::isActionEnabled(Actions::Actions action) const
 
 void SelectionTool::onSelectAll()
 {
-    QItemSelection sel(m_model->index(0, 0), m_model->index(m_model->rowCount() - 1, 0));
-    m_selectionModel->select(sel, QItemSelectionModel::Rows|QItemSelectionModel::ClearAndSelect);
+    m_view->selectAll();
 }
 
 void SelectionTool::onModelsChanged(QItemSelectionModel *selectionModel, QAbstractItemModel *model)

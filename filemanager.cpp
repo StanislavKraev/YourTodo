@@ -84,10 +84,28 @@ void FileManager::onSaveAs()
             return;
 
         QFileInfo fi(fileName);
+        bool fixed(false);
         if (fi.suffix().length() < 1)
+        {
             fileName += ".tdl";
-        m_curTaskList->setFileName(fileName);
-        onSave();
+            fixed = true;
+        }
+
+        QFileInfo fi2(fileName);
+        bool save(true);
+        if (fixed && fi2.exists())
+        {
+            save = QMessageBox::question(m_parent, "File already exists",
+                                         QString("The file named %1 already exists in %2. Do you want to replace it?").
+                                            arg(fi2.fileName()).arg(fi2.dir().path()),
+                                         QMessageBox::Cancel, QMessageBox::Save) == QMessageBox::Save;
+        }
+        if (save)
+        {
+            m_curTaskList->setFileName(fileName);
+            onSave();
+            emit(filenameChanged(m_curTaskList->title()));
+        }
     }
 }
 

@@ -16,6 +16,9 @@ void TaskEditorTool::init(IToolManager *manager)
     addAction(Actions::MoveDown);
     addAction(Actions::MoveRight);
     addAction(Actions::MoveLeft);
+
+    addAction(Actions::EditDeleteSelected);
+    addAction(Actions::NewTaskBelow);
 }
 
 const char *TaskEditorTool::getActionSlot(Actions::Actions action) const
@@ -28,6 +31,10 @@ const char *TaskEditorTool::getActionSlot(Actions::Actions action) const
         return SLOT(moveLeft());
     else if (action == Actions::MoveRight)
         return SLOT(moveRight());
+    else if (action == Actions::EditDeleteSelected)
+        return SLOT(editDeleteSelected());
+    else if (action == Actions::NewTaskBelow)
+        return SLOT(newTaskBelow());
     return 0;
 }
 
@@ -38,7 +45,15 @@ QObject *TaskEditorTool::getReciever()
 
 bool TaskEditorTool::isActionEnabled(Actions::Actions action) const
 {
-    if (!m_curSelectionModel || m_curSelectionModel->selectedRows().count() < 1)
+    if (!m_curSelectionModel)
+        return false;
+
+    if (action == Actions::NewTaskBelow)
+    {
+        return m_taskTreeView->canAddBelow();
+    }
+
+    if (m_curSelectionModel->selectedRows().count() < 1)
         return false;
 
     if (action == Actions::MoveUp)
@@ -49,6 +64,8 @@ bool TaskEditorTool::isActionEnabled(Actions::Actions action) const
         return m_taskTreeView->canMoveLeft();
     else if (action == Actions::MoveRight)
         return m_taskTreeView->canMoveRight();
+    else if (action == Actions::EditDeleteSelected)
+        return true;
     return false;
 }
 
@@ -59,6 +76,8 @@ void TaskEditorTool::selectionChanged(QItemSelectionModel *selectionModel)
     m_manager->onActionChanged(Actions::MoveUp);
     m_manager->onActionChanged(Actions::MoveLeft);
     m_manager->onActionChanged(Actions::MoveRight);
+    m_manager->onActionChanged(Actions::EditDeleteSelected);
+    m_manager->onActionChanged(Actions::NewTaskBelow);
 }
 
 void TaskEditorTool::moveUp()
@@ -79,4 +98,14 @@ void TaskEditorTool::moveRight()
 void TaskEditorTool::moveLeft()
 {
     m_taskTreeView->shiftSelectedTasksLeft();
+}
+
+void TaskEditorTool::editDeleteSelected()
+{
+    m_taskTreeView->removeSelectedTasks();
+}
+
+void TaskEditorTool::newTaskBelow()
+{
+    m_taskTreeView->addTaskBelowCursor();
 }

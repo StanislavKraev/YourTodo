@@ -19,7 +19,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     m_prefsManager = new PrefsManager(m_mainWindow);
     m_mainWindow->SetupEventFilter();
     m_fileManager = new FileManager(m_mainWindow);
-    m_selectionTool = new SelectionTool(m_mainWindow->selectionModel(), m_mainWindow->model());
+    m_selectionTool = new SelectionTool(m_mainWindow->selectionModel(), m_mainWindow->model(), m_mainWindow->treeView());
     m_taskEditTool = new TaskEditorTool(m_mainWindow->treeView());
 
     m_uiManager = new UiManager(m_mainWindow->menuBar(),
@@ -42,6 +42,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     connect(m_fileManager, SIGNAL(currentListChanged(ITaskList*)), m_uiManager, SLOT(onCurrentListChanged(ITaskList*)));
     connect(m_fileManager, SIGNAL(currentListChanged(ITaskList*)),
             m_taskControlManager, SLOT(onCurrentListChanged(ITaskList*)));
+    connect(m_fileManager, SIGNAL(filenameChanged(QString)), m_uiManager, SLOT(filenameChanged(QString)));
     connect(m_mainWindow, SIGNAL(onModelsChanged(QItemSelectionModel*,QAbstractItemModel*)),
             m_selectionTool, SLOT(onModelsChanged(QItemSelectionModel*,QAbstractItemModel*)));
     connect(m_selectionTool, SIGNAL(selectionChanged(QItemSelectionModel*)),

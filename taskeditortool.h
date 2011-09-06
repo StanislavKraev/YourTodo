@@ -20,10 +20,13 @@ public:
     virtual bool isActionEnabled(Actions::Actions action) const;
 public slots:
     void selectionChanged(QItemSelectionModel *selectionModel);
+
     void moveUp();
     void moveDown();
     void moveRight();
     void moveLeft();
+    void editDeleteSelected();
+    void newTaskBelow();
 private:
     IToolManager *m_manager;
     QItemSelectionModel *m_curSelectionModel;

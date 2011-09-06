@@ -13,7 +13,7 @@
 
 #include "tasklist.h"
 
-TaskList::TaskList()
+TaskList::TaskList() : m_fileFormat(9), m_fileVersion(0)
 {
     m_taskRoot = Task::Ptr(new Task());
     m_lastModified = QDateTime::currentDateTime();

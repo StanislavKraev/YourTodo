@@ -146,8 +146,8 @@ void UiManager::createMenu()
 
     QList<ActionHelper> newTaskMenuActions;
     newTaskMenuActions
-            << ActionHelper("New Task Above", Actions::NewTaskAbove)
             << ActionHelper("New Task Below", Actions::NewTaskBelow)
+            << ActionHelper("New Task Above", Actions::NewTaskAbove)
             << ActionHelper("New Subtask", Actions::NewSubtask);
 
     QList<ActionHelper> editMenuActions;
@@ -183,8 +183,8 @@ void UiManager::createMenu()
     moveMenuActions
             << ActionHelper("Move up", Actions::MoveUp)
             << ActionHelper("Move down", Actions::MoveDown)
-            << ActionHelper("Move left", Actions::MoveLeft)
-            << ActionHelper("Move right", Actions::MoveRight);
+            << ActionHelper("Move right", Actions::MoveRight)
+            << ActionHelper("Move left", Actions::MoveLeft);
 
     typedef QPair<QMenu*, QList<ActionHelper> > MenuActionsPair;
     QList<MenuActionsPair> menuActions;
@@ -415,4 +415,9 @@ void UiManager::setActionShortcut(Actions::Actions action, QKeySequence sequence
 {
     if (m_idActionMap.find(action) != m_idActionMap.end())
         m_idActionMap[action]->setShortcut(sequence);
+}
+
+void UiManager::filenameChanged(QString title)
+{
+    m_mainWindow->setWindowTitle(title);
 }

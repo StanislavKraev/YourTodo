@@ -75,42 +75,6 @@ void TaskTreeView::keyPressEvent(QKeyEvent *event)
         toggleSelectedTasks();
         event->accept();
     }
-    else if (event->key() == Qt::Key_N &&
-             event->modifiers() == Qt::ControlModifier)
-    {
-        addTaskBelowCursor();
-        event->accept();
-    }
-    else if (event->key() == Qt::Key_Delete &&
-             event->modifiers() == Qt::NoModifier)
-    {
-        removeSelectedTasks();
-        event->accept();
-    }
-    else if (event->key() == Qt::Key_Right &&
-             event->modifiers() == Qt::ControlModifier)
-    {
-        shiftSelectedTasksRight();
-        event->accept();
-    }
-    else if (event->key() == Qt::Key_Left &&
-             event->modifiers() == Qt::ControlModifier)
-    {
-        shiftSelectedTasksLeft();
-        event->accept();
-    }
-    else if (event->key() == Qt::Key_Up &&
-             event->modifiers() == Qt::ControlModifier)
-    {
-        shiftSelectedTasksUp();
-        event->accept();
-    }
-    else if (event->key() == Qt::Key_Down &&
-             event->modifiers() == Qt::ControlModifier)
-    {
-        shiftSelectedTasksDown();
-        event->accept();
-    }
     else
         QTreeView::keyPressEvent(event);
 }
@@ -130,6 +94,9 @@ void TaskTreeView::addTaskBelowCursor()
     QModelIndex parent;
 
     QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() > 1)
+        return;
+
     if (selectedList.count() < 1)
     {
         if (model()->rowCount() > 0)
@@ -543,6 +510,17 @@ bool TaskTreeView::canMoveRight() const
 
     QModelIndex newParent = model()->index(firstItem.row() - 1, 0, mainParent);
     if (!newParent.isValid())
+        return false;
+    return true;
+}
+
+bool TaskTreeView::canAddBelow() const
+{
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() > 1)
+        return false;
+
+    if (selectedList.count() < 1 && model()->rowCount() > 0)
         return false;
     return true;
 }

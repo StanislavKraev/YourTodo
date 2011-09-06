@@ -35,6 +35,10 @@ TaskInfo XmlTaskLoader::read()
         QDomElement taskElement = m_curElement;
 
         QDomElement childElement;
+        bool hasChildNodes = m_curElement.hasChildNodes();
+        QDomElement element = m_curElement.firstChildElement("TASK");
+        bool isNull = element.isNull();
+
         if (m_curElement.hasChildNodes() &&
             !(childElement = m_curElement.firstChildElement("TASK")).isNull())
         {
@@ -44,27 +48,27 @@ TaskInfo XmlTaskLoader::read()
         else
         {
             QDomElement nextElement = m_curElement.nextSiblingElement("TASK");
-            if (!nextElement.isNull())
-            {
-                m_curElement = nextElement;
-            }
-            else
+            if (nextElement.isNull())
             {
                 while (m_level > 0)
                 {
                     m_curElement = m_curElement.parentNode().toElement();
                     m_level--;
-                    QDomElement nextElement = m_curElement.nextSiblingElement("TASK");
+                    nextElement = m_curElement.nextSiblingElement("TASK");
                     if (!nextElement.isNull())
                     {
                         m_curElement = nextElement;
                         break;
                     }
-                    if (m_level == 0)
-                    {
-                        m_curElement = nextElement;
-                    }
                 }
+                if (m_level == 0)
+                {
+                    m_curElement = nextElement;
+                }
+            }
+            else
+            {
+                m_curElement = nextElement;
             }
         }
 
@@ -141,6 +145,7 @@ bool XmlTaskLoader::readHeader(QString &projectName, int &fileFormat, int &uniqu
         earliestDueDate = fromOleTime(docElem.attribute("EARLIESTDUEDATE", "0.0").toDouble());
 
         m_curElement = docElem.firstChildElement("TASK");
+        m_level = 0;
     }
     return true;
 }

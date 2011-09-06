@@ -1,6 +1,8 @@
 #ifndef ACTIONIDS_H
 #define ACTIONIDS_H
 
+#include <QString>
+
 namespace Actions
 {
     enum Actions
@@ -42,6 +44,46 @@ namespace Actions
         MoveDown,
         MoveLeft,
         MoveRight
+    };
+
+    static QString actionNames[] = {
+        "Undefined",
+        "FileNew",
+        "FileOpen",
+        "FileSave",
+        "FileSaveAs",
+        "FileSaveAll",
+        "FileClose",
+        "FileCloseAll",
+        "FileMinimize",
+        "FileExit",
+
+        "NewTaskAbove",
+        "NewTaskBelow",
+        "NewSubtask",
+
+        "EditUndo",
+        "EditRedo",
+        "EditCut",
+        "EditCopy",
+        "EditPaste",
+        "EditDeleteSelected",
+        "EditDeleteAll",
+        "EditSelectAll",
+        "EditPreferences",
+
+        "ViewMaxTasklist",
+        "ViewMaxComments",
+        "ViewExpandAll",
+        "ViewCollapseAll",
+        "ViewSelectColumns",
+        "ViewShowToolbar",
+        "ViewShowStatusbar",
+
+        "MoveUp",
+        "MoveDown",
+        "MoveLeft",
+        "MoveRight"
     };
 }
 #endif // ACTIONIDS_H

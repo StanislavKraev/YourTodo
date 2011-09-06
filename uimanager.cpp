@@ -217,8 +217,10 @@ void UiManager::createMenu()
                 menu->addAction(helper.title, obj, slot) :
                 menu->addAction(helper.title);
             m_idActionMap[helper.id] = a;
-            if (!helper.keySequence.isEmpty())
-                a->setShortcut(helper.keySequence);
+
+            QKeySequence shortcut = m_prefs->shortcutForAction(helper.id);
+            if (!shortcut.isEmpty())
+                a->setShortcut(shortcut);
             a->setParent(this);
             a->setEnabled(enabled);
             a->setCheckable(helper.checkable);
@@ -407,4 +409,10 @@ void UiManager::onMainWindowClosing()
 const QAction * UiManager::action(Actions::Actions searchAction) const
 {
     return m_idActionMap[searchAction];
+}
+
+void UiManager::setActionShortcut(Actions::Actions action, QKeySequence sequence)
+{
+    if (m_idActionMap.find(action) != m_idActionMap.end())
+        m_idActionMap[action]->setShortcut(sequence);
 }

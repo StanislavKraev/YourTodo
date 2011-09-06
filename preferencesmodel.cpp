@@ -1,3 +1,5 @@
+#include <QList>
+
 #include "preferencesmodel.h"
 
 PreferencesModel::PreferencesModel()
@@ -43,20 +45,82 @@ void PreferencesModel::load()
     loadShortcuts(settings);
 }
 
+struct ShortHelper
+{
+    Actions::Actions id;
+    QKeySequence seq;
+    bool hard;
+
+    ShortHelper(Actions::Actions id, QString seq = QString(), bool hard = false) : id(id), seq(seq), hard(hard) {}
+};
+
 void PreferencesModel::loadShortcuts(QSettings &settings)
 {
-    settings.beginGroup("Shortcuts");
-    m_shortcuts[Actions::FileNew] = QKeySequence(settings.value("FileNew", "Alt+N").toString());
-    m_shortcuts[Actions::FileOpen] = QKeySequence(settings.value("FileOpen", "Alt+O").toString());
-    m_shortcuts[Actions::FileSave] = QKeySequence(settings.value("FileSave", "Ctrl+S").toString());
-    m_shortcuts[Actions::FileSaveAs] = QKeySequence(settings.value("FileSaveAs", "").toString());
-    m_shortcuts[Actions::FileMinimize] = QKeySequence(settings.value("FileMinimize", "").toString());
-    m_shortcuts[Actions::FileExit] = QKeySequence(settings.value("FileExit", "Ctrl+F4").toString());
+    QList<ShortHelper> shortcuts;
 
+    shortcuts
+            << ShortHelper(Actions::FileNew,        "Alt+N")
+            << ShortHelper(Actions::FileOpen,       "Alt+O")
+            << ShortHelper(Actions::FileSave,       "Ctrl+S")
+            << ShortHelper(Actions::FileSaveAs)
+            << ShortHelper(Actions::FileMinimize,   "Esc")
+            << ShortHelper(Actions::FileExit,       "Alt+F4",       true)
+
+            << ShortHelper(Actions::NewTaskBelow,   "Ctrl+N")
+            << ShortHelper(Actions::NewTaskAbove,   "Ctrl+Alt+N")
+            << ShortHelper(Actions::NewSubtask,     "Ctrl+Shift+N")
+
+            << ShortHelper(Actions::EditUndo,       "Ctrl+Z",       true)
+            << ShortHelper(Actions::EditRedo,       "Ctrl+Shift+Z", true)
+
+            << ShortHelper(Actions::EditCut,        "Ctrl+X",       true)
+            << ShortHelper(Actions::EditCopy,       "Ctrl+C",       true)
+            << ShortHelper(Actions::EditPaste,      "Ctrl+V",       true)
+
+            << ShortHelper(Actions::EditDeleteSelected, "Del",      true)
+            << ShortHelper(Actions::EditSelectAll,  "Ctrl+A",       true)
+
+            << ShortHelper(Actions::ViewMaxTasklist, "Ctrl+M")
+
+            << ShortHelper(Actions::MoveUp,         "Ctrl+Up")
+            << ShortHelper(Actions::MoveDown,       "Ctrl+Down")
+            << ShortHelper(Actions::MoveRight,      "Ctrl+Right")
+            << ShortHelper(Actions::MoveLeft,       "Ctrl+Left");
+
+    settings.beginGroup("Shortcuts");
+    foreach (ShortHelper h, shortcuts)
+        if (h.hard)
+            m_hardShortcuts[h.id] = QKeySequence(settings.value(Actions::actionNames[h.id], h.seq).toString());
+        else
+            m_shortcuts[h.id] = QKeySequence(settings.value(Actions::actionNames[h.id], h.seq).toString());
     settings.endGroup();
 }
 
 const QMap<Actions::Actions, QKeySequence> PreferencesModel::shortcuts() const
 {
     return m_shortcuts;
+}
+
+void PreferencesModel::setShortcut(Actions::Actions action, QKeySequence sequence)
+{
+    if (m_shortcuts.find(action) != m_shortcuts.end())
+    {
+        m_shortcuts[action] = sequence;
+        QSettings settings;
+        settings.beginGroup("Shortcuts");
+
+        QString actionName = Actions::actionNames[action];
+        settings.setValue(actionName, sequence.toString(QKeySequence::NativeText));
+        settings.endGroup();
+        emit(shortcutChanged(action, sequence));
+    }
+}
+
+QKeySequence PreferencesModel::shortcutForAction(Actions::Actions id) const
+{
+    if (m_shortcuts.find(id) != m_shortcuts.end())
+        return m_shortcuts[id];
+    else if (m_hardShortcuts.find(id) != m_hardShortcuts.end())
+        return m_hardShortcuts[id];
+    return QKeySequence();
 }

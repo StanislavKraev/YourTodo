@@ -51,6 +51,7 @@ public:
     ITreeUiProvider* treeUi() const;
     void setTaskControlManager(ITaskControlManager *taskControlManager);
     virtual const QAction* action(Actions::Actions searchAction) const;
+    virtual void setActionShortcut(Actions::Actions action, QKeySequence sequence);
 public slots:
     void onExit();
     void onShowToolbar();

@@ -7,51 +7,92 @@ KeyAssignWidget::KeyAssignWidget(QWidget *parent) :
     QLineEdit(parent),
     m_ctrl(false),
     m_alt(false),
+    m_shift(false),
+    m_meta(false),
     m_key(-1)
 {
 }
 
 bool KeyAssignWidget::event(QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress) {
-        QKeyEvent *keyEvent = (QKeyEvent *)event;
+    QKeyEvent *keyEvent = 0;
+    bool pressed(false);
+    if (event->type() == QEvent::KeyPress)
+    {
+        keyEvent = (QKeyEvent *)event;
+        pressed = true;
+    }
+    else if (event->type() == QEvent::KeyRelease)
+    {
+        keyEvent = (QKeyEvent *)event;
+        pressed = false;
+    }
 
+    if (keyEvent)
+    {
         int keyInt = keyEvent->key();
         Qt::Key key = static_cast<Qt::Key>(keyInt);
-        if(key == Qt::Key_unknown){
-            qDebug() << "Unknown key from a macro probably";
-            return true;
-        }
-        // the user have clicked just and only the special keys Ctrl, Shift, Alt, Meta.
-        if(key == Qt::Key_Control ||
-            key == Qt::Key_Shift ||
-            key == Qt::Key_Alt ||
-            key == Qt::Key_Meta)
+        if(key == Qt::Key_unknown)
         {
-            qDebug() << "Single click of special key: Ctrl, Shift, Alt or Meta";
-            qDebug() << "New KeySequence:" << QKeySequence(keyInt).toString(QKeySequence::NativeText);
+            event->ignore();
             return true;
         }
 
-        // check for a combination of user clicks
-        Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
-        QString keyText = keyEvent->text();
-        // if the keyText is empty than it's a special key like F1, F5, ...
-        qDebug() << "Pressed Key:" << keyText;
+        if (key == Qt::Key_Control)
+            m_ctrl = pressed;
+        else if (key == Qt::Key_Alt)
+            m_alt = pressed;
+        else if (key == Qt::Key_Shift)
+            m_shift = pressed;
+        else if (key == Qt::Key_Meta)
+            m_meta = pressed;
+        else
+        {
+            m_key = pressed ? keyInt : -1;
+        }
 
-        QList<Qt::Key> modifiersList;
-        if(modifiers & Qt::ShiftModifier)
-            keyInt += Qt::SHIFT;
-        if(modifiers & Qt::ControlModifier)
-            keyInt += Qt::CTRL;
-        if(modifiers & Qt::AltModifier)
-            keyInt += Qt::ALT;
-        if(modifiers & Qt::MetaModifier)
-            keyInt += Qt::META;
-
-        setText(QKeySequence(keyInt).toString(QKeySequence::NativeText));
+        event->accept();
+        bool final(false);
+        QString res = makeText(final);
+        setText(res);
+        if (final)
+        {
+            m_sequence = QKeySequence(res);
+            emit(assigned(m_sequence));
+            m_ctrl = false;
+            m_alt = false;
+            m_shift = false;
+            m_meta = false;
+            m_key = -1;
+        }
         return true;
     }
-    // http://www.qtcentre.org/archive/index.php/t-28754.html
     return QWidget::event(event);
+}
+
+QString KeyAssignWidget::makeText(bool &final) const
+{
+    QString text;
+    if (m_ctrl)
+        text += "Ctrl+";
+    if (m_shift)
+        text += "Shift+";
+    if (m_alt)
+        text += "Alt+";
+    if (m_meta)
+        text += "Meta+";
+    QString keyVal;
+    if (m_key >= 0)
+    {
+        keyVal = QKeySequence(m_key).toString(QKeySequence::NativeText);
+        text += keyVal;
+    }
+    final = keyVal.length() > 0;
+    return text;
+}
+
+void KeyAssignWidget::setSequence(QKeySequence seq)
+{
+    m_sequence = seq;
+    setText(m_sequence.toString(QKeySequence::NativeText));
 }

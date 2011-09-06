@@ -28,8 +28,11 @@ public:
     virtual bool isColumnSelected(nsTaskData::TaskDataMember member) const;
     virtual bool saveOnMinimize() const;
     virtual bool saveOnExit() const;
+    virtual QKeySequence shortcutForAction(Actions::Actions id) const;
 public slots:
     void showPreferences();
+private slots:
+    void shortcutChanged(Actions::Actions action, QKeySequence sequence);
 private:
     QSet<nsTaskData::TaskDataMember> m_selectedColumns;
     IToolManager *m_manager;

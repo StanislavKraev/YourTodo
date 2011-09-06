@@ -2,6 +2,7 @@
 
 #include "prefsdialog.h"
 #include "preferencesmodel.h"
+#include "iuimanager.h"
 #include "prefsmanager.h"
 
 PrefsManager::PrefsManager(QWidget *parent) :
@@ -14,6 +15,8 @@ PrefsManager::PrefsManager(QWidget *parent) :
                       << nsTaskData::PercentDone
                       << nsTaskData::Cost
                       << nsTaskData::Risk;
+    connect(m_prefs, SIGNAL(shortcutChanged(Actions::Actions,QKeySequence)),
+                       SLOT(shortcutChanged(Actions::Actions,QKeySequence)));
 }
 
 PrefsManager::~PrefsManager()
@@ -53,9 +56,8 @@ bool PrefsManager::isActionEnabled(Actions::Actions action) const
 
 void PrefsManager::showPreferences()
 {
-    PrefsDialog *dialog = new PrefsDialog(m_parentWindow, m_prefs, m_uiManager);
-    dialog->exec();
-    dialog->deleteLater();
+    PrefsDialog dialog(m_parentWindow, m_prefs, m_uiManager);
+    dialog.exec();
 }
 
 bool PrefsManager::saveOnMinimize() const
@@ -71,4 +73,14 @@ bool PrefsManager::saveOnExit() const
 void PrefsManager::setUiManager(IUiManager *uiManager)
 {
     m_uiManager = uiManager;
+}
+
+void PrefsManager::shortcutChanged(Actions::Actions action, QKeySequence sequence)
+{
+    m_uiManager->setActionShortcut(action, sequence);
+}
+
+QKeySequence PrefsManager::shortcutForAction(Actions::Actions id) const
+{
+    return m_prefs->shortcutForAction(id);
 }

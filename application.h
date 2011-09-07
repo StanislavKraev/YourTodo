@@ -3,6 +3,8 @@
 
 #include <QApplication>
 
+class QUndoStack;
+
 class MainWindow;
 class FileManager;
 class UiManager;
@@ -29,6 +31,7 @@ private:
     TaskControlManager *m_taskControlManager;
     PrefsManager *m_prefsManager;
     TaskEditorTool *m_taskEditTool;
+    QUndoStack *m_undoStack;
 };
 
 #endif // APPLICATION_H

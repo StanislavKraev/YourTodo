@@ -7,12 +7,13 @@
 class IToolManager;
 class QItemSelectionModel;
 class TaskTreeView;
+class QUndoStack;
 
 class TaskEditorTool : public QObject, public Tool
 {
     Q_OBJECT
 public:
-    explicit TaskEditorTool(TaskTreeView *treeView);
+    explicit TaskEditorTool(TaskTreeView *treeView, QUndoStack *undoStack);
 public:
     virtual void init(IToolManager *manager);
     virtual const char* getActionSlot(Actions::Actions action) const;
@@ -31,6 +32,7 @@ private:
     IToolManager *m_manager;
     QItemSelectionModel *m_curSelectionModel;
     TaskTreeView *m_taskTreeView;
+    QUndoStack *m_undoStack;
 };
 
 #endif // TASKEDITORTOOL_H

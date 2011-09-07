@@ -4,6 +4,7 @@
 #include <QToolBar>
 #include <QStatusBar>
 #include <QApplication>
+#include <QUndoStack>
 
 #include "tasktree/treeui.h"
 #include "tasktree/tasktreeview.h"
@@ -17,7 +18,8 @@
 
 UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
                      QToolBar *toolBar, MainWindow *mainWindow,
-                     IPreferences *prefs, IFileManager *fileManager) :
+                     IPreferences *prefs, IFileManager *fileManager,
+                     QUndoStack *undoStack) :
     m_menuBar(menuBar),
     m_toolBar(toolBar),
     m_statusBar(statusBar),
@@ -28,13 +30,15 @@ UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
     m_treeUi(0),
     m_taskControlManager(0),
     m_prefs(prefs),
-    m_fileManager(fileManager)
+    m_fileManager(fileManager),
+    m_undoStack(undoStack)
 {
     m_trayMenu = new QMenu(m_mainWindow);
     m_trayMenu->addAction("Exit", this, SLOT(onExit()));
     m_trayIcon = new QSystemTrayIcon(m_mainWindow);
     m_trayIcon->setContextMenu(m_trayMenu);
     m_trayIcon->setIcon(QIcon(":/icons/tray.gif"));
+
     connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 }
@@ -206,26 +210,43 @@ void UiManager::createMenu()
                 continue;
             }
 
-            ITool *tool = 0;
-            if (m_actionToolMap.contains(helper.id))
-                tool = m_actionToolMap[helper.id];
-            bool enabled = (tool != 0) && (tool->isActionEnabled(helper.id));
-            bool checked = tool ? tool->isActionChecked(helper.id) : false;
-            const char *slot = tool ? tool->getActionSlot(helper.id) : 0;
-            QObject *obj = tool ? tool->getReciever() : 0;
-            QAction *a = (obj && slot) ?
-                menu->addAction(helper.title, obj, slot) :
-                menu->addAction(helper.title);
-            m_idActionMap[helper.id] = a;
+            if (helper.id == Actions::EditUndo || helper.id == Actions::EditRedo)
+            {
+                QAction *a = helper.id == Actions::EditUndo ?
+                                m_undoStack->createUndoAction(this) :
+                                m_undoStack->createRedoAction(this);
+                m_idActionMap[helper.id] = a;
+                QList<QAction*> actionList;
+                actionList << a;
+                menu->addActions(actionList);
 
-            QKeySequence shortcut = m_prefs->shortcutForAction(helper.id);
-            if (!shortcut.isEmpty())
-                a->setShortcut(shortcut);
-            a->setParent(this);
-            a->setEnabled(enabled);
-            a->setCheckable(helper.checkable);
-            if (helper.checkable)
-                a->setChecked(checked);
+                QKeySequence shortcut = m_prefs->shortcutForAction(helper.id);
+                if (!shortcut.isEmpty())
+                    a->setShortcut(shortcut);
+            }
+            else
+            {
+                ITool *tool = 0;
+                if (m_actionToolMap.contains(helper.id))
+                    tool = m_actionToolMap[helper.id];
+                bool enabled = (tool != 0) && (tool->isActionEnabled(helper.id));
+                bool checked = tool ? tool->isActionChecked(helper.id) : false;
+                const char *slot = tool ? tool->getActionSlot(helper.id) : 0;
+                QObject *obj = tool ? tool->getReciever() : 0;
+                QAction *a = (obj && slot) ?
+                    menu->addAction(helper.title, obj, slot) :
+                    menu->addAction(helper.title);
+                m_idActionMap[helper.id] = a;
+
+                QKeySequence shortcut = m_prefs->shortcutForAction(helper.id);
+                if (!shortcut.isEmpty())
+                    a->setShortcut(shortcut);
+                a->setParent(this);
+                a->setEnabled(enabled);
+                a->setCheckable(helper.checkable);
+                if (helper.checkable)
+                    a->setChecked(checked);
+                }
         }
     }
 }

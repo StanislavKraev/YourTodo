@@ -20,6 +20,7 @@ class QAction;
 class MainWindow;
 class QMenu;
 class QSystemTrayIcon;
+class QUndoStack;
 class ITaskList;
 class TreeUi;
 class ITreeUiProvider;
@@ -36,7 +37,8 @@ public:
               QToolBar *toolBar,
               MainWindow *mainWindow,
               IPreferences *prefs,
-              IFileManager *fileManager);
+              IFileManager *fileManager,
+              QUndoStack *undoStack);
     virtual ~UiManager();
 public:
     void initManager();
@@ -86,6 +88,7 @@ private:
     ITaskControlManager *m_taskControlManager;
     IPreferences *m_prefs;
     IFileManager *m_fileManager;
+    QUndoStack *m_undoStack;
 };
 
 #endif // UIMANAGER_H

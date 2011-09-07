@@ -1,11 +1,14 @@
 #include <QItemSelectionModel>
+#include <QUndoStack>
 
 #include "itoolmanager.h"
+#include "undoredo/deleteselectedtaskscmd.h"
 #include "tasktree/tasktreeview.h"
 
 #include "taskeditortool.h"
 
-TaskEditorTool::TaskEditorTool(TaskTreeView *treeView) : m_manager(0), m_curSelectionModel(0), m_taskTreeView(treeView)
+TaskEditorTool::TaskEditorTool(TaskTreeView *treeView, QUndoStack *undoStack) :
+    m_manager(0), m_curSelectionModel(0), m_taskTreeView(treeView), m_undoStack(undoStack)
 {
 }
 
@@ -103,6 +106,7 @@ void TaskEditorTool::moveLeft()
 void TaskEditorTool::editDeleteSelected()
 {
     m_taskTreeView->removeSelectedTasks();
+    m_undoStack->push(new DeleteSelectedTasksCmd());
 }
 
 void TaskEditorTool::newTaskBelow()

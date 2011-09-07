@@ -54,7 +54,8 @@ SOURCES += main.cpp\
     taskeditortool.cpp \
     prefsdialog.cpp \
     preferencesmodel.cpp \
-    widgets/keyassignwidget.cpp
+    widgets/keyassignwidget.cpp \
+    undoredo/deleteselectedtaskscmd.cpp
 
 HEADERS  += mainwindow.h \
     tasktree/treemodel.h \
@@ -104,7 +105,8 @@ HEADERS  += mainwindow.h \
     preferencesmodel.h \
     ifilemanager.h \
     iuimanager.h \
-    widgets/keyassignwidget.h
+    widgets/keyassignwidget.h \
+    undoredo/deleteselectedtaskscmd.h
 
 FORMS    += mainwindow.ui \
     prefsdialog.ui

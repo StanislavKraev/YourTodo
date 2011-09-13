@@ -31,7 +31,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role == Qt::DisplayRole || role == Qt::EditRole)
+    if (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole)
     {
         Task::Ptr item = m_taskList->getById(index.internalId());
         if (!item)

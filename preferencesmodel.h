@@ -20,18 +20,21 @@ public:
     void setSaveOnExit(bool save=true);
     const QMap<Actions::Actions, QKeySequence> shortcuts() const;
     void setShortcut(Actions::Actions action, QKeySequence sequence);
+    void setGlobalHotkey(QKeySequence sequence);
     QKeySequence shortcutForAction(Actions::Actions id) const;
+    QKeySequence globalShortcut() const;
 signals:
     void shortcutChanged(Actions::Actions action, QKeySequence sequence);
+    void globalhotKeyChanged(QKeySequence sequence);
 private:
     void load();
     void loadShortcuts(QSettings &settings);
-    void saveShortcuts();
 private:
     bool m_saveOnMinimize;
     bool m_saveOnExit;
     QMap<Actions::Actions, QKeySequence> m_shortcuts;
     QMap<Actions::Actions, QKeySequence> m_hardShortcuts;
+    QKeySequence m_globalShortcut;
 };
 
 #endif // PREFERENCESMODEL_H

@@ -19,6 +19,8 @@ public:
     virtual bool saveOnMinimize() const = 0;
     virtual bool saveOnExit() const = 0;
     virtual QKeySequence shortcutForAction(Actions::Actions id) const = 0;
+    virtual void setGlobalHotkey(QKeySequence sequence) = 0;
+    virtual QKeySequence globalHotkey() const = 0;
 };
 
 #endif // IPREFERENCES_H

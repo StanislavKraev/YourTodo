@@ -442,3 +442,13 @@ void UiManager::filenameChanged(QString title)
 {
     m_mainWindow->setWindowTitle(title);
 }
+
+QKeySequence UiManager::globalHotkey() const
+{
+    return m_prefs->globalHotkey();
+}
+
+void UiManager::setGlobalHotkey(QKeySequence key) const
+{
+    m_mainWindow->setGlobalHotkey(key);
+}

@@ -15,6 +15,7 @@
 #include "windows.h"
 #endif
 
+#include "iuimanager.h"
 #include "tasktree/tasklist.h"
 #include "tasktree/treemodel.h"
 #include "utils.h"
@@ -24,7 +25,9 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_globalShortcut(0),
+    m_uiManager(0)
 {
     ui->setupUi(this);
     ui->treeView->setEditTriggers(QAbstractItemView::SelectedClicked |
@@ -84,8 +87,11 @@ void MainWindow::changeEvent(QEvent * event)
 
 void MainWindow::SetupEventFilter()
 {
-    QxtGlobalShortcut* shortcut = new QxtGlobalShortcut(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T), this);
-    connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcut()));
+    if (!m_globalShortcut)
+    {
+        m_globalShortcut = new QxtGlobalShortcut(m_uiManager->globalHotkey(), this);
+        connect(m_globalShortcut, SIGNAL(activated()), this, SLOT(onShortcut()));
+    }
 }
 
 void MainWindow::onShortcut()
@@ -224,4 +230,17 @@ void MainWindow::restoreUiState()
 void MainWindow::setWindowTitle(const QString &title)
 {
     QWidget::setWindowTitle(title + " - YourTodo");
+}
+
+void MainWindow::setUiManager(IUiManager *uiManager)
+{
+    m_uiManager = uiManager;
+}
+
+void MainWindow::setGlobalHotkey(QKeySequence key)
+{
+    if (m_globalShortcut)
+    {
+        m_globalShortcut->setShortcut(key);
+    }
 }

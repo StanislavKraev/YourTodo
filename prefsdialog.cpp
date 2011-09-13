@@ -10,12 +10,16 @@ PrefsDialog::PrefsDialog(QWidget *parent, PreferencesModel* model, IUiManager *m
     ui(new Ui::PrefsDialog),
     m_model(model),
     m_uiManager(manager),
-    m_selectedRow(-1)
+    m_selectedRow(-1),
+    m_afterAssign(false)
 {
     ui->setupUi(this);
 
     ui->keysPreviewEdit->setReadOnly(true);
     ui->keysPreviewEdit->setFocusPolicy(Qt::NoFocus);
+
+    ui->gskeysPreviewEdit->setReadOnly(true);
+    ui->gskeysPreviewEdit->setFocusPolicy(Qt::NoFocus);
 
     ui->saveOnExitCheck->setChecked(m_model->saveOnExit());
     ui->saveOnMinimizeCheck->setChecked(m_model->saveOnMinimize());
@@ -31,6 +35,13 @@ PrefsDialog::PrefsDialog(QWidget *parent, PreferencesModel* model, IUiManager *m
     connect(ui->assignButton, SIGNAL(clicked()), SLOT(onAssign()));
     connect(ui->resetButton, SIGNAL(clicked()), SLOT(onReset()));
     ui->shortcutsTableWidget->setCurrentCell(0, 0, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows);
+
+
+    connect(ui->gskeysPreviewEdit, SIGNAL(assigned(QKeySequence)), SLOT(gsAssigned(QKeySequence)));
+    connect(ui->gskeysPreviewEdit, SIGNAL(editingFinished()), SLOT(stopGSAssigning()));
+    connect(ui->assignGSButton, SIGNAL(clicked()), SLOT(onGSAssign()));
+    connect(ui->resetGSButton, SIGNAL(clicked()), SLOT(onGSReset()));
+    updateGSState();
 }
 
 PrefsDialog::~PrefsDialog()
@@ -76,17 +87,6 @@ void PrefsDialog::loadShortcuts()
     }
 }
 
-void PrefsDialog::assigned(QKeySequence sequence)
-{
-    Actions::Actions action = getCurrentAction();
-    if (action != Actions::Undefined)
-    {
-        m_model->setShortcut(action, sequence);
-        ui->shortcutsTableWidget->item(m_selectedRow, 1)->setData(Qt::DisplayRole, sequence.toString(QKeySequence::NativeText));
-    }
-    stopAssigning();
-}
-
 void PrefsDialog::currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn)
 {
     m_selectedRow = currentRow;
@@ -113,23 +113,6 @@ void PrefsDialog::updateState()
     }
 }
 
-void PrefsDialog::onAssign()
-{
-    ui->keysPreviewEdit->setReadOnly(false);
-    ui->keysPreviewEdit->setFocusPolicy(Qt::TabFocus);
-    ui->keysPreviewEdit->setFocus();
-    ui->keysPreviewEdit->activateWindow();
-    ui->keysPreviewEdit->clear();
-}
-
-void PrefsDialog::stopAssigning()
-{
-    ui->keysPreviewEdit->setReadOnly(true);
-    ui->keysPreviewEdit->clearFocus();
-    ui->keysPreviewEdit->setFocusPolicy(Qt::NoFocus);
-    updateState();
-}
-
 Actions::Actions PrefsDialog::getCurrentAction() const
 {
     int rowCount = m_model->shortcuts().count();
@@ -147,6 +130,34 @@ Actions::Actions PrefsDialog::getCurrentAction() const
     return Actions::Undefined;
 }
 
+void PrefsDialog::assigned(QKeySequence sequence)
+{
+    Actions::Actions action = getCurrentAction();
+    if (action != Actions::Undefined)
+    {
+        m_model->setShortcut(action, sequence);
+        ui->shortcutsTableWidget->item(m_selectedRow, 1)->setData(Qt::DisplayRole, sequence.toString(QKeySequence::NativeText));
+    }
+    stopAssigning();
+}
+
+void PrefsDialog::onAssign()
+{
+    ui->keysPreviewEdit->setReadOnly(false);
+    ui->keysPreviewEdit->setFocusPolicy(Qt::TabFocus);
+    ui->keysPreviewEdit->setFocus();
+    ui->keysPreviewEdit->activateWindow();
+    ui->keysPreviewEdit->clear();
+}
+
+void PrefsDialog::stopAssigning()
+{
+    ui->keysPreviewEdit->setReadOnly(true);
+    ui->keysPreviewEdit->clearFocus();
+    ui->keysPreviewEdit->setFocusPolicy(Qt::NoFocus);
+    updateState();
+}
+
 void PrefsDialog::onReset()
 {
     stopAssigning();
@@ -157,4 +168,53 @@ void PrefsDialog::onReset()
         m_model->setShortcut(action, QKeySequence());
         ui->shortcutsTableWidget->item(m_selectedRow, 1)->setData(Qt::DisplayRole, "");
     }
+}
+
+void PrefsDialog::gsAssigned(QKeySequence sequence)
+{
+    m_afterAssign = true;
+    m_storedGSK = QKeySequence();
+    m_model->setGlobalHotkey(sequence);
+
+    ui->gskeysPreviewEdit->setReadOnly(true);
+    ui->gskeysPreviewEdit->clearFocus();
+    ui->gskeysPreviewEdit->setFocusPolicy(Qt::NoFocus);
+    updateGSState();
+}
+
+void PrefsDialog::onGSAssign()
+{
+    m_storedGSK = m_model->globalShortcut();
+    m_model->setGlobalHotkey(QKeySequence());
+    ui->gskeysPreviewEdit->clear();
+    ui->gskeysPreviewEdit->setReadOnly(false);
+    ui->gskeysPreviewEdit->setFocusPolicy(Qt::TabFocus);
+    ui->gskeysPreviewEdit->setFocus();
+    ui->gskeysPreviewEdit->activateWindow();
+}
+
+void PrefsDialog::stopGSAssigning()
+{
+    if (!m_afterAssign)
+    {
+        m_model->setGlobalHotkey(m_storedGSK);
+        ui->gskeysPreviewEdit->setReadOnly(true);
+        ui->gskeysPreviewEdit->clearFocus();
+        ui->gskeysPreviewEdit->setFocusPolicy(Qt::NoFocus);
+        updateGSState();
+    }
+    m_afterAssign = false;
+}
+
+void PrefsDialog::onGSReset()
+{
+    stopGSAssigning();
+    ui->gskeysPreviewEdit->clear();
+    m_model->setGlobalHotkey(QKeySequence());
+}
+
+void PrefsDialog::updateGSState()
+{
+    ui->gskeysPreviewEdit->clear();
+    ui->gskeysPreviewEdit->setSequence(m_model->globalShortcut());
 }

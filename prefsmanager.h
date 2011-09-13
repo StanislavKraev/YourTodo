@@ -29,10 +29,13 @@ public:
     virtual bool saveOnMinimize() const;
     virtual bool saveOnExit() const;
     virtual QKeySequence shortcutForAction(Actions::Actions id) const;
+    virtual void setGlobalHotkey(QKeySequence sequence);
+    virtual QKeySequence globalHotkey() const;
 public slots:
     void showPreferences();
 private slots:
     void shortcutChanged(Actions::Actions action, QKeySequence sequence);
+    void globalhotKeyChanged(QKeySequence sequence);
 private:
     QSet<nsTaskData::TaskDataMember> m_selectedColumns;
     IToolManager *m_manager;

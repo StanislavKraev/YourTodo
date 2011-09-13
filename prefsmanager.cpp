@@ -17,6 +17,8 @@ PrefsManager::PrefsManager(QWidget *parent) :
                       << nsTaskData::Risk;
     connect(m_prefs, SIGNAL(shortcutChanged(Actions::Actions,QKeySequence)),
                        SLOT(shortcutChanged(Actions::Actions,QKeySequence)));
+    connect(m_prefs, SIGNAL(globalhotKeyChanged(QKeySequence)),
+                       SLOT(globalhotKeyChanged(QKeySequence)));
 }
 
 PrefsManager::~PrefsManager()
@@ -83,4 +85,19 @@ void PrefsManager::shortcutChanged(Actions::Actions action, QKeySequence sequenc
 QKeySequence PrefsManager::shortcutForAction(Actions::Actions id) const
 {
     return m_prefs->shortcutForAction(id);
+}
+
+void PrefsManager::setGlobalHotkey(QKeySequence sequence)
+{
+    m_prefs->setGlobalHotkey(sequence);
+}
+
+QKeySequence PrefsManager::globalHotkey() const
+{
+    return m_prefs->globalShortcut();
+}
+
+void PrefsManager::globalhotKeyChanged(QKeySequence sequence)
+{
+    m_uiManager->setGlobalHotkey(sequence);
 }

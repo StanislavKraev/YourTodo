@@ -54,6 +54,8 @@ public:
     void setTaskControlManager(ITaskControlManager *taskControlManager);
     virtual const QAction* action(Actions::Actions searchAction) const;
     virtual void setActionShortcut(Actions::Actions action, QKeySequence sequence);
+    virtual QKeySequence globalHotkey() const;
+    virtual void setGlobalHotkey(QKeySequence key) const;
 public slots:
     void onExit();
     void onShowToolbar();

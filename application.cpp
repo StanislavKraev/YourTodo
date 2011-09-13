@@ -20,7 +20,6 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 
     m_mainWindow = new MainWindow();
     m_prefsManager = new PrefsManager(m_mainWindow);
-    m_mainWindow->SetupEventFilter();
     m_fileManager = new FileManager(m_mainWindow);
     m_selectionTool = new SelectionTool(m_mainWindow->selectionModel(), m_mainWindow->model(), m_mainWindow->treeView());
     m_taskEditTool = new TaskEditorTool(m_mainWindow->treeView(), m_undoStack);
@@ -38,6 +37,8 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     m_uiManager->addTool(m_prefsManager);
     m_uiManager->initManager();
     m_prefsManager->setUiManager(m_uiManager);
+    m_mainWindow->setUiManager(m_uiManager);
+    m_mainWindow->SetupEventFilter();
 
     connect(m_mainWindow, SIGNAL(onMainWindowMinimized()), m_uiManager, SLOT(onMainWindowMinimized()));
     connect(m_mainWindow, SIGNAL(onMainWindowRestored()), m_uiManager, SLOT(onMainWindowRestored()));

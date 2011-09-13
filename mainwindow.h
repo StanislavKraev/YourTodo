@@ -7,6 +7,7 @@ class QMenuBar;
 class QStatusBar;
 class QToolBar;
 class QTextEdit;
+class QxtGlobalShortcut;
 
 class UiManager;
 class ITaskList;
@@ -14,6 +15,7 @@ class QItemSelectionModel;
 class QAbstractItemModel;
 class TaskTreeView;
 class ITreeUiProvider;
+class IUiManager;
 
 namespace Ui {
     class MainWindow;
@@ -39,6 +41,9 @@ public:
     TaskTreeView *treeView() const;
     QWidget* controlsArea() const;
     QTextEdit* commentsControl() const;
+    void setUiManager(IUiManager *uiManager);
+    void setGlobalHotkey(QKeySequence key);
+
 public slots:
     void onShortcut();
     void setWindowTitle(const QString &title);
@@ -55,6 +60,8 @@ signals:
     void onMainWindowClosing();
 private:
     Ui::MainWindow *ui;
+    QxtGlobalShortcut *m_globalShortcut;
+    IUiManager *m_uiManager;
 };
 
 #endif // MAINWINDOW_H

@@ -93,6 +93,7 @@ void PreferencesModel::loadShortcuts(QSettings &settings)
             m_hardShortcuts[h.id] = QKeySequence(settings.value(Actions::actionNames[h.id], h.seq).toString());
         else
             m_shortcuts[h.id] = QKeySequence(settings.value(Actions::actionNames[h.id], h.seq).toString());
+    m_globalShortcut = QKeySequence(settings.value("GlobalHotKey", "Ctrl+Shift+T").toString());
     settings.endGroup();
 }
 
@@ -123,4 +124,19 @@ QKeySequence PreferencesModel::shortcutForAction(Actions::Actions id) const
     else if (m_hardShortcuts.find(id) != m_hardShortcuts.end())
         return m_hardShortcuts[id];
     return QKeySequence();
+}
+
+void PreferencesModel::setGlobalHotkey(QKeySequence sequence)
+{
+    QSettings settings;
+    m_globalShortcut = sequence;
+    settings.beginGroup("Shortcuts");
+    settings.setValue("GlobalHotKey", m_globalShortcut.toString(QKeySequence::NativeText));
+    settings.endGroup();
+    emit(globalhotKeyChanged(m_globalShortcut));
+}
+
+QKeySequence PreferencesModel::globalShortcut() const
+{
+    return m_globalShortcut;
 }

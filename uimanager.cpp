@@ -351,8 +351,7 @@ bool UiManager::isActionChecked(Actions::Actions action) const
 
 void UiManager::onMinimize()
 {
-    m_mainWindow->hide();
-    m_trayIcon->show();
+    m_mainWindow->onShortcut();
 }
 
 void UiManager::init(IToolManager *manager)

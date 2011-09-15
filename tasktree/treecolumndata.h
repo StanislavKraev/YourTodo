@@ -31,7 +31,8 @@ struct TreeColumnData
     {
         GENERAL = 0,
         PRIORITY,
-        ICONINDEX
+        ICONINDEX,
+        TITLE
     };
 
     QString title;

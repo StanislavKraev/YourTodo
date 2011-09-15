@@ -171,6 +171,8 @@ void TreeUi::init()
             m_view->setItemDelegateForColumn(index, new PriorityDelegate(m_view));
         else if (column.colType == TreeColumnData::ICONINDEX)
             m_view->setItemDelegateForColumn(index, new IconIndexDelegate(m_view));
+        else if (column.colType == TreeColumnData::TITLE)
+            m_view->setItemDelegateForColumn(index, new TitleDelegate(m_view));
         if (column.width < 0)
         {
             m_view->header()->setResizeMode(index, QHeaderView::ResizeToContents);

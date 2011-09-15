@@ -20,6 +20,16 @@ public:
             const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
+class TitleDelegate : public QStyledItemDelegate
+{
+public:
+    TitleDelegate(QTreeView *treeView);
+public:
+    virtual void paint(QPainter *painter,
+                       const QStyleOptionViewItem &option, const QModelIndex &index) const;
+};
+
+
 class IconIndexDelegate : public QStyledItemDelegate
 {
 private:

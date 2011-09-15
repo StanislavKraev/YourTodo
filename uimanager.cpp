@@ -81,7 +81,7 @@ void UiManager::createTreeUi()
     m_treeUi->addColumn(TreeColumnData("Last mod", nsTaskData::LastModified, 100));
     m_treeUi->addColumn(TreeColumnData("CT", nsTaskData::CommentsType, 24));
     m_treeUi->addColumn(TreeColumnData("Comments", nsTaskData::Comments));
-    m_treeUi->addColumn(TreeColumnData("Title", nsTaskData::Title, -1));
+    m_treeUi->addColumn(TreeColumnData("Title", nsTaskData::Title, -1, TreeColumnData::TITLE));
 }
 
 struct ActionHelper

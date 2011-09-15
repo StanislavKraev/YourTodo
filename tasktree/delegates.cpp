@@ -20,7 +20,6 @@ PriorityDelegate::PriorityDelegate(QTreeView *treeView)
 void PriorityDelegate::paint(QPainter *painter,
                              const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    // TODO: if percent_done >= 100% - do not draw anything (or just background)
     QStyleOptionViewItemV4 opt = option;
     initStyleOption(&opt, index);
 
@@ -140,4 +139,17 @@ void PriorityComboBoxDelegate::paint(QPainter *painter,
         opt.displayAlignment = Qt::AlignCenter;
         style->drawControl(QStyle::CE_ComboBoxLabel, &opt, painter, 0);
     }*/
+}
+
+
+TitleDelegate::TitleDelegate(QTreeView *treeView)
+{
+}
+
+
+void TitleDelegate::paint(QPainter *painter,
+                          const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+
+    QStyledItemDelegate::paint(painter, option, index);
 }

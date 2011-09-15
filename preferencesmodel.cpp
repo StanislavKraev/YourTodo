@@ -42,6 +42,9 @@ void PreferencesModel::load()
     m_saveOnMinimize = settings.value("onMinimize", true).toBool();
     m_saveOnExit = settings.value("onExit", true).toBool();
     settings.endGroup();
+    settings.beginGroup("General");
+    m_onTop = settings.value("onTop", true).toBool();
+    settings.endGroup();
     loadShortcuts(settings);
 }
 
@@ -139,4 +142,22 @@ void PreferencesModel::setGlobalHotkey(QKeySequence sequence)
 QKeySequence PreferencesModel::globalShortcut() const
 {
     return m_globalShortcut;
+}
+
+bool PreferencesModel::onTop() const
+{
+    return m_onTop;
+}
+
+void PreferencesModel::setOnTop(bool onTop)
+{
+    if (onTop != m_onTop)
+    {
+        m_onTop = onTop;
+        QSettings settings;
+        settings.beginGroup("General");
+        settings.setValue("onTop", m_onTop);
+        settings.endGroup();
+        emit(onTopChanged(m_onTop));
+    }
 }

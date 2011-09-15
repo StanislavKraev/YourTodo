@@ -6,7 +6,7 @@
 #include "ui_prefsdialog.h"
 
 PrefsDialog::PrefsDialog(QWidget *parent, PreferencesModel* model, IUiManager *manager) :
-    QDialog(parent),
+    QDialog(0),
     ui(new Ui::PrefsDialog),
     m_model(model),
     m_uiManager(manager),
@@ -23,9 +23,11 @@ PrefsDialog::PrefsDialog(QWidget *parent, PreferencesModel* model, IUiManager *m
 
     ui->saveOnExitCheck->setChecked(m_model->saveOnExit());
     ui->saveOnMinimizeCheck->setChecked(m_model->saveOnMinimize());
+    ui->onTopCheck->setChecked(m_model->onTop());
 
     connect(ui->saveOnExitCheck, SIGNAL(stateChanged(int)), SLOT(saveOnExitChanged(int)));
     connect(ui->saveOnMinimizeCheck, SIGNAL(stateChanged(int)), SLOT(saveOnMinimizeChanged(int)));
+    connect(ui->onTopCheck, SIGNAL(stateChanged(int)), SLOT(onTopChanged(int)));
 
     loadShortcuts();
     connect(ui->keysPreviewEdit, SIGNAL(assigned(QKeySequence)), SLOT(assigned(QKeySequence)));
@@ -217,4 +219,9 @@ void PrefsDialog::updateGSState()
 {
     ui->gskeysPreviewEdit->clear();
     ui->gskeysPreviewEdit->setSequence(m_model->globalShortcut());
+}
+
+void PrefsDialog::onTopChanged(int state)
+{
+    m_model->setOnTop(state == Qt::Checked);
 }

@@ -28,6 +28,7 @@ public:
     virtual bool isColumnSelected(nsTaskData::TaskDataMember member) const;
     virtual bool saveOnMinimize() const;
     virtual bool saveOnExit() const;
+    virtual bool onTop() const;
     virtual QKeySequence shortcutForAction(Actions::Actions id) const;
     virtual void setGlobalHotkey(QKeySequence sequence);
     virtual QKeySequence globalHotkey() const;
@@ -36,6 +37,8 @@ public slots:
 private slots:
     void shortcutChanged(Actions::Actions action, QKeySequence sequence);
     void globalhotKeyChanged(QKeySequence sequence);
+signals:
+    void onTopChanged(bool newState);
 private:
     QSet<nsTaskData::TaskDataMember> m_selectedColumns;
     IToolManager *m_manager;

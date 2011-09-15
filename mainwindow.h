@@ -47,6 +47,7 @@ public:
 public slots:
     void onShortcut();
     void setWindowTitle(const QString &title);
+    void onTopChanged(bool newState);
 protected:
     virtual void changeEvent(QEvent *event);
     virtual void closeEvent(QCloseEvent *event);

@@ -25,6 +25,7 @@ public:
 private slots:
     void saveOnExitChanged(int state);
     void saveOnMinimizeChanged(int state);
+    void onTopChanged(int state);
     void currentCellChanged(int currentRow, int currentColumn, int previousRow, int previousColumn);
 
     void assigned(QKeySequence sequence);

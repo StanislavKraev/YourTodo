@@ -225,6 +225,11 @@ void MainWindow::restoreUiState()
     resize(windowWidth, windowHeight);
     move(left, top);
     ui->splitter->setSizes(splitter_sizes);
+    settings.beginGroup("General");
+    bool onTop = settings.value("onTop", false).toBool();
+    settings.endGroup();
+    if (onTop)
+        setWindowFlags(Qt::WindowStaysOnTopHint);
 }
 
 void MainWindow::setWindowTitle(const QString &title)
@@ -243,4 +248,20 @@ void MainWindow::setGlobalHotkey(QKeySequence key)
     {
         m_globalShortcut->setShortcut(key);
     }
+}
+
+void MainWindow::onTopChanged(bool newState)
+{
+    bool visible = isVisible();
+
+    Qt::WindowFlags curFlags = windowFlags();
+    if (newState)
+        setWindowFlags(Qt::WindowStaysOnTopHint);
+    else
+    {
+        curFlags.operator ^= (Qt::WindowStaysOnTopHint);
+        setWindowFlags(curFlags);
+    }
+    if (visible)
+        setVisible(visible);
 }

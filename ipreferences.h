@@ -21,6 +21,7 @@ public:
     virtual QKeySequence shortcutForAction(Actions::Actions id) const = 0;
     virtual void setGlobalHotkey(QKeySequence sequence) = 0;
     virtual QKeySequence globalHotkey() const = 0;
+    virtual bool onTop() const = 0;
 };
 
 #endif // IPREFERENCES_H

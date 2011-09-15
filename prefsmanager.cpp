@@ -19,6 +19,8 @@ PrefsManager::PrefsManager(QWidget *parent) :
                        SLOT(shortcutChanged(Actions::Actions,QKeySequence)));
     connect(m_prefs, SIGNAL(globalhotKeyChanged(QKeySequence)),
                        SLOT(globalhotKeyChanged(QKeySequence)));
+    connect(m_prefs, SIGNAL(onTopChanged(bool)),
+                     SIGNAL(onTopChanged(bool)));
 }
 
 PrefsManager::~PrefsManager()
@@ -59,6 +61,7 @@ bool PrefsManager::isActionEnabled(Actions::Actions action) const
 void PrefsManager::showPreferences()
 {
     PrefsDialog dialog(m_parentWindow, m_prefs, m_uiManager);
+    dialog.setObjectName("prefsDialog");
     dialog.exec();
 }
 
@@ -100,4 +103,9 @@ QKeySequence PrefsManager::globalHotkey() const
 void PrefsManager::globalhotKeyChanged(QKeySequence sequence)
 {
     m_uiManager->setGlobalHotkey(sequence);
+}
+
+bool PrefsManager::onTop() const
+{
+    return m_prefs->onTop();
 }

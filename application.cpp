@@ -53,6 +53,8 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
             m_taskControlManager, SLOT(selectionChanged(QItemSelectionModel*)));
     connect(m_selectionTool, SIGNAL(selectionChanged(QItemSelectionModel*)),
             m_taskEditTool, SLOT(selectionChanged(QItemSelectionModel*)));
+    connect(m_prefsManager, SIGNAL(onTopChanged(bool)),
+            m_mainWindow, SLOT(onTopChanged(bool)));
     m_fileManager->startUp();
     m_mainWindow->show();
 }

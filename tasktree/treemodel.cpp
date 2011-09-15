@@ -162,6 +162,15 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value, int rol
             m_taskList->replace(item, newItem);
         }
     }
+    else if (role == Qt::UserRole + 3)
+    {
+        Task::Ptr item = m_taskList->getById(index.internalId());
+        if (item)
+        {
+            Task::Ptr newItem = value.value<Task::Ptr>();
+            item->setPriority(newItem->priority());
+        }
+    }
     else if (role == Qt::UserRole + 1)
     {
         Task::Ptr item = m_taskList->getById(index.internalId());

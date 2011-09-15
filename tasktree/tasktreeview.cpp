@@ -97,6 +97,7 @@ void TaskTreeView::addTaskBelowCursor()
     if (selectedList.count() > 1)
         return;
 
+    QVariant val;
     if (selectedList.count() < 1)
     {
         if (model()->rowCount() > 0)
@@ -106,6 +107,9 @@ void TaskTreeView::addTaskBelowCursor()
     else
     {
         QModelIndex selection = selectedList.first();
+
+        val = model()->data(selection, Qt::UserRole);
+
         row = selection.row() + 1;
         parent = selection.parent();
     }
@@ -113,6 +117,7 @@ void TaskTreeView::addTaskBelowCursor()
     int titleColumn = model()->data(QModelIndex(), Qt::UserRole + 2).toInt();
     QModelIndex newItemIndex = model()->index(row, titleColumn, parent);
     selectionModel()->select(newItemIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    model()->setData(newItemIndex, val, Qt::UserRole + 3);
     setCurrentIndex(newItemIndex);
     edit(newItemIndex);
 }

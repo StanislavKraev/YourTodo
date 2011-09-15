@@ -45,9 +45,13 @@ void PriorityDelegate::paint(QPainter *painter,
         opt.rect.setLeft(opt.rect.left() + 1);
         opt.rect.setTop(opt.rect.top() + 1);
         QStyle *style = QApplication::style();
-        opt.backgroundBrush = task->priorityColor();
-        opt.displayAlignment = Qt::AlignCenter;
-        style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, 0);
+        QColor color = task->priorityColor();
+        if (color.isValid())
+        {
+            opt.backgroundBrush = color;
+            opt.displayAlignment = Qt::AlignCenter;
+            style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, 0);
+        }
     }
 }
 

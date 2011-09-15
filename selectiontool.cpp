@@ -12,8 +12,12 @@ SelectionTool::SelectionTool(QItemSelectionModel* selectionModel,
     m_view(view)
 {
     if (m_selectionModel)
+    {
         connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                 SLOT(selectionChanged(QItemSelection,QItemSelection)));
+        connect(m_selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+                SLOT(currentChanged(QModelIndex,QModelIndex)));
+    }
 }
 
 void SelectionTool::init(IToolManager *manager)
@@ -54,6 +58,8 @@ void SelectionTool::onModelsChanged(QItemSelectionModel *selectionModel, QAbstra
 
     connect(m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
             SLOT(selectionChanged(QItemSelection,QItemSelection)));
+    connect(m_selectionModel, SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+            SLOT(currentChanged(QModelIndex,QModelIndex)));
     emit(selectionChanged(m_selectionModel));
 }
 
@@ -62,4 +68,17 @@ void SelectionTool::selectionChanged(const QItemSelection &selected, const QItem
     (void)selected;
     (void)deselected;
     emit(selectionChanged(m_selectionModel));
+}
+
+void SelectionTool::currentChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+    if (current.isValid())
+    {
+        Task::Ptr val = m_model->data(current, Qt::UserRole).value<Task::Ptr>();
+        emit(currentChanged(val));
+    }
+    else
+    {
+        emit(currentChanged(Task::Ptr(0)));
+    }
 }

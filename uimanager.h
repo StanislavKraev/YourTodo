@@ -11,6 +11,7 @@
 #include "action.h"
 #include "actionids.h"
 #include "iuimanager.h"
+#include "tasktree/task.h"
 
 class QMenuBar;
 class QWidget;
@@ -27,6 +28,7 @@ class ITreeUiProvider;
 class ITaskControlManager;
 class IPreferences;
 class IFileManager;
+class QItemSelectionModel;
 
 class UiManager : public QObject, public IToolManager, public Tool, public IUiManager
 {
@@ -68,6 +70,7 @@ public slots:
     void onCurrentListChanged(ITaskList* newList);
     void onMaximizeTasklist();
     void filenameChanged(QString title);
+    void currentChanged(Task::Ptr task);
 private:
     void createMenu();
     void createTreeUi();

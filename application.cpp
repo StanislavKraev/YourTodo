@@ -55,6 +55,10 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
             m_taskEditTool, SLOT(selectionChanged(QItemSelectionModel*)));
     connect(m_prefsManager, SIGNAL(onTopChanged(bool)),
             m_mainWindow, SLOT(onTopChanged(bool)));
+
+    connect(m_selectionTool, SIGNAL(currentChanged(Task::Ptr)),
+            m_uiManager, SLOT(currentChanged(Task::Ptr)));
+
     m_fileManager->startUp();
     m_mainWindow->show();
 }

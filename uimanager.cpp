@@ -34,7 +34,6 @@ UiManager::UiManager(QMenuBar *menuBar, QStatusBar *statusBar,
     m_undoStack(undoStack)
 {
     m_trayMenu = new QMenu(m_mainWindow);
-    m_trayMenu->addAction("Exit", this, SLOT(onExit()));
     m_trayIcon = new QSystemTrayIcon(m_mainWindow);
     m_trayIcon->setContextMenu(m_trayMenu);
     m_trayIcon->setIcon(QIcon(":/icons/tray.gif"));
@@ -72,7 +71,7 @@ void UiManager::createTreeUi()
     m_treeUi = new TreeUi(treeViewFont, m_mainWindow->treeView(), m_prefs);
     m_treeUi->addColumn(TreeColumnData("O", nsTaskData::IconIndex, -1, TreeColumnData::ICONINDEX));
     m_treeUi->addColumn(TreeColumnData("!", nsTaskData::Priority, 22, TreeColumnData::PRIORITY));
-    m_treeUi->addColumn(TreeColumnData("%", nsTaskData::PercentDone, 30));
+    m_treeUi->addColumn(TreeColumnData("%", nsTaskData::PercentDone, 40));
     m_treeUi->addColumn(TreeColumnData("Pos", nsTaskData::Position, 24));
     m_treeUi->addColumn(TreeColumnData("Risk", nsTaskData::Risk, 40));
     m_treeUi->addColumn(TreeColumnData("Cost", nsTaskData::Cost, 40));
@@ -249,6 +248,9 @@ void UiManager::createMenu()
                 }
         }
     }
+    QList<QAction*> actions_list;
+    actions_list << m_idActionMap[Actions::FileExit];
+    m_trayMenu->addActions(actions_list);
 }
 
 void UiManager::onExit()
@@ -450,4 +452,12 @@ QKeySequence UiManager::globalHotkey() const
 void UiManager::setGlobalHotkey(QKeySequence key) const
 {
     m_mainWindow->setGlobalHotkey(key);
+}
+
+void UiManager::currentChanged(Task::Ptr task)
+{
+    if (task)
+        m_trayIcon->setToolTip(task->title());
+    else
+        m_trayIcon->setToolTip("");
 }

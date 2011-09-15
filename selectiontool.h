@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QItemSelection>
 #include "tool.h"
+#include "tasktree/task.h"
 
 class IToolManager;
 class QItemSelectionModel;
@@ -22,10 +23,12 @@ public:
     virtual bool isActionEnabled(Actions::Actions action) const;
 signals:
     void selectionChanged(QItemSelectionModel *selectionModel);
+    void currentChanged(Task::Ptr task);
 public slots:
     void onSelectAll();
     void onModelsChanged(QItemSelectionModel *selectionModel, QAbstractItemModel *model);
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 private:
     IToolManager *m_manager;
     QItemSelectionModel *m_selectionModel;

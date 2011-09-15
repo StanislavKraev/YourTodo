@@ -29,10 +29,8 @@ public:
     void addTaskAboveCursor();
     void addSubTask();
     void removeSelectedTasks();
-protected:
-    virtual void keyPressEvent(QKeyEvent *event);
-private:
     void toggleSelectedTasks();
+private:
     void getSelectedRowsRange(const QModelIndexList &selectedList, int &startRow, int &endRow) const;
     bool checkAllAreChildren(const QModelIndex &parent, const QModelIndexList &selectedList) const;
     void getItemChildren(const QModelIndex &parent, const QModelIndexList &selectedList, QModelIndexList &topLevelChildren) const;

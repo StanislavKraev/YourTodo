@@ -67,18 +67,6 @@ TaskTreeView::TaskTreeView(QWidget *parent) :
 {
 }
 
-void TaskTreeView::keyPressEvent(QKeyEvent *event)
-{
-    if (event->key() == Qt::Key_Space &&
-        event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-    {
-        toggleSelectedTasks();
-        event->accept();
-    }
-    else
-        QTreeView::keyPressEvent(event);
-}
-
 void TaskTreeView::toggleSelectedTasks()
 {
     QModelIndexList selectedList = selectionModel()->selectedRows(0);

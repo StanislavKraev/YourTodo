@@ -30,6 +30,7 @@ public slots:
     void newTaskBelow();
     void newTaskAbove();
     void newSubTask();
+    void markAsCompleted();
 private:
     IToolManager *m_manager;
     QItemSelectionModel *m_curSelectionModel;

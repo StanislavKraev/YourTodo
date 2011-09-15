@@ -24,6 +24,7 @@ void TaskEditorTool::init(IToolManager *manager)
     addAction(Actions::NewTaskBelow);
     addAction(Actions::NewTaskAbove);
     addAction(Actions::NewSubtask);
+    addAction(Actions::MarkAsCompleted);
 }
 
 const char *TaskEditorTool::getActionSlot(Actions::Actions action) const
@@ -44,6 +45,8 @@ const char *TaskEditorTool::getActionSlot(Actions::Actions action) const
         return SLOT(newTaskAbove());
     else if (action == Actions::NewSubtask)
         return SLOT(newSubTask());
+    else if (action == Actions::MarkAsCompleted)
+        return SLOT(markAsCompleted());
     return 0;
 }
 
@@ -75,7 +78,8 @@ bool TaskEditorTool::isActionEnabled(Actions::Actions action) const
         return m_taskTreeView->canMoveLeft();
     else if (action == Actions::MoveRight)
         return m_taskTreeView->canMoveRight();
-    else if (action == Actions::EditDeleteSelected)
+    else if (action == Actions::EditDeleteSelected ||
+             action == Actions::MarkAsCompleted)
         return true;
     return false;
 }
@@ -91,6 +95,7 @@ void TaskEditorTool::selectionChanged(QItemSelectionModel *selectionModel)
     m_manager->onActionChanged(Actions::NewTaskBelow);
     m_manager->onActionChanged(Actions::NewTaskAbove);
     m_manager->onActionChanged(Actions::NewSubtask);
+    m_manager->onActionChanged(Actions::MarkAsCompleted);
 }
 
 void TaskEditorTool::moveUp()
@@ -132,4 +137,9 @@ void TaskEditorTool::newTaskAbove()
 void TaskEditorTool::newSubTask()
 {
     m_taskTreeView->addSubTask();
+}
+
+void TaskEditorTool::markAsCompleted()
+{
+    m_taskTreeView->toggleSelectedTasks();
 }

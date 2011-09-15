@@ -128,7 +128,7 @@ void UiManager::createMenu()
     QMenu *newTaskMenu = m_menuBar->addMenu("New &Task");
     QMenu *editMenu = m_menuBar->addMenu("&Edit");
     QMenu *viewMenu = m_menuBar->addMenu("&View");
-    QMenu *moveMenu = m_menuBar->addMenu("&Move");
+    QMenu *moveMenu = m_menuBar->addMenu("&Change");
 
     QList<ActionHelper> fileMenuActions;
     fileMenuActions
@@ -187,7 +187,8 @@ void UiManager::createMenu()
             << ActionHelper("Move up", Actions::MoveUp)
             << ActionHelper("Move down", Actions::MoveDown)
             << ActionHelper("Move right", Actions::MoveRight)
-            << ActionHelper("Move left", Actions::MoveLeft);
+            << ActionHelper("Move left", Actions::MoveLeft)
+            << ActionHelper("Toggle completed", Actions::MarkAsCompleted);
 
     typedef QPair<QMenu*, QList<ActionHelper> > MenuActionsPair;
     QList<MenuActionsPair> menuActions;

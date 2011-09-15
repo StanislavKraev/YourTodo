@@ -43,7 +43,9 @@ namespace Actions
         MoveUp,
         MoveDown,
         MoveLeft,
-        MoveRight
+        MoveRight,
+        MarkAsCompleted
+        // DO NOT FORGET TO ADD NEW ACTION NAME BELOW
     };
 
     static QString actionNames[] = {
@@ -83,7 +85,8 @@ namespace Actions
         "MoveUp",
         "MoveDown",
         "MoveLeft",
-        "MoveRight"
+        "MoveRight",
+        "MarkAsCompleted"
     };
 }
 #endif // ACTIONIDS_H

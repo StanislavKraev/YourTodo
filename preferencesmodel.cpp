@@ -88,7 +88,8 @@ void PreferencesModel::loadShortcuts(QSettings &settings)
             << ShortHelper(Actions::MoveUp,         "Ctrl+Up")
             << ShortHelper(Actions::MoveDown,       "Ctrl+Down")
             << ShortHelper(Actions::MoveRight,      "Ctrl+Right")
-            << ShortHelper(Actions::MoveLeft,       "Ctrl+Left");
+            << ShortHelper(Actions::MoveLeft,       "Ctrl+Left")
+            << ShortHelper(Actions::MarkAsCompleted,"Ctrl+Shift+Space");
 
     settings.beginGroup("Shortcuts");
     foreach (ShortHelper h, shortcuts)

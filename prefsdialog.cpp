@@ -68,6 +68,7 @@ void PrefsDialog::loadShortcuts()
     ui->shortcutsTableWidget->setColumnCount(2);
     ui->shortcutsTableWidget->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
     ui->shortcutsTableWidget->horizontalHeader()->setResizeMode(1, QHeaderView::Fixed);
+    ui->shortcutsTableWidget->horizontalHeader()->resizeSection(1, 200);
     int index = 0;
     foreach(Actions::Actions action, keys.keys())
     {

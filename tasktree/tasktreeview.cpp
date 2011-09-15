@@ -529,3 +529,65 @@ bool TaskTreeView::canAddBelow() const
         return false;
     return true;
 }
+
+void TaskTreeView::addTaskAboveCursor()
+{
+    int row(0);
+    QModelIndex parent;
+
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() != 1)
+        return;
+
+    QModelIndex selection = selectedList.first();
+    row = selection.row();
+
+    QVariant val = model()->data(selection, Qt::UserRole);
+    parent = selection.parent();
+
+    model()->insertRows(row, 1, parent);
+    int titleColumn = model()->data(QModelIndex(), Qt::UserRole + 2).toInt();
+    QModelIndex newItemIndex = model()->index(row, titleColumn, parent);
+    selectionModel()->select(newItemIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    model()->setData(newItemIndex, val, Qt::UserRole + 3);
+    setCurrentIndex(newItemIndex);
+    edit(newItemIndex);
+}
+
+void TaskTreeView::addSubTask()
+{
+    int row(0);
+    QModelIndex parent;
+
+    QModelIndexList selectedList = selectionModel()->selectedRows(0);
+    if (selectedList.count() != 1)
+        return;
+
+    QModelIndex selection = selectedList.first();
+
+    parent = selection;
+    row = model()->rowCount(selection) ;
+    QVariant val;
+    if (row <= 0)
+        val = model()->data(selection, Qt::UserRole);
+    else
+        val = model()->data(model()->index(row - 1, 0, parent), Qt::UserRole);
+
+    model()->insertRows(row, 1, parent);
+    int titleColumn = model()->data(QModelIndex(), Qt::UserRole + 2).toInt();
+    QModelIndex newItemIndex = model()->index(row, titleColumn, parent);
+    selectionModel()->select(newItemIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    model()->setData(newItemIndex, val, Qt::UserRole + 3);
+    setCurrentIndex(newItemIndex);
+    edit(newItemIndex);
+}
+
+bool TaskTreeView::canAddAbove() const
+{
+    return selectionModel()->selectedRows(0).count() == 1;
+}
+
+bool TaskTreeView::canAddSubtask() const
+{
+    return selectionModel()->selectedRows(0).count() == 1;
+}

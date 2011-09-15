@@ -28,6 +28,8 @@ public slots:
     void moveLeft();
     void editDeleteSelected();
     void newTaskBelow();
+    void newTaskAbove();
+    void newSubTask();
 private:
     IToolManager *m_manager;
     QItemSelectionModel *m_curSelectionModel;

@@ -22,6 +22,8 @@ void TaskEditorTool::init(IToolManager *manager)
 
     addAction(Actions::EditDeleteSelected);
     addAction(Actions::NewTaskBelow);
+    addAction(Actions::NewTaskAbove);
+    addAction(Actions::NewSubtask);
 }
 
 const char *TaskEditorTool::getActionSlot(Actions::Actions action) const
@@ -38,6 +40,10 @@ const char *TaskEditorTool::getActionSlot(Actions::Actions action) const
         return SLOT(editDeleteSelected());
     else if (action == Actions::NewTaskBelow)
         return SLOT(newTaskBelow());
+    else if (action == Actions::NewTaskAbove)
+        return SLOT(newTaskAbove());
+    else if (action == Actions::NewSubtask)
+        return SLOT(newSubTask());
     return 0;
 }
 
@@ -52,9 +58,11 @@ bool TaskEditorTool::isActionEnabled(Actions::Actions action) const
         return false;
 
     if (action == Actions::NewTaskBelow)
-    {
         return m_taskTreeView->canAddBelow();
-    }
+    else if (action == Actions::NewTaskAbove)
+        return m_taskTreeView->canAddAbove();
+    else if (action == Actions::NewSubtask)
+        return m_taskTreeView->canAddSubtask();
 
     if (m_curSelectionModel->selectedRows().count() < 1)
         return false;
@@ -81,6 +89,8 @@ void TaskEditorTool::selectionChanged(QItemSelectionModel *selectionModel)
     m_manager->onActionChanged(Actions::MoveRight);
     m_manager->onActionChanged(Actions::EditDeleteSelected);
     m_manager->onActionChanged(Actions::NewTaskBelow);
+    m_manager->onActionChanged(Actions::NewTaskAbove);
+    m_manager->onActionChanged(Actions::NewSubtask);
 }
 
 void TaskEditorTool::moveUp()
@@ -112,4 +122,14 @@ void TaskEditorTool::editDeleteSelected()
 void TaskEditorTool::newTaskBelow()
 {
     m_taskTreeView->addTaskBelowCursor();
+}
+
+void TaskEditorTool::newTaskAbove()
+{
+    m_taskTreeView->addTaskAboveCursor();
+}
+
+void TaskEditorTool::newSubTask()
+{
+    m_taskTreeView->addSubTask();
 }

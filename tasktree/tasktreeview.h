@@ -18,12 +18,16 @@ public:
     bool canMoveLeft() const;
     bool canMoveRight() const;
     bool canAddBelow() const;
+    bool canAddAbove() const;
+    bool canAddSubtask() const;
 
     void shiftSelectedTasksRight();
     void shiftSelectedTasksLeft();
     void shiftSelectedTasksUp();
     void shiftSelectedTasksDown();
     void addTaskBelowCursor();
+    void addTaskAboveCursor();
+    void addSubTask();
     void removeSelectedTasks();
 protected:
     virtual void keyPressEvent(QKeyEvent *event);

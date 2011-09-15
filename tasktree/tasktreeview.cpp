@@ -125,6 +125,10 @@ void TaskTreeView::addTaskBelowCursor()
 void TaskTreeView::removeSelectedTasks()
 {
     QModelIndexList selectedList = selectionModel()->selectedRows();
+    bool count = selectedList.count();
+    QModelIndex nextParent;
+    int nextRow = -1;
+
     while (selectedList.count())
     {
         QMap<Task::Ptr, QModelIndex> taskMap;
@@ -147,13 +151,33 @@ void TaskTreeView::removeSelectedTasks()
             if (!parentSelected)
             {
                 QModelIndex taskIndex = taskMap[task];
+                nextRow = taskIndex.row();
+                nextParent = taskIndex.parent();
                 model()->removeRows(taskIndex.row(), 1, taskIndex.parent());
                 break;
             }
         }
         selectedList = selectionModel()->selectedRows();
     }
-    // TODO: select next element after last removed.
+    if (count == 1 && nextRow >= 0)
+    {
+        if ((model()->rowCount(nextParent) > 0))
+        {
+            if (model()->rowCount(nextParent) - 1< nextRow)
+                nextRow--;
+            if (nextRow >=0)
+            {
+                QModelIndex next = model()->index(nextRow, 0, nextParent);
+                selectionModel()->select(next, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+                setCurrentIndex(next);
+            }
+        }
+        else if (nextParent.isValid())
+        {
+            selectionModel()->select(nextParent, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+            setCurrentIndex(nextParent);
+        }
+    }
 }
 
 void TaskTreeView::getSelectedRowsRange(const QModelIndexList &selectedList, int &startRow, int &endRow) const

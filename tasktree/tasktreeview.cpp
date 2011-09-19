@@ -105,7 +105,8 @@ void TaskTreeView::addTaskBelowCursor()
     int titleColumn = model()->data(QModelIndex(), Qt::UserRole + 2).toInt();
     QModelIndex newItemIndex = model()->index(row, titleColumn, parent);
     selectionModel()->select(newItemIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-    model()->setData(newItemIndex, val, Qt::UserRole + 3);
+    if (val.isValid())
+        model()->setData(newItemIndex, val, Qt::UserRole + 3);
     setCurrentIndex(newItemIndex);
     edit(newItemIndex);
 }
@@ -561,7 +562,8 @@ void TaskTreeView::addTaskAboveCursor()
     int titleColumn = model()->data(QModelIndex(), Qt::UserRole + 2).toInt();
     QModelIndex newItemIndex = model()->index(row, titleColumn, parent);
     selectionModel()->select(newItemIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-    model()->setData(newItemIndex, val, Qt::UserRole + 3);
+    if (val.isValid())
+        model()->setData(newItemIndex, val, Qt::UserRole + 3);
     setCurrentIndex(newItemIndex);
     edit(newItemIndex);
 }
@@ -589,7 +591,8 @@ void TaskTreeView::addSubTask()
     int titleColumn = model()->data(QModelIndex(), Qt::UserRole + 2).toInt();
     QModelIndex newItemIndex = model()->index(row, titleColumn, parent);
     selectionModel()->select(newItemIndex, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
-    model()->setData(newItemIndex, val, Qt::UserRole + 3);
+    if (val.isValid())
+        model()->setData(newItemIndex, val, Qt::UserRole + 3);
     setCurrentIndex(newItemIndex);
     edit(newItemIndex);
 }
